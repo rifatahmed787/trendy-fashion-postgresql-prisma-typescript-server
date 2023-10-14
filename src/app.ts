@@ -1,47 +1,47 @@
-import express, { NextFunction, Request, Response } from 'express'
-import cors from 'cors'
-import httpStatus from 'http-status'
-import { error_res_type } from './interfaces/error'
-import global_error_handler from './app/middlewares/globalErrorHandler'
-import AllRoutes from './routes/Routes'
-import root_api_response from './constant/RootApiResponse'
-import cookieParser from 'cookie-parser'
+// import express, { NextFunction, Request, Response } from 'express'
+// import cors from 'cors'
+// import httpStatus from 'http-status'
+// import { error_res_type } from './interfaces/error'
+// import global_error_handler from './app/middlewares/globalErrorHandler'
+// import AllRoutes from './routes'
+// import root_api_response from './constant/RootApiResponse'
+// import cookieParser from 'cookie-parser'
 
-const app = express()
+// const app = express()
 
-app.use(cors())
-app.use(cookieParser())
+// app.use(cors())
+// app.use(cookieParser())
 
-//parser
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+// //parser
+// app.use(express.json())
+// app.use(express.urlencoded({ extended: true }))
 
 // Application routes
-app.use('/api/v1/', AllRoutes)
+// app.use('/api/v1/', AllRoutes)
 
 // testing
-app.get('/', (req, res) => {
-  res.send(root_api_response)
-})
+// app.get('/', (req, res) => {
+//   res.send(root_api_response)
+// })
 
 // Global error
-app.use(global_error_handler)
+// app.use(global_error_handler)
 
 // Undefined error
-app.use((req: Request, res: Response, next: NextFunction) => {
-  const error_data: error_res_type = {
-    success: false,
-    message: 'NOT FOUND',
-    errorMessages: [
-      {
-        path: req.originalUrl,
-        message: 'Api not found ',
-      },
-    ],
-  }
-  res.status(httpStatus.NOT_FOUND).json(error_data)
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   const error_data: error_res_type = {
+//     success: false,
+//     message: 'NOT FOUND',
+//     errorMessages: [
+//       {
+//         path: req.originalUrl,
+//         message: 'Api not found ',
+//       },
+//     ],
+//   }
+//   res.status(httpStatus.NOT_FOUND).json(error_data)
 
-  next()
-})
+//   next()
+// })
 
-export default app
+// export default app

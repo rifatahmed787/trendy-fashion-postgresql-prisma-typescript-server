@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status'
 import { IUser } from './user.interface'
-import { User } from './user.model'
 import ApiError from '../../errors/ApiError'
 import { hashingHelper } from '../../../helpers/hashingHelper'
 

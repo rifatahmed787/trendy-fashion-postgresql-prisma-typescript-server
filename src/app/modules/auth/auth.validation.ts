@@ -3,15 +3,13 @@ import { z } from 'zod'
 export const user_signup_zod_schema = z.object({
   body: z.object({
     email: z.string({ required_error: 'Email address is required' }),
-    imageUrl: z.string({ required_error: 'Image URL is required' }),
+
     password: z.string({ required_error: 'Password  is required' }),
-    name: z.object({
-      firstName: z.string({ required_error: 'First name is required' }),
-      lastName: z.string().optional(),
+    username: z.string({
+      required_error: 'Username is required',
     }),
-    address: z.string({
-      required_error: 'Present address is required',
-    }),
+    role: z.string({ required_error: 'Please enter user role' }),
+    avatar: z.string({ required_error: 'Please enter the image' }).optional(),
   }),
 })
 

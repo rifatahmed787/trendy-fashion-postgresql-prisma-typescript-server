@@ -1,0 +1,32 @@
+openapi: 3.0.0
+info:
+  title: Trendy-Fashion
+  description: This API is building for Trendy-Fashion website.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+    description: Localhost
+
+paths:
+  /api/auth/signup:
+    post:
+      summary: Register a new user
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+  content:
+    application/json:
+      schema:
+        $ref: '#/components/schemas/UserSignup'
+responses:
+  200:
+    description: User registered successfully
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/UserWithResponse'
+  400:
+    description: Bad request
+  500:
+    description: Internal server error
