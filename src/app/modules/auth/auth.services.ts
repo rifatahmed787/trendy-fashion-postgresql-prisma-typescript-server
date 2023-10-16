@@ -1,22 +1,39 @@
-// import httpStatus from 'http-status'
-// import ApiError from '../../errors/ApiError'
-// import { IUser, IUserLogin, IUserLoginResponse } from '../user/user.interface'
 import { jwtHelper } from '../../../helpers/jwtHelper'
 import config from '../../../config'
 import { Secret } from 'jsonwebtoken'
 import { PrismaClient, User } from '@prisma/client'
+import ApiError from '../../errors/ApiError'
+import httpStatus from 'http-status'
+import bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient()
 
+// user signup response
 type UserWithResponse = {
   user_details: User
   accessToken: string
   refreshToken: string
 }
 
+// User login response
+type IUserLoginResponse = {
+  accessToken: string
+  user_details: Partial<User>
+  refreshToken?: string
+}
+
+// user signup
 const user_signup = async (user_data: User): Promise<UserWithResponse> => {
+  const hashedPassword = await bcrypt.hash(user_data.password, 10)
+
   const created_user = await prisma.user.create({
-    data: user_data,
+    data: {
+      username: user_data.username,
+      email: user_data.email,
+      password: hashedPassword,
+      role: user_data.role,
+      avatar: user_data.avatar,
+    },
   })
 
   const userWithoutPassword: Partial<User> = {
@@ -48,86 +65,113 @@ const user_signup = async (user_data: User): Promise<UserWithResponse> => {
 }
 
 // user_login
-// const user_login = async (
-//   login_data: IUserLogin
-// ): Promise<IUserLoginResponse | null> => {
-//   const { email, password } = login_data
+const user_login = async (
+  email: string,
+  password: string
+): Promise<IUserLoginResponse | null> => {
+  // Function to check if a user with a given email exists
+  const isUserExist = async (email: string): Promise<User | null> => {
+    return prisma.user.findUnique({
+      where: { email },
+    })
+  }
 
-//   // Admin checking
-//   const isUserExist = await User.isUserExist(email)
+  const user = await isUserExist(email)
 
-//   if (!isUserExist) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'User not found')
-//   }
+  if (!user) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User not found')
+  }
 
-//   const { password: user_encrypted_password, ...othersUserData } = isUserExist
+  // Function to compare a given password with the stored hashed password
+  const isPasswordMatched = async (
+    encrypted_pass: string,
+    given_pass: string
+  ): Promise<boolean> => {
+    const isMatch = await bcrypt.compare(given_pass, encrypted_pass)
+    return isMatch
+  }
 
-//   // match password;
-//   if (
-//     isUserExist &&
-//     user_encrypted_password &&
-//     !(await User.isPasswordMatched(user_encrypted_password, password))
-//   ) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid password')
-//   }
+  // Match password
+  if (!(await isPasswordMatched(user.password, password))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid password')
+  }
 
-//   // access token
-//   const accessToken = jwtHelper.create_token(
-//     { _id: othersUserData?._id, email: othersUserData?.email },
-//     config.jwt.access_token_secret as Secret,
-//     config.jwt.access_token_expiresIn as string
-//   )
-//   // refresh token
-//   const refreshToken = jwtHelper.create_token(
-//     { _id: othersUserData?._id, email: othersUserData?.email },
-//     config.jwt.refresh_token_secret as Secret,
-//     config.jwt.refresh_token_expiresIn as string
-//   )
+  // Create an access token
+  const accessToken = jwtHelper.create_token(
+    { id: user.id, email: user.email },
+    config.jwt.access_token_secret as Secret,
+    config.jwt.access_token_expiresIn as string
+  )
 
-//   return { accessToken, refreshToken, user_details: isUserExist }
-// }
+  // Create a refresh token
+  const refreshToken = jwtHelper.create_token(
+    { id: user.id, email: user.email },
+    config.jwt.refresh_token_secret as Secret,
+    config.jwt.refresh_token_expiresIn as string
+  )
+
+  // Return the response
+  return {
+    accessToken,
+    refreshToken,
+    user_details: {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      avatar: user.avatar,
+    },
+  }
+}
 
 // refresh_token
-// const refresh_token = async (
-//   token: string
-// ): Promise<IUserLoginResponse | null> => {
-//   //  token verification
-//   let decoded_token = null
-//   try {
-//     decoded_token = jwtHelper.verify_token(
-//       token,
-//       config.jwt.refresh_token_secret as Secret
-//     )
-//   } catch (err) {
-//     // err
-//     throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid refresh token')
-//   }
-//   const { _id, email } = decoded_token
+const refresh_token = async (
+  token: string
+): Promise<IUserLoginResponse | null> => {
+  //  token verification
+  let decoded_token = null
+  try {
+    decoded_token = jwtHelper.verify_token(
+      token,
+      config.jwt.refresh_token_secret as Secret
+    )
+  } catch (err) {
+    // err
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid refresh token')
+  }
+  const { id, email } = decoded_token
 
-//   // user checking verification
-//   const isUserExist = await User.isUserExistByID(_id)
-//   if (!isUserExist) {
-//     throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid refresh token')
-//   }
+  // user checking verification
+  const isUserExist = async (email: string): Promise<User | null> => {
+    return prisma.user.findUnique({
+      where: { email },
+    })
+  }
 
-//   // access token
-//   const accessToken = jwtHelper.create_token(
-//     { _id, email },
-//     config.jwt.access_token_secret as Secret,
-//     config.jwt.access_token_expiresIn as string
-//   )
-//   // refresh token
-//   const refreshToken = jwtHelper.create_token(
-//     { _id, email },
-//     config.jwt.refresh_token_secret as Secret,
-//     config.jwt.refresh_token_expiresIn as string
-//   )
+  const user = await isUserExist(email)
 
-//   return { accessToken, refreshToken, user_details: isUserExist }
-// }
+  if (!user) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User not found')
+  }
+
+  // access token
+  const accessToken = jwtHelper.create_token(
+    { id, email },
+    config.jwt.access_token_secret as Secret,
+    config.jwt.access_token_expiresIn as string
+  )
+  // refresh token
+  const refreshToken = jwtHelper.create_token(
+    { id, email },
+    config.jwt.refresh_token_secret as Secret,
+    config.jwt.refresh_token_expiresIn as string
+  )
+
+  return { accessToken, refreshToken, user_details: user }
+}
 
 export const AuthServices = {
   user_signup,
-  // user_login,
-  // refresh_token,
+  user_login,
+  refresh_token,
 }

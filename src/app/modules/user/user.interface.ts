@@ -1,4 +1,3 @@
-import { User } from '@prisma/client'
 import { IUser_role } from '../../../interfaces/common'
 
 export type IName = {
@@ -15,7 +14,7 @@ export type IUser = {
   imageUrl: string
 }
 
-// Create a new Model type that knows about IUserMethods when available here...
+// // Create a new Model type that knows about IUserMethods when available here...
 // export type UserModel = {
 //   isUserExist(email: string): Promise<IUser | null>
 //   isUserExistByID(id: number | string): Promise<IUser | null>
@@ -38,10 +37,4 @@ export type IUserFilter = {
 export type IUserLogin = {
   email: string
   password: string
-}
-
-export type IUserLoginResponse = {
-  accessToken: string
-  user_details: Partial<User>
-  refreshToken?: string
 }
