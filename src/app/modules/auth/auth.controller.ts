@@ -5,13 +5,7 @@ import { Request, Response } from 'express'
 import { AuthServices } from './auth.services'
 
 import { User } from '@prisma/client'
-
-// User login response
-type IUserLoginResponse = {
-  accessToken: string
-  user_details: Partial<User>
-  refreshToken?: string
-}
+import { IUserLoginResponse } from '../user/user.interface'
 
 // signup user
 const signupUser = catchAsync(async (req: Request, res: Response) => {

@@ -5,22 +5,9 @@ import { Address, PrismaClient, User } from '@prisma/client'
 import ApiError from '../../errors/ApiError'
 import httpStatus from 'http-status'
 import bcrypt from 'bcrypt'
+import { IUserLoginResponse, UserWithResponse } from '../user/user.interface'
 
 const prisma = new PrismaClient()
-
-// user signup response
-type UserWithResponse = {
-  user_details: User
-  accessToken: string
-  refreshToken: string
-}
-
-// User login response
-type IUserLoginResponse = {
-  accessToken: string
-  user_details: Partial<User>
-  refreshToken?: string
-}
 
 // user signup
 const user_signup = async (user_data: User): Promise<UserWithResponse> => {

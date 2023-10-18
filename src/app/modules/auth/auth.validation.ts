@@ -8,7 +8,6 @@ export const user_signup_zod_schema = z.object({
     username: z.string({
       required_error: 'Username is required',
     }),
-    role: z.string({ required_error: 'Please enter user role' }),
     avatar: z.string({ required_error: 'Please enter the image' }).optional(),
   }),
 })
