@@ -20,6 +20,8 @@ router.post(
   AuthController.loginUser
 )
 
+router.post('/profile', AuthController.createOrUpdateUserDetails)
+
 router.post(
   '/refresh-token',
   requestValidationHandler(user_refresh_token_zod_schema),

@@ -63,6 +63,20 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+//user profile create or update
+const createOrUpdateUserDetails = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await AuthServices.createOrUpdateUserDetails(req.body)
+
+    sendResponse(res, {
+      status_code: httpStatus.OK,
+      success: true,
+      data: result,
+      message: 'User details updated successfully',
+    })
+  }
+)
+
 // refreshToken
 const refreshToken = catchAsync(async (req: Request, res: Response) => {
   const { refreshToken } = req.cookies
@@ -91,5 +105,6 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 export const AuthController = {
   signupUser,
   loginUser,
+  createOrUpdateUserDetails,
   refreshToken,
 }

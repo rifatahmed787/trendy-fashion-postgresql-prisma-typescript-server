@@ -1,7 +1,7 @@
 import { jwtHelper } from '../../../helpers/jwtHelper'
 import config from '../../../config'
 import { Secret } from 'jsonwebtoken'
-import { PrismaClient, User } from '@prisma/client'
+import { Address, PrismaClient, User } from '@prisma/client'
 import ApiError from '../../errors/ApiError'
 import httpStatus from 'http-status'
 import bcrypt from 'bcrypt'
@@ -124,6 +124,36 @@ const user_login = async (
   }
 }
 
+//update user details
+const createOrUpdateUserDetails = async (data: Address): Promise<Address> => {
+  const isUserExist = await prisma.address.findUnique({
+    where: {
+      address_id: data.address_id,
+    },
+  })
+
+  if (isUserExist) {
+    const result = await prisma.address.update({
+      where: {
+        address_id: data.address_id,
+      },
+      data: {
+        street_address: data.street_address,
+        city: data.city,
+        postal_code: data.postal_code,
+        country: data.country,
+        phone_number: data.phone_number,
+        district_name: data.district_name,
+      },
+    })
+    return result
+  }
+  const result = await prisma.address.create({
+    data,
+  })
+  return result
+}
+
 // refresh_token
 const refresh_token = async (
   token: string
@@ -173,5 +203,6 @@ const refresh_token = async (
 export const AuthServices = {
   user_signup,
   user_login,
+  createOrUpdateUserDetails,
   refresh_token,
 }
