@@ -15,7 +15,7 @@ const all_routes = [
   { path: '/auth', router: AuthRoute },
   // { path: '/upload', router: UploadRoute },
   { path: '/', router: UserRoute },
-  { path: '/users', router: UserRoute },
+  { path: '/user', router: UserRoute },
   // { path: '/books', router: BookRoute },
   // { path: '/reviews', router: ReviewRoute },
   // { path: '/wish', router: WishRoute },

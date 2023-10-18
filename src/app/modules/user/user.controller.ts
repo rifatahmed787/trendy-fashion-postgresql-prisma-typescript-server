@@ -17,9 +17,7 @@ const allUsers = catchAsync(async (req: Request, res: Response) => {
 
 //  Get   user profile information
 const userProfile = catchAsync(async (req: Request, res: Response) => {
-  const { _id: user_id } = req.logged_in_user
-
-  const result = await UserServices.my_profile(user_id)
+  const result = await UserServices.my_profile(req.params.id)
 
   sendResponse(res, {
     status_code: httpStatus.OK,
@@ -29,22 +27,7 @@ const userProfile = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-// userProfileUpdate
-// const userProfileUpdate = catchAsync(async (req: Request, res: Response) => {
-//   const { _id: user_id } = req.logged_in_user
-//   const { ...user_data } = req.body
-//   const result = await UserServices.update_user_profile(user_data, user_id)
-
-//   sendResponse(res, {
-//     status_code: httpStatus.OK,
-//     success: true,
-//     data: result,
-//     message: "User's information updated successfully",
-//   })
-// })
-
 export const UserController = {
   userProfile,
   allUsers,
-  // userProfileUpdate,
 }
