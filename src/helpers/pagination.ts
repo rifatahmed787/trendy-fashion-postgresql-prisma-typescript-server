@@ -1,9 +1,9 @@
-import { SortOrder } from 'mongoose'
 import { IPagination } from '../interfaces/pagination'
+import { Prisma } from '@prisma/client'
 
 type IPaginationMap = IPagination & {
   skip: number
-  sortObject: { [key: string]: SortOrder }
+  sortObject: { [key: string]: Prisma.SortOrder }
 }
 
 export const pagination_map = (
@@ -14,7 +14,7 @@ export const pagination_map = (
   const skip = (page - 1) * limit
 
   const sortBy = pagination_data.sortBy || 'createdAt'
-  const sortOrder = pagination_data.sortOrder || 'desc'
+  const sortOrder: Prisma.SortOrder = pagination_data.sortOrder || 'desc' // Ensure sortOrder is of type Prisma.SortOrder
 
   const sortObject = { [sortBy]: sortOrder }
 

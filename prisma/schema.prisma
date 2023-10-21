@@ -48,17 +48,16 @@ model Products {
   productName         String
   productDetails      String?
   productColor        String
-  productQuality      String    // Should be a valid quality identifier
+  productQuality      String    
   productImage        String[]
   productSize         String[]
   productPrice        Float
   productRating       Float?
   productSpecification String[]
-  productCategory     String    // Should be a valid category identifier
-  gender              String    // Should be 'male' or 'female'
-  age                 String?   // You can specify age range or other relevant information
-  productWarranty     String?   // Information about product warranty
-  relatedProducts     String[]  // You can store related product IDs
+  productCategory     String   
+  productGender       String   
+  age                 String?   
+  relatedProducts     String[]  
   buyerId Int?
   buyer               User? @relation(fields: [buyerId], references: [id])
   productReviews      ProductReview[]
