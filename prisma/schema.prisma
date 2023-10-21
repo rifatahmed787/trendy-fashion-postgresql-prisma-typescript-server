@@ -21,7 +21,8 @@ model User {
   address Address?
   purchasedProducts Products[]
   reviewProducts ProductReview[]
-  posts Post[]
+  posts     Post[]
+  wishLists    WishList[] 
   @@map("Users")
 }
 
@@ -61,6 +62,8 @@ model Products {
   buyerId Int?
   buyer               User? @relation(fields: [buyerId], references: [id])
   productReviews      ProductReview[]
+  wishLists           WishList[]
+  
 }
 
 
@@ -119,9 +122,15 @@ model OrderProduct {
 }
 
 
-// payment methods model
+// wish list model
 
-
+model WishList {
+  id      Int    @id @default(autoincrement())
+  userId  Int
+  user    User   @relation(fields: [userId], references: [id])
+  productId Int
+  product Products @relation(fields: [productId], references: [id])
+}
 
 
 
