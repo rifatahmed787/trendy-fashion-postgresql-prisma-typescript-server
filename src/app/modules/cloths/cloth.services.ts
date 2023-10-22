@@ -41,7 +41,7 @@ const get_all_cloths = async (
   // Define conditions (for search and filter)
   const filterConditions = filter_cloth_conditions(filters) ?? {}
 
-  // Retrieve all cloth products based on the conditions
+  // Use the dynamic 'sortObject' in the 'orderBy' clause
   const allCloths = await prisma.products.findMany({
     where: filterConditions,
     orderBy: sortObject,
@@ -138,7 +138,7 @@ const get_cloths_details = async (id: string): Promise<Products | null> => {
 
 // Update cloths
 const update_cloth = async (
-  cloth_id: string,
+  id: string,
   cloth_data: Partial<Products>,
   user: JwtPayload
 ): Promise<Products | null> => {
@@ -150,8 +150,7 @@ const update_cloth = async (
     )
   }
 
-  // First, check if the product exists
-  const existingProductId = parseInt(cloth_id)
+  const existingProductId = parseInt(id)
   const existingProduct = await prisma.products.findUnique({
     where: {
       id: existingProductId,
@@ -163,7 +162,7 @@ const update_cloth = async (
   }
 
   // Now, update the product
-  const updateProductId = parseInt(cloth_id)
+  const updateProductId = parseInt(id)
   const updated_cloth_data = await prisma.products.update({
     where: {
       id: updateProductId,
@@ -176,7 +175,7 @@ const update_cloth = async (
 
 //  Delete cloth
 const delete_product = async (
-  cloth_id: string,
+  id: string,
   user: JwtPayload
 ): Promise<Products | null> => {
   // Check if the user is an admin
@@ -187,7 +186,7 @@ const delete_product = async (
     )
   }
 
-  const productId = parseInt(cloth_id)
+  const productId = parseInt(id)
   const product = await prisma.products.findUnique({
     where: {
       id: productId,
@@ -201,10 +200,14 @@ const delete_product = async (
     )
   }
 
-  // Perform the deletion operation here
-  // Add your logic to delete the product from the database
+  //delete the product from the database
+  const deletedProduct = await prisma.products.delete({
+    where: {
+      id: productId,
+    },
+  })
 
-  return product
+  return deletedProduct
 }
 
 export const ClothServices = {

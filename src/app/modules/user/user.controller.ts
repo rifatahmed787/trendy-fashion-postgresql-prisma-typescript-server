@@ -11,7 +11,7 @@ const allUsers = catchAsync(async (req: Request, res: Response) => {
     status_code: httpStatus.OK,
     success: true,
     data: result,
-    message: 'users retrieved successfully',
+    message: 'Users retrieved successfully',
   })
 })
 

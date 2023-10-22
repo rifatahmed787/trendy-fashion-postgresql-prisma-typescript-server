@@ -24,15 +24,12 @@ const createCloth = catchAsync(async (req: Request, res: Response) => {
 
 //  update product
 const updateCloth = catchAsync(async (req: Request, res: Response) => {
-  const { cloth_id } = req.params
+  const { id } = req.params
+
   const user_data = req.logged_in_user
 
   const { ...cloth_data } = req.body
-  const result = await ClothServices.update_cloth(
-    cloth_id,
-    cloth_data,
-    user_data
-  )
+  const result = await ClothServices.update_cloth(id, cloth_data, user_data)
 
   sendResponse(res, {
     status_code: httpStatus.OK,
@@ -107,9 +104,9 @@ const clothDetails = catchAsync(async (req: Request, res: Response) => {
 
 //  Delete cloth
 const deleteCloth = catchAsync(async (req: Request, res: Response) => {
-  const { cloth_id } = req.params
+  const { id } = req.params
   const user_data = req.logged_in_user
-  const result = await ClothServices.delete_product(cloth_id, user_data)
+  const result = await ClothServices.delete_product(id, user_data)
 
   sendResponse(res, {
     status_code: httpStatus.OK,

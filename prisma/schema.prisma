@@ -63,6 +63,7 @@ model Products {
   buyer               User? @relation(fields: [buyerId], references: [id])
   productReviews      ProductReview[]
   wishLists           WishList[]
+  createdAt  DateTime @default(now())
   
 }
 

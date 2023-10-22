@@ -17,7 +17,7 @@ router.post(
   ClothController.createCloth
 )
 
-router.get('/', ClothController.allCloths)
+router.get('/allcloths', ClothController.allCloths)
 router.get('/latest-ten', ClothController.latestTenCloths)
 router.get('/best-seller', ClothController.bestSellingCloths)
 router.get('/unique-filter-items', ClothController.uniqueFilteringData)

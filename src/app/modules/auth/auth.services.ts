@@ -85,7 +85,7 @@ const user_login = async (
 
   // Create an access token
   const accessToken = jwtHelper.create_token(
-    { id: user.id, email: user.email },
+    { id: user.id, email: user.email, role: user.role },
     config.jwt.access_token_secret as Secret,
     config.jwt.access_token_expiresIn as string
   )
