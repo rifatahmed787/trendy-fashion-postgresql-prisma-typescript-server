@@ -55,35 +55,35 @@ const addToWish = async (
 // Remove from wish list
 const removeFromWish = async (
   userId: number,
-  productId: number
+  id: number
 ): Promise<WishList | null> => {
   // User checking
-  const user = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  })
+  // const user = await prisma.wishList.findUnique({
+  //   where: {
+  //     id: userId,
+  //   },
+  // })
 
-  if (!user) {
-    throw new Error('User not found')
-  }
+  // if (!user) {
+  //   throw new Error('User not found')
+  // }
 
   // Product checking
-  const product = await prisma.products.findUnique({
-    where: {
-      id: productId,
-    },
-  })
+  // const product = await prisma.wishList.findUnique({
+  //   where: {
+  //     id: id,
+  //   },
+  // })
 
-  if (!product) {
-    throw new Error('Product not found')
-  }
+  // if (!product) {
+  //   throw new Error('Product not found')
+  // }
 
   // Check if the product is in the user's wish list
   const isInWishList = await prisma.wishList.findFirst({
     where: {
       userId,
-      productId,
+      productId: id,
     },
   })
 
@@ -95,13 +95,13 @@ const removeFromWish = async (
   const wishListId = isInWishList.id
 
   // Delete the product from the wish list using the wishListId
-  const remove = await prisma.wishList.delete({
+  const removedWish = await prisma.wishList.delete({
     where: {
       id: wishListId,
     },
   })
 
-  return remove
+  return removedWish
 }
 
 const getWishListByUserId = async (userId: number): Promise<WishList[]> => {
@@ -112,7 +112,6 @@ const getWishListByUserId = async (userId: number): Promise<WishList[]> => {
     },
     include: {
       product: true,
-      user: true,
     },
   })
 

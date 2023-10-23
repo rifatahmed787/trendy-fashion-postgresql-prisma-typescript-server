@@ -64,7 +64,6 @@ model Products {
   productReviews      ProductReview[]
   wishLists           WishList[]
   createdAt  DateTime @default(now())
-  
 }
 
 
