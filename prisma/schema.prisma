@@ -72,12 +72,12 @@ model Products {
 // product reviews
 model ProductReview {
   id           Int      @id @default(autoincrement())
-  rating       Int      // Numeric rating (e.g., 1-5 stars)
-  reviewText   String?  // Optional text review/comment
-  reviewDate   DateTime // Date and time the review was submitted
-  reviewer     User     @relation( fields: [reviewerId], references: [id]) // User who wrote the review
+  rating       Int      
+  reviewText   String?  
+  createdAt  DateTime @default(now()) 
+  reviewer     User     @relation( fields: [reviewerId], references: [id]) 
   reviewerId   Int
-  productId    Int      @map("product_id") // The ID of the product being reviewed
+  productId    Int      @map("product_id")
   review      Products  @relation(fields: [productId], references: [id])
 }
 

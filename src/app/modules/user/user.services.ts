@@ -33,6 +33,7 @@ const allUsers = async (): Promise<User[]> => {
   const users = await prisma.user.findMany({
     include: {
       address: true,
+      reviewProducts: true,
     },
   })
   return users

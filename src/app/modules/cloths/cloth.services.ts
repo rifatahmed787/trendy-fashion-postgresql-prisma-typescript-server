@@ -47,6 +47,9 @@ const get_all_cloths = async (
     orderBy: sortObject,
     skip: skip,
     take: limit,
+    include: {
+      productReviews: true,
+    },
   })
 
   // Get the total count of cloth products that match the conditions
@@ -69,6 +72,9 @@ const latest_ten_cloths = async (): Promise<Products[] | null> => {
   const latestCloths = await prisma.products.findMany({
     take: 10,
     orderBy: { id: 'desc' },
+    include: {
+      productReviews: true,
+    },
   })
 
   return latestCloths
@@ -86,6 +92,9 @@ const bestSellingCloths = async (): Promise<Products[] | null> => {
       productRating: 'desc',
     },
     take: 10,
+    include: {
+      productReviews: true,
+    },
   })
 
   return bestSellers
@@ -130,6 +139,9 @@ const get_cloths_details = async (id: string): Promise<Products | null> => {
   const clothDetails = await prisma.products.findUnique({
     where: {
       id: clothId,
+    },
+    include: {
+      productReviews: true,
     },
   })
 
