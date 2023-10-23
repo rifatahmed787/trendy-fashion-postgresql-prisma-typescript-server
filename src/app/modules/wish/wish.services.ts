@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PrismaClient, WishList } from '@prisma/client'
+import ApiError from '../../errors/ApiError'
+import httpStatus from 'http-status'
 
 const prisma = new PrismaClient()
 
@@ -15,7 +17,7 @@ const addToWish = async (
   })
 
   if (!user) {
-    throw new Error('User not found')
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found')
   }
 
   // Product checking
@@ -26,7 +28,7 @@ const addToWish = async (
   })
 
   if (!product) {
-    throw new Error('Product not found')
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found')
   }
 
   // Check if the product is already in the wish list
@@ -38,7 +40,7 @@ const addToWish = async (
   })
 
   if (isInWishList) {
-    throw new Error('Product is already in your wish list')
+    throw new ApiError(httpStatus.FOUND, 'Product is already in your wish list')
   }
 
   // Create a new wish list entry

@@ -22,6 +22,7 @@ model User {
   purchasedProducts Products[]
   reviewProducts ProductReview[]
   posts     Post[]
+   cartProducts       CartProduct[]
   wishLists    WishList[] 
   @@map("Users")
 }
@@ -63,6 +64,7 @@ model Products {
   buyer               User? @relation(fields: [buyerId], references: [id])
   productReviews      ProductReview[]
   wishLists           WishList[]
+  cartProducts       CartProduct[]
   createdAt  DateTime @default(now())
 }
 
@@ -81,23 +83,15 @@ model ProductReview {
 
 
 // cart model
-
-model Cart {
-  id        Int      @id @default(autoincrement())
-  userId    Int      // Foreign key to associate the cart with a user
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  products  CartProduct[]
-}
-
 model CartProduct {
-  id         Int     @id @default(autoincrement())
-  cartId     Int
-  productId  Int     // Foreign key to associate the product with the cart
-  quantity   Int     // The quantity of the product in the cart
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  cart Cart? @relation(fields: [cartId], references: [id])
+  id                 Int      @id @default(autoincrement())
+  userId             Int
+  user               User     @relation(fields: [userId], references: [id])
+  productId          Int
+  product            Products @relation(fields: [productId], references: [id])
+  quantity           Int
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 
