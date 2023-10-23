@@ -20,33 +20,35 @@ const addToCart = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-// getBookReviews
-// const getCart = catchAsync(async (req: Request, res: Response) => {
-//   const result = await CartServices.get_cart_by_user_id(
-//     req.logged_in_user?._id as string
-//   )
+// get all cart data
+const getCart = catchAsync(async (req: Request, res: Response) => {
+  const result = await CartServices.get_cart_by_user_id(req.logged_in_user?._id)
 
-//   sendResponse<ICart[], null>(res, {
-//     status_code: httpStatus.OK,
-//     success: true,
-//     data: result,
-//     message: 'Cart data retrieve successfully',
-//   })
-// })
+  sendResponse<CartProduct[], null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Cart data retrieve successfully',
+  })
+})
 
-// delete from review
-// const removeFromCart = catchAsync(async (req: Request, res: Response) => {
-//   const { ...cart_data } = req.body
-//   const result = await CartServices.remove_from_cart(cart_data)
+// delete from cart
+const removeFromCart = catchAsync(async (req: Request, res: Response) => {
+  const { ...cart_data } = req.body
+  const userId = req.logged_in_user.id
+  // console.log(cart_data.id, userId)
+  const result = await CartServices.remove_from_cart(userId, cart_data.id)
 
-//   sendResponse<ICart, null>(res, {
-//     status_code: httpStatus.OK,
-//     success: true,
-//     data: result,
-//     message: 'Book removed from your cart successfully !',
-//   })
-// })
+  sendResponse<CartProduct, null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Product removed from your cart successfully !',
+  })
+})
 
 export const CartController = {
   addToCart,
+  getCart,
+  removeFromCart,
 }

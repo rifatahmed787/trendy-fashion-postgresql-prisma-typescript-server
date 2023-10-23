@@ -13,13 +13,8 @@ router.post(
   CartController.addToCart
 )
 
-// router.get('/', authHandler(), CartController.getCart)
+router.get('/cartdata', authHandler(), CartController.getCart)
 
-// router.delete(
-//   '/:id',
-//   requestValidationHandler(cart_zod_schema),
-//   authHandler(),
-//   CartController.removeFromCart
-// )
+router.delete('/:id', authHandler(), CartController.removeFromCart)
 
 export const CartRoute = router

@@ -65,53 +65,65 @@ const add_to_cart = async (
   return createdCart
 }
 
-// Remove from wish list
-// const remove_from_cart = async (cart_data: ICart): Promise<ICart | null> => {
-//   // User checking
-//   const isUserExist: IUser | null = await User.isUserExistByID(
-//     cart_data?.user_id as Types.ObjectId
-//   )
-
-//   if (!isUserExist) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found')
-//   }
-
-//   // book checking checking
-//   const isBookExist = await Book.findById(cart_data.book_id)
-
-//   if (!isBookExist) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Book not found')
-//   }
-
-//   //  reading list cheking
-//   const isInRedingList = await Cart.findOne({
-//     book_id: cart_data?.book_id,
-//     user_id: cart_data?.user_id,
-//   })
-
-//   if (!isInRedingList) {
-//     throw new ApiError(
-//       httpStatus.NOT_FOUND,
-//       'Already removed from your wishlist'
-//     )
-//   }
-
-//   const remove_cart = await Cart.findByIdAndDelete(cart_data?._id)
-
-//   return remove_cart
-// }
-
 // get_cart_by_id
-// const get_cart_by_user_id = async (
-//   user_id: string
-// ): Promise<ICart[] | null> => {
-//   const user_cart = await Cart.find({ user_id: user_id })
-//     .populate('book_id')
-//     .populate('user_id')
+const get_cart_by_user_id = async (
+  user_id: number
+): Promise<CartProduct[] | null> => {
+  const user_cart = await prisma.cartProduct.findMany({
+    where: {
+      userId: user_id,
+    },
+    include: {
+      product: true,
+    },
+  })
 
-//   return user_cart
-// }
+  return user_cart
+}
+
+// Remove from wish list
+const remove_from_cart = async (
+  userId: number,
+  id: number
+): Promise<CartProduct | null> => {
+  // Check if the product is in the user's cart
+  const isInCartList = await prisma.cartProduct.findFirst({
+    where: {
+      userId,
+      id,
+    },
+  })
+
+  if (!isInCartList) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product is not in your cart')
+  }
+
+  if (isInCartList.quantity === 1) {
+    // If the quantity is 1, remove the entire cart entry
+    const removedCart = await prisma.cartProduct.delete({
+      where: {
+        id: isInCartList.id,
+      },
+    })
+
+    return removedCart
+  } else {
+    // If the quantity is greater than 1, decrement the quantity by 1
+    const updatedCart = await prisma.cartProduct.update({
+      where: {
+        id: isInCartList.id,
+      },
+      data: {
+        quantity: isInCartList.quantity - 1,
+      },
+    })
+
+    return updatedCart
+  }
+}
 
 export const CartServices = {
   add_to_cart,
+  get_cart_by_user_id,
+  remove_from_cart,
 }
