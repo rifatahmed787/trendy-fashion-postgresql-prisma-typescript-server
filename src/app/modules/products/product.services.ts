@@ -1,12 +1,12 @@
 import { pagination_map } from '../../../helpers/pagination'
 import { GenericResponse } from '../../../interfaces/common'
 import { IPagination } from '../../../interfaces/pagination'
-import { filter_cloth_conditions } from './cloth.condition'
+import { filter_cloth_conditions } from './product.condition'
 import ApiError from '../../errors/ApiError'
 import {
   IClothFilter,
   IClothFilteringItems as IClothUniqueFilteringItems,
-} from './cloth.interface'
+} from './product.interface'
 import httpStatus from 'http-status'
 import { Products, PrismaClient } from '@prisma/client'
 import { JwtPayload } from 'jsonwebtoken'
@@ -123,7 +123,7 @@ const get__unique_filtering_items =
     }
   }
 
-//cloths detail
+//products detail
 const get_cloths_details = async (id: string): Promise<Products | null> => {
   const clothId = parseInt(id)
   const isExist = await prisma.products.findUnique({

@@ -4,9 +4,9 @@ import requestValidationHandler from '../../middlewares/requestValidationHandler
 import {
   create_cloth_zod_schema,
   update_cloth_zod_schema,
-} from './cloth.validation'
+} from './product.validation'
 import authHandler from '../../middlewares/authHandler'
-import { ClothController } from './cloth.controller'
+import { ClothController } from './product.controller'
 
 const router = express.Router()
 
@@ -17,7 +17,7 @@ router.post(
   ClothController.createCloth
 )
 
-router.get('/allcloths', ClothController.allCloths)
+router.get('/allproducts', ClothController.allCloths)
 router.get('/latest-ten', ClothController.latestTenCloths)
 router.get('/best-seller', ClothController.bestSellingCloths)
 router.get('/unique-filter-items', ClothController.uniqueFilteringData)

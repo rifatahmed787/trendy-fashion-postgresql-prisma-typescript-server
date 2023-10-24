@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { cloth_search_condition_keys } from './cloth.constant'
-import { IClothFilter } from './cloth.interface'
+import { cloth_search_condition_keys } from './product.constant'
+import { IClothFilter } from './product.interface'
 
 export const filter_cloth_conditions = (
   filers: IClothFilter

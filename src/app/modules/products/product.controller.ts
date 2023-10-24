@@ -4,9 +4,9 @@ import catchAsync from '../../../shared/catchAsync'
 import sendResponse from '../../../shared/sendResponse'
 
 import pick from '../../../shared/pick'
-import { book_filter_keys } from './cloth.constant'
+import { book_filter_keys } from './product.constant'
 import { pagination_keys } from '../../../constant/common'
-import { ClothServices } from './cloth.services'
+import { ClothServices } from './product.services'
 
 // Create cloth
 const createCloth = catchAsync(async (req: Request, res: Response) => {
