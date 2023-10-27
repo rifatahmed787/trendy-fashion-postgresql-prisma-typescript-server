@@ -5,7 +5,7 @@ export const cloth_search_condition_keys = [
   'age',
 ]
 
-export const book_filter_keys = [
+export const product_filter_keys = [
   'productName',
   'productCategory',
   'productGender',

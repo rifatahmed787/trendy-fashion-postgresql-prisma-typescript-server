@@ -14,7 +14,7 @@ export const pagination_map = (
   const skip = (page - 1) * limit
 
   const sortBy = pagination_data.sortBy || 'createdAt'
-  const sortOrder: Prisma.SortOrder = pagination_data.sortOrder || 'desc' // Ensure sortOrder is of type Prisma.SortOrder
+  const sortOrder: Prisma.SortOrder = pagination_data.sortOrder || 'desc'
 
   const sortObject = { [sortBy]: sortOrder }
 

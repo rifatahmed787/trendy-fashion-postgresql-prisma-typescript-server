@@ -4,7 +4,7 @@ import catchAsync from '../../../shared/catchAsync'
 import sendResponse from '../../../shared/sendResponse'
 
 import pick from '../../../shared/pick'
-import { book_filter_keys } from './product.constant'
+import { product_filter_keys } from './product.constant'
 import { pagination_keys } from '../../../constant/common'
 import { ClothServices } from './product.services'
 
@@ -41,7 +41,7 @@ const updateCloth = catchAsync(async (req: Request, res: Response) => {
 
 //  Get all cloth
 const allCloths = catchAsync(async (req: Request, res: Response) => {
-  const filers = pick(req.query, book_filter_keys)
+  const filers = pick(req.query, product_filter_keys)
   const pagination = pick(req.query, pagination_keys)
 
   const result = await ClothServices.get_all_cloths(filers, pagination)

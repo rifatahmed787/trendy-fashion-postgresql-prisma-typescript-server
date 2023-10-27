@@ -12,13 +12,14 @@ const fileUploadMiddleware = (
       'image/jpeg',
       'image/png',
       'image/jpg',
+      'image/webp',
       'application/pdf',
       'application/msword',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'application/vnd.ms-excel',
     ],
     errorMessage:
-      'Only .jpg, .jpeg, .png, .pdf, .doc, .docx, .xls format allowed!',
+      'Only .jpg, .jpeg, .png, .pdf, webp, .doc, .docx, .xls format allowed!',
     maxFileSize: 1024 * 1024 * 10, // 5MB
   })
 

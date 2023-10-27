@@ -199,9 +199,16 @@ const delete_product = async (
   }
 
   const productId = parseInt(id)
+
+  // Check if the product exists
   const product = await prisma.products.findUnique({
     where: {
       id: productId,
+    },
+    include: {
+      productReviews: true,
+      wishLists: true,
+      cartProducts: true,
     },
   })
 
@@ -212,7 +219,26 @@ const delete_product = async (
     )
   }
 
-  //delete the product from the database
+  // Delete related data
+  await prisma.productReview.deleteMany({
+    where: {
+      productId: productId,
+    },
+  })
+
+  await prisma.wishList.deleteMany({
+    where: {
+      productId,
+    },
+  })
+
+  await prisma.cartProduct.deleteMany({
+    where: {
+      productId,
+    },
+  })
+
+  // Delete the product
   const deletedProduct = await prisma.products.delete({
     where: {
       id: productId,

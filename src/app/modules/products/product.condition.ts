@@ -28,6 +28,10 @@ export const filter_cloth_conditions = (
           return { productName: { $regex: '^' + value } }
         } else if (key === 'productCategory') {
           return { productCategory: new RegExp(`\\b${value}\\b`, 'i') }
+        } else if (key === 'productGender') {
+          return { productGender: new RegExp(`\\b${value}\\b`, 'i') }
+        } else if (key === 'age') {
+          return { age: new RegExp(`\\b${value}\\b`, 'i') }
         } else {
           return { [key]: value }
         }
