@@ -1,5 +1,5 @@
 export type generic_error_type = {
-  path: string | number
+  path?: string | number
   message: string
 }
 

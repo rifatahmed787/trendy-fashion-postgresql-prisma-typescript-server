@@ -6,7 +6,7 @@ import { ZodError } from 'zod'
 import HandleZodValidationError from '../errors/HandleZodValidationError'
 import { handleCastError } from '../errors/HandleCastError'
 
-const global_error_handler: ErrorRequestHandler = (error, req, res) => {
+const global_error_handler: ErrorRequestHandler = async (error, req, res) => {
   let status_code = 500
   let message = 'Something went wrong'
   let errorMessages: generic_error_type[] = []
@@ -23,9 +23,9 @@ const global_error_handler: ErrorRequestHandler = (error, req, res) => {
     errorMessages = z_validation_error.errorMessages
   } else if (error?.name === 'CastError') {
     const cast_error = handleCastError(error)
-    status_code = cast_error.status_code
-    message = cast_error.message
-    errorMessages = cast_error.errorMessages
+    status_code = (await cast_error).status_code
+    message = (await cast_error).message
+    errorMessages = (await cast_error).errorMessages
   } else if (error instanceof ApiError) {
     status_code = error.statusCode
     message = 'Api Connection error'

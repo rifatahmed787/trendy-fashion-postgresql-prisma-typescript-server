@@ -12,33 +12,34 @@ datasource db {
 // user model
 
 model User {
-  id       Int      @id @default(autoincrement())
+  id       Int          @id @default(autoincrement())
   username String   
-  email    String   @unique
+  email    String       @unique
   password String
   avatar String?
-  role String @default("user")
+  role String           @default("user")
   address Address?
-  purchasedProducts Products[]
-  reviewProducts ProductReview[]
-  posts     Post[]
-   cartProducts       CartProduct[]
-  wishLists    WishList[] 
+  purchasedProducts     Products[]
+  reviewProducts        ProductReview[]
+  posts                 Post[]
+  cartProducts          CartProduct[]
+  wishLists             WishList[] 
   @@map("Users")
 }
 
 model Address {
-  id Int @id @default(autoincrement())
+  id Int                 @id @default(autoincrement())
+  //  id String          @id @default(uuid())
   street_address String
   city String
   postal_code String
   country String
   phone_number String
   district_name String
-  address_id Int  @unique
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  user User @relation(fields: [address_id], references: [id])
+  address_id Int         @unique
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  user User              @relation(fields: [address_id], references: [id])
 }
 
 
