@@ -24,6 +24,7 @@ const create_new_cloth = async (
       'Only admin users can create products'
     )
   }
+
   const created_cloth = await prisma.products.create({
     data: cloth_data,
   })

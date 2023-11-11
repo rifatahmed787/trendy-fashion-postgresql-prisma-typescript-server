@@ -26,7 +26,7 @@ const authHandler =
         token,
         config.jwt.access_token_secret as Secret
       )
-      const { id, email } = decoded_user
+      const { id, email, role } = decoded_user
 
       // set in req
       req.logged_in_user = decoded_user
@@ -41,9 +41,12 @@ const authHandler =
       }
 
       // // check if the user has the required role
-      // if (!user_roles.includes(role)) {
-      //   throw new ApiError(httpStatus.FORBIDDEN, 'forbidden')
-      // }
+      if (role !== 'admin') {
+        throw new ApiError(
+          httpStatus.FORBIDDEN,
+          'Only admin users can create accordions'
+        )
+      }
 
       next()
     } catch (error) {

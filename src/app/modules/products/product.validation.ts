@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const create_cloth_zod_schema = z.object({
   body: z.object({
     productName: z.string({ required_error: 'Name is required' }),
-    productColor: z.string({ required_error: 'Color is required' }),
+    productColor: z.array(z.string({ required_error: 'Color is required' })),
     productQuality: z.string({ required_error: 'Quality is required' }),
     productSize: z.array(z.string({ required_error: 'Size is required' })),
     productRating: z.number({ required_error: 'Ratings is required' }),
@@ -14,7 +14,7 @@ export const create_cloth_zod_schema = z.object({
     productImage: z.array(z.string({ required_error: 'Image is required' })),
     productCategory: z.string({ required_error: 'Category is required' }),
     productGender: z.string({ required_error: 'Gender is required' }),
-    age: z.string({ required_error: 'Age is required' }),
+    age: z.array(z.string({ required_error: 'Age is required' })),
     productSpecification: z.array(
       z.string({ required_error: 'Specification is required' })
     ),

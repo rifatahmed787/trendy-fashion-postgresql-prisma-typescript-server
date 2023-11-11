@@ -4,7 +4,7 @@ import httpStatus from 'http-status'
 
 const prisma = new PrismaClient()
 
-// Create new user
+// Create new review
 const post_review = async (
   review_data: ProductReview,
   reviewerId: number
