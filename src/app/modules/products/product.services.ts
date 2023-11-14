@@ -105,23 +105,20 @@ const bestSellingCloths = async (): Promise<Products[] | null> => {
 const get__unique_filtering_items =
   async (): Promise<GenericResponse<IClothUniqueFilteringItems> | null> => {
     // and conditions (for search and filter)
-    const distinctAges = await prisma.products.groupBy({
-      by: ['age'],
+    const distinctGender = await prisma.products.groupBy({
+      by: ['productGender'],
     })
 
     const distinctCategories = await prisma.products.groupBy({
       by: ['productCategory'],
     })
 
-    const allAges = distinctAges.map(item => item.age).flat() as (
-      | string
-      | null
-    )[]
+    const allGender = distinctGender.map(item => item.productGender)
     const allCategories = distinctCategories.map(item => item.productCategory)
 
     return {
       data: {
-        all_age: allAges,
+        all_gender: allGender,
         all_category: allCategories,
       },
     }
