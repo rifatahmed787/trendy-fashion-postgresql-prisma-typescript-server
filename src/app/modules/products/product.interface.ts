@@ -2,7 +2,7 @@ export type IClothFilter = {
   productName?: string
   productCategory?: string
   productGender?: string
-  age?: string
+  age?: string[]
   searchTerm?: string
 }
 

@@ -1,7 +1,7 @@
 import express, { Application } from 'express'
 import cors from 'cors'
 import { PrismaClient } from '@prisma/client'
-import AllRoutes from './routes/index'
+import AllRoutes from './routes/router'
 import swaggerUi from 'swagger-ui-express'
 import swaggerConfig from './swaggerConfig'
 import cookieParser from 'cookie-parser'

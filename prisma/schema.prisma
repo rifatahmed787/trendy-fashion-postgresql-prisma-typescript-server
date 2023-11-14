@@ -134,8 +134,8 @@ model ProductAccordian {
   id        Int      @id @default(autoincrement())
   question  String
   answer    String
+  category String
 }
-
 
 
 // blog post model

@@ -71,7 +71,7 @@ const get_all_cloths = async (
 //  latestTenCloths
 const latest_ten_cloths = async (): Promise<Products[] | null> => {
   const latestCloths = await prisma.products.findMany({
-    take: 10,
+    take: 50,
     orderBy: { id: 'desc' },
     include: {
       productReviews: true,
@@ -113,7 +113,10 @@ const get__unique_filtering_items =
       by: ['productCategory'],
     })
 
-    const allAges = distinctAges.map(item => item.age)
+    const allAges = distinctAges.map(item => item.age).flat() as (
+      | string
+      | null
+    )[]
     const allCategories = distinctCategories.map(item => item.productCategory)
 
     return {

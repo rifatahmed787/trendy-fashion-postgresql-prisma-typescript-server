@@ -1,12 +1,15 @@
-import { ErrorRequestHandler } from 'express'
+import { ErrorRequestHandler, Request, Response } from 'express'
 import { generic_error_type } from '../../interfaces/error'
 import { handleValidationError } from '../errors/HandleValidationError'
 import ApiError from '../errors/ApiError'
 import { ZodError } from 'zod'
 import HandleZodValidationError from '../errors/HandleZodValidationError'
-import { handleCastError } from '../errors/HandleCastError'
 
-const global_error_handler: ErrorRequestHandler = async (error, req, res) => {
+const global_error_handler: ErrorRequestHandler = async (
+  error,
+  req: Request,
+  res: Response
+) => {
   let status_code = 500
   let message = 'Something went wrong'
   let errorMessages: generic_error_type[] = []
@@ -21,11 +24,6 @@ const global_error_handler: ErrorRequestHandler = async (error, req, res) => {
     status_code = z_validation_error.status_code
     message = z_validation_error.message
     errorMessages = z_validation_error.errorMessages
-  } else if (error?.name === 'CastError') {
-    const cast_error = handleCastError(error)
-    status_code = (await cast_error).status_code
-    message = (await cast_error).message
-    errorMessages = (await cast_error).errorMessages
   } else if (error instanceof ApiError) {
     status_code = error.statusCode
     message = 'Api Connection error'
@@ -34,6 +32,7 @@ const global_error_handler: ErrorRequestHandler = async (error, req, res) => {
     message = 'Internal error'
     errorMessages = error.message ? [{ path: '', message: error.message }] : []
   }
+  console.log('Response object:', res)
   res.status(status_code).json({
     success: false,
     message,

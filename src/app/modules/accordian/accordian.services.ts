@@ -1,7 +1,7 @@
-import { PrismaClient, ProductAccordian } from '@prisma/client'
 import { JwtPayload } from 'jsonwebtoken'
 import ApiError from '../../errors/ApiError'
 import httpStatus from 'http-status'
+import { PrismaClient, ProductAccordian } from '@prisma/client'
 
 const prisma = new PrismaClient({ errorFormat: 'minimal' })
 // create accordian for products
@@ -15,7 +15,6 @@ const createProductAccordian = async (
       'Only admin can add the accordian.'
     )
   }
-  console.log(accordian_data)
   const created_product_accordian = await prisma.productAccordian.create({
     data: accordian_data,
   })

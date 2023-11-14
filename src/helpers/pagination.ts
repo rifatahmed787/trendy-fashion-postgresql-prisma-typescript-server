@@ -10,7 +10,7 @@ export const pagination_map = (
   pagination_data: Partial<IPagination>
 ): IPaginationMap => {
   const page = Number(pagination_data.page || 1)
-  const limit = Number(pagination_data.limit || 30)
+  const limit = Number(pagination_data.limit || 10)
   const skip = (page - 1) * limit
 
   const sortBy = pagination_data.sortBy || 'createdAt'

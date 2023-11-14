@@ -1,37 +1,33 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cloth_search_condition_keys } from './product.constant'
 import { IClothFilter } from './product.interface'
 
 export const filter_cloth_conditions = (
-  filers: IClothFilter
-): { [key: string]: Array<Record<string, any>> } | undefined => {
-  const { searchTerm, ...filter_keys } = filers
+  filters: IClothFilter
+): { [key: string]: unknown } | undefined => {
+  const { searchTerm, ...filter_keys } = filters // Remove 'age' from destructuring
 
   const conditions = []
 
   if (searchTerm) {
     conditions.push({
-      $or: cloth_search_condition_keys.map(item => ({
+      OR: cloth_search_condition_keys.map(item => ({
         [item]: {
-          $regex: searchTerm,
-          $options: 'i',
+          contains: searchTerm,
+          mode: 'insensitive',
         },
       })),
     })
   }
 
-  //
   if (Object.keys(filter_keys).length) {
     conditions.push({
-      $and: Object.entries(filter_keys).map(([key, value]) => {
+      AND: Object.entries(filter_keys).map(([key, value]) => {
         if (key === 'productName') {
-          return { productName: { $regex: '^' + value } }
+          return { productName: { startsWith: value } }
         } else if (key === 'productCategory') {
-          return { productCategory: new RegExp(`\\b${value}\\b`, 'i') }
+          return { productCategory: { contains: value, mode: 'insensitive' } }
         } else if (key === 'productGender') {
-          return { productGender: new RegExp(`\\b${value}\\b`, 'i') }
-        } else if (key === 'age') {
-          return { age: new RegExp(`\\b${value}\\b`, 'i') }
+          return { productGender: { contains: value, mode: 'insensitive' } }
         } else {
           return { [key]: value }
         }
@@ -39,5 +35,5 @@ export const filter_cloth_conditions = (
     })
   }
 
-  return conditions?.length > 0 ? { $and: conditions } : undefined
+  return conditions?.length > 0 ? { AND: conditions } : undefined
 }
