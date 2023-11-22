@@ -12,14 +12,16 @@ const prisma = new PrismaClient()
 // user signup
 const user_signup = async (user_data: User): Promise<UserWithResponse> => {
   const hashedPassword = await bcrypt.hash(user_data.password, 10)
-
+  const avatar =
+    user_data.avatar ||
+    'https://res.cloudinary.com/dztlowlu0/image/upload/v1700031261/avatar_ylo9mt.png'
   const created_user = await prisma.user.create({
     data: {
       username: user_data.username,
       email: user_data.email,
       password: hashedPassword,
       role: user_data.role,
-      avatar: user_data.avatar,
+      avatar: avatar,
     },
   })
 

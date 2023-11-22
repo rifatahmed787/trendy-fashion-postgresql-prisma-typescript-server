@@ -44,7 +44,7 @@ const post_review = async (
   return createdReview
 }
 
-// get_reviews_by_id
+// get_review
 
 export const ReviewServices = {
   post_review,

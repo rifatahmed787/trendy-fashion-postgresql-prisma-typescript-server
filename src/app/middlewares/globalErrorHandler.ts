@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorRequestHandler, Request, Response } from 'express'
 import { generic_error_type } from '../../interfaces/error'
 import { handleValidationError } from '../errors/HandleValidationError'
@@ -8,7 +9,8 @@ import HandleZodValidationError from '../errors/HandleZodValidationError'
 const global_error_handler: ErrorRequestHandler = async (
   error,
   req: Request,
-  res: Response
+  res: Response,
+  next
 ) => {
   let status_code = 500
   let message = 'Something went wrong'
@@ -32,7 +34,7 @@ const global_error_handler: ErrorRequestHandler = async (
     message = 'Internal error'
     errorMessages = error.message ? [{ path: '', message: error.message }] : []
   }
-  console.log('Response object:', res)
+
   res.status(status_code).json({
     success: false,
     message,

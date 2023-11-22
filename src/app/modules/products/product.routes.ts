@@ -23,6 +23,7 @@ router.get('/best-seller', ClothController.bestSellingCloths)
 router.get('/unique-filter-items', ClothController.uniqueFilteringData)
 
 router.get('/:id', ClothController.clothDetails)
+router.get('/:productId/relatedProducts', ClothController.getRelatedProducts)
 
 router.patch(
   '/:id',

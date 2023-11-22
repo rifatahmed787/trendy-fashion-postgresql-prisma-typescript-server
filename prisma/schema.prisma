@@ -16,7 +16,7 @@ model User {
   username String   
   email    String       @unique
   password String
-  avatar String?
+  avatar String         @default("https://res.cloudinary.com/dztlowlu0/image/upload/v1700031261/avatar_ylo9mt.png")
   role String           @default("user")
   address Address?
   purchasedProducts     Products[]

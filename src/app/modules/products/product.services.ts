@@ -124,29 +124,59 @@ const get__unique_filtering_items =
     }
   }
 
-//products detail
+//products details
 const get_cloths_details = async (id: string): Promise<Products | null> => {
   const clothId = parseInt(id)
-  const isExist = await prisma.products.findUnique({
-    where: {
-      id: clothId,
-    },
-  })
-
-  if (!isExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Cloth not found')
-  }
 
   const clothDetails = await prisma.products.findUnique({
     where: {
       id: clothId,
     },
     include: {
-      productReviews: true,
+      productReviews: {
+        include: {
+          reviewer: {
+            select: {
+              id: true,
+              username: true,
+              avatar: true,
+            },
+          },
+        },
+      },
     },
   })
 
+  if (!clothDetails) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cloth not found')
+  }
+
   return clothDetails
+}
+
+//relatedproducts
+const getRelatedProducts = async (productId: string): Promise<Products[]> => {
+  const mainProductDetails = await prisma.products.findUnique({
+    where: {
+      productId: productId,
+    },
+  })
+
+  if (!mainProductDetails) {
+    throw new Error('Main product not found')
+  }
+
+  const relatedProductIds = mainProductDetails.relatedProducts
+
+  const relatedProducts = await prisma.products.findMany({
+    where: {
+      productId: {
+        in: relatedProductIds,
+      },
+    },
+  })
+
+  return relatedProducts
 }
 
 // Update cloths
@@ -254,6 +284,7 @@ export const ClothServices = {
   update_cloth,
   get_all_cloths,
   get_cloths_details,
+  getRelatedProducts,
   delete_product,
   get__unique_filtering_items,
   latest_ten_cloths,

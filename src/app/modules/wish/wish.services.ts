@@ -73,7 +73,7 @@ const removeFromWish = async (
   // Product checking
   // const product = await prisma.wishList.findUnique({
   //   where: {
-  //     id: id,
+  //     id,
   //   },
   // })
 
@@ -85,7 +85,7 @@ const removeFromWish = async (
   const isInWishList = await prisma.wishList.findFirst({
     where: {
       userId,
-      productId: id,
+      id,
     },
   })
 

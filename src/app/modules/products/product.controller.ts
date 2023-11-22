@@ -102,6 +102,19 @@ const clothDetails = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const getRelatedProducts = catchAsync(async (req: Request, res: Response) => {
+  const { productId } = req.params
+
+  const relatedProducts = await ClothServices.getRelatedProducts(productId)
+
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: relatedProducts,
+    message: 'Data retrieve successfully',
+  })
+})
+
 //  Delete cloth
 const deleteCloth = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params
@@ -125,4 +138,5 @@ export const ClothController = {
   uniqueFilteringData,
   latestTenCloths,
   bestSellingCloths,
+  getRelatedProducts,
 }

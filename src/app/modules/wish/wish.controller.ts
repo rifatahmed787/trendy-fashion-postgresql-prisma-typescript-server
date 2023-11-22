@@ -24,7 +24,7 @@ const addToWish = catchAsync(async (req: Request, res: Response) => {
 const removeFromWish = catchAsync(async (req: Request, res: Response) => {
   const { ...wish_data } = req.body
   const userId = req.logged_in_user.id
-  const result = await WishServices.removeFromWish(userId, wish_data)
+  const result = await WishServices.removeFromWish(userId, wish_data.id)
 
   sendResponse(res, {
     status_code: httpStatus.OK,
