@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "CartProduct" ADD COLUMN     "totalPrice" DOUBLE PRECISION NOT NULL DEFAULT 0.0,
+ALTER COLUMN "quantity" SET DEFAULT 1;
+
+-- AlterTable
+ALTER TABLE "Products" ADD COLUMN     "quantity" INTEGER NOT NULL DEFAULT 1;

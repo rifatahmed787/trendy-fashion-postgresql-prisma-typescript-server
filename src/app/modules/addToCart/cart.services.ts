@@ -40,17 +40,10 @@ const add_to_cart = async (
   })
 
   if (isInCart) {
-    // Product is already in the cart, increment the quantity
-    const updatedCart = await prisma.cartProduct.update({
-      where: {
-        id: isInCart.id,
-      },
-      data: {
-        quantity: isInCart.quantity + 1,
-      },
-    })
-
-    return updatedCart
+    throw new ApiError(
+      httpStatus.NOT_ACCEPTABLE,
+      'Product is already in cart, update quantity from cart'
+    )
   }
 
   // Product is not in the cart, create a new entry with quantity 1
@@ -79,6 +72,44 @@ const get_cart_by_user_id = async (
   })
 
   return user_cart
+}
+
+// cartService.ts
+const update_quantity = async (
+  userId: number,
+  id: string,
+  quantity: number
+  // totalPrice: number
+): Promise<CartProduct | null> => {
+  // Find the cart entry
+
+  const existingCartId = parseInt(id)
+  const existingCartProduct = await prisma.cartProduct.findFirst({
+    where: {
+      userId,
+      id: existingCartId,
+    },
+    include: {
+      product: true,
+    },
+  })
+
+  if (!existingCartProduct) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart entry not found')
+  }
+
+  // Update quantity and total price
+  const updatedCart = await prisma.cartProduct.update({
+    where: {
+      id: existingCartProduct.id,
+    },
+    data: {
+      quantity,
+      // totalPrice,
+    },
+  })
+
+  return updatedCart
 }
 
 // Remove from wish list
@@ -126,4 +157,5 @@ export const CartServices = {
   add_to_cart,
   get_cart_by_user_id,
   remove_from_cart,
+  update_quantity,
 }

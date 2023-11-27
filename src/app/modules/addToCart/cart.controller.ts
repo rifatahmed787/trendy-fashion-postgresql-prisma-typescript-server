@@ -32,6 +32,28 @@ const getCart = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+// cartController.ts
+const updateQuantity = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const { quantity } = req.body
+
+  const userId = req.logged_in_user.id
+
+  const result = await CartServices.update_quantity(
+    userId,
+    id,
+    quantity
+    // totalPrice
+  )
+
+  sendResponse<CartProduct, null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Quantity and Total price updated successfully',
+  })
+})
+
 // delete from cart
 const removeFromCart = catchAsync(async (req: Request, res: Response) => {
   const { ...cart_data } = req.body
@@ -51,4 +73,5 @@ export const CartController = {
   addToCart,
   getCart,
   removeFromCart,
+  updateQuantity,
 }

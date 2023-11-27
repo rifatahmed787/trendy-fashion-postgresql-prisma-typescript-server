@@ -15,6 +15,8 @@ router.post(
 
 router.get('/cartdata', authHandler(), CartController.getCart)
 
+router.patch('/:id', authHandler(), CartController.updateQuantity)
+
 router.delete('/:id', authHandler(), CartController.removeFromCart)
 
 export const CartRoute = router
