@@ -1,4 +1,4 @@
-export const user_role = ['user', 'admin']
+export const user_role = ['USER', 'ADMIN']
 
 export const pagination_keys = ['page', 'limit', 'sortBy', 'sortOrder']
 

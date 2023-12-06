@@ -9,7 +9,7 @@ const createProductAccordian = async (
   accordian_data: ProductAccordian,
   user_data: JwtPayload
 ): Promise<ProductAccordian | null> => {
-  if (user_data?.role !== 'admin') {
+  if (user_data?.role !== 'ADMIN') {
     throw new ApiError(
       httpStatus.FORBIDDEN,
       'Only admin can add the accordian.'

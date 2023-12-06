@@ -18,7 +18,7 @@ const create_new_cloth = async (
   user: JwtPayload
 ): Promise<Products | null> => {
   // Check if the user is an admin
-  if (user.role !== 'admin') {
+  if (user.role !== 'ADMIN') {
     throw new ApiError(
       httpStatus.FORBIDDEN,
       'Only admin users can create products'
@@ -186,7 +186,7 @@ const update_cloth = async (
   user: JwtPayload
 ): Promise<Products | null> => {
   // Check if the user is an admin or has the necessary permissions
-  if (user.role !== 'admin') {
+  if (user.role !== 'ADMIN') {
     throw new ApiError(
       httpStatus.FORBIDDEN,
       'You do not have permission to update products'
@@ -222,7 +222,7 @@ const delete_product = async (
   user: JwtPayload
 ): Promise<Products | null> => {
   // Check if the user is an admin
-  if (user.role !== 'admin') {
+  if (user.role !== 'ADMIN') {
     throw new ApiError(
       httpStatus.FORBIDDEN,
       'Only admin users can delete products'

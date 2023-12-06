@@ -39,12 +39,7 @@ const updateQuantity = catchAsync(async (req: Request, res: Response) => {
 
   const userId = req.logged_in_user.id
 
-  const result = await CartServices.update_quantity(
-    userId,
-    id,
-    quantity
-    // totalPrice
-  )
+  const result = await CartServices.update_quantity(userId, id, quantity)
 
   sendResponse<CartProduct, null>(res, {
     status_code: httpStatus.OK,
@@ -69,9 +64,22 @@ const removeFromCart = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const clear_cart = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.logged_in_user.id
+  const deletedCartProducts = await CartServices.clear_cart(userId)
+
+  sendResponse<CartProduct[], null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: deletedCartProducts,
+    message: 'Cart cleared successfully',
+  })
+})
+
 export const CartController = {
   addToCart,
   getCart,
   removeFromCart,
   updateQuantity,
+  clear_cart,
 }

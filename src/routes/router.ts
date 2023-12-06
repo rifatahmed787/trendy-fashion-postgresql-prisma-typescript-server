@@ -5,9 +5,9 @@ import { UploadRoute } from '../app/modules/cloudinary/upload.route'
 import { ClothRoute } from '../app/modules/products/product.routes'
 import { ReviewRoute } from '../app/modules/review/review.route'
 import { WishRoute } from '../app/modules/wish/wish.route'
-// import { ReadingRoute } from '../app/modules/reading/reading.route'
-import { CartRoute } from '../app/modules/addToCart/cart.route'
+import { CartRoute } from '../app/modules/cart/cart.route'
 import { AccordianRouter } from '../app/modules/accordian/accordian.route'
+import { PaymentRouter } from '../app/modules/payment/payment.route'
 // import { BlogRoute } from '../app/modules/blog/blog.routes'
 
 const router = express.Router()
@@ -20,10 +20,10 @@ const all_routes = [
   { path: '/product', router: ClothRoute },
   { path: '/reviews', router: ReviewRoute },
   { path: '/wish', router: WishRoute },
-  // { path: '/reading', router: ReadingRoute },
   { path: '/cart', router: CartRoute },
   // { path: '/blog', router: BlogRoute },
   { path: '/accordian', router: AccordianRouter },
+  { path: '/payment', router: PaymentRouter },
 ]
 
 all_routes.map(item => router.use(item.path, item.router))

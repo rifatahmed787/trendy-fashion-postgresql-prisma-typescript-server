@@ -16,14 +16,16 @@ model User {
   username String   
   email    String       @unique
   password String
-  avatar String         @default("https://res.cloudinary.com/dztlowlu0/image/upload/v1700031261/avatar_ylo9mt.png")
-  role String           @default("user")
+  avatar   String         @default("https://res.cloudinary.com/dztlowlu0/image/upload/v1700031261/avatar_ylo9mt.png")
+  role       String        @default("USER")
   address Address?
   purchasedProducts     Products[]
   reviewProducts        ProductReview[]
   posts                 Post[]
   cartProducts          CartProduct[]
   wishLists             WishList[] 
+  stripeCustomerId      String?
+  payments              Payment[] 
   @@map("Users")
 }
 
@@ -54,6 +56,7 @@ model Products {
   productQuality      String    
   productImage        String[]
   productSize         String[]
+  oldPrice            Float @default(0.0)
   productPrice        Float
   productRating       Float?
   productSpecification String[]
@@ -61,12 +64,13 @@ model Products {
   productGender       String   
   age                 String[]   
   relatedProducts     String[]
-  quantity             Int @default(1) 
+  quantity            Int 
   buyerId Int?
   buyer               User? @relation(fields: [buyerId], references: [id])
   productReviews      ProductReview[]
   wishLists           WishList[]
-  cartProducts       CartProduct[]
+  cartProducts        CartProduct[]
+  orderProducts       Payment[]
   createdAt  DateTime @default(now())
 }
 
@@ -86,37 +90,31 @@ model ProductReview {
 
 // cart model
 model CartProduct {
-  id                 Int      @id @default(autoincrement())
-  userId             Int
-  user               User     @relation(fields: [userId], references: [id])
-  productId          Int
-  product            Products @relation(fields: [productId], references: [id])
-  quantity           Int @default(1)
-  totalPrice         Float @default(0.0)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id])
+  productId      Int
+  product        Products @relation(fields: [productId], references: [id])
+  quantity       Int      @default(1)
+  totalPrice     Float    @default(0.0)
+  paymentStatus  Boolean  @default(false)
+  orderStatus    Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
-
 
 
 // order model
-model Order {
-  id        Int      @id @default(autoincrement())
-  userId    Int      // Foreign key to associate the order with a user
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  products  OrderProduct[]
+model Payment{
+  id                 Int       @id @default(autoincrement())
+  userId             Int
+  user               User       @relation(fields: [userId], references: [id])
+  sessionId          String
+  productId          Int
+  orderProducts      Products @relation(fields: [productId], references: [id])
 }
 
-model OrderProduct {
-  id         Int     @id @default(autoincrement())
-  orderId    Int
-  productId  Int     // Foreign key to associate the product with the order
-  quantity   Int     // The quantity of the product in the order
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  order Order? @relation(fields: [orderId], references: [id])
-}
+
 
 
 // wish list model
@@ -150,6 +148,8 @@ model Category{
 }
 
 
+
+
 model Post{
   id Int @id @default(autoincrement())
   title String
@@ -159,8 +159,15 @@ model Post{
   category Category @relation(fields: [category_id], references:[id] )
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-
+  comments  Json
+  likes     Int     @default(0)
   @@map("Posts")
 }
 
+
+enum Status {
+  Pending
+  Accepted
+  Rejected
+}
 

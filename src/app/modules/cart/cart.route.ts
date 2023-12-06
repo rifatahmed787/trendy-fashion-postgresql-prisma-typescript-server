@@ -19,4 +19,6 @@ router.patch('/:id', authHandler(), CartController.updateQuantity)
 
 router.delete('/:id', authHandler(), CartController.removeFromCart)
 
+router.delete('/', authHandler(), CartController.clear_cart)
+
 export const CartRoute = router

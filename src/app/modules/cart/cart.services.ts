@@ -31,6 +31,19 @@ const add_to_cart = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found')
   }
 
+  const product_quantity = await prisma.products.findFirst({
+    where: {
+      id: productId,
+      quantity: {
+        equals: 0,
+      },
+    },
+  })
+
+  if (product_quantity) {
+    throw new Error('This product is out of Stock')
+  }
+
   // Check if the product is already in the user's cart
   const isInCart = await prisma.cartProduct.findFirst({
     where: {
@@ -52,6 +65,7 @@ const add_to_cart = async (
       userId,
       productId,
       quantity: 1,
+      totalPrice: product.productPrice,
     },
   })
 
@@ -79,7 +93,6 @@ const update_quantity = async (
   userId: number,
   id: string,
   quantity: number
-  // totalPrice: number
 ): Promise<CartProduct | null> => {
   // Find the cart entry
 
@@ -105,7 +118,7 @@ const update_quantity = async (
     },
     data: {
       quantity,
-      // totalPrice,
+      totalPrice: existingCartProduct.product.productPrice * quantity,
     },
   })
 
@@ -153,9 +166,31 @@ const remove_from_cart = async (
   }
 }
 
+const clear_cart = async (userId: number): Promise<CartProduct[] | null> => {
+  const deletedCartProducts = await prisma.cartProduct.findMany({
+    where: {
+      userId,
+    },
+  })
+  // Check if the product is in the user's cart
+  if (deletedCartProducts.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Your cart is already empty')
+  }
+
+  // Delete all cart products for the specified user
+  await prisma.cartProduct.deleteMany({
+    where: {
+      userId,
+    },
+  })
+
+  return deletedCartProducts
+}
+
 export const CartServices = {
   add_to_cart,
   get_cart_by_user_id,
   remove_from_cart,
   update_quantity,
+  clear_cart,
 }
