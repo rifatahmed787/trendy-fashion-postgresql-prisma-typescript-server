@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { CartProduct, PrismaClient } from '@prisma/client'
 import Stripe from 'stripe'
 import { Request, Response } from 'express'
 import config from '../../../config'
@@ -16,10 +16,9 @@ const stripeInstance = new Stripe(stripeSK, { apiVersion: '2023-10-16' })
 const createPayment = catchAsync(async (req: Request, res: Response) => {
   const { email, id } = req.logged_in_user
   const userId = parseInt(id)
-  console.log(userId)
 
   try {
-    const carts: any[] = []
+    const carts: CartProduct[] = []
     const cartInfo = await prisma.cartProduct.findMany({
       where: {
         userId: userId,
@@ -30,8 +29,6 @@ const createPayment = catchAsync(async (req: Request, res: Response) => {
       },
     })
 
-    console.log('cart info lenght', cartInfo.length)
-
     if (!cartInfo.length) {
       return res.status(400).send({
         success: false,
@@ -40,7 +37,6 @@ const createPayment = catchAsync(async (req: Request, res: Response) => {
     }
 
     for (const cart of cartInfo) {
-      console.log(cart)
       if (cart.orderStatus === false) {
         carts.push(cart)
       }
@@ -48,13 +44,9 @@ const createPayment = catchAsync(async (req: Request, res: Response) => {
 
     let totalPrice = 0
 
-    console.log('carts length', carts.length)
-
     for (const cart of carts) {
       totalPrice = totalPrice + cart.totalPrice
     }
-
-    console.log(totalPrice)
 
     const amount = Number((totalPrice * 100).toFixed(2))
     const product = await stripeInstance.products.create({
@@ -96,13 +88,12 @@ const createPayment = catchAsync(async (req: Request, res: Response) => {
     })
 
     for (const cart of carts) {
-      const updateStatus = await prisma.cartProduct.updateMany({
+      await prisma.cartProduct.updateMany({
         where: {
           id: cart.id,
         },
         data: { paymentStatus: true },
       })
-      console.log(updateStatus)
     }
 
     res.status(200).send({
@@ -111,7 +102,6 @@ const createPayment = catchAsync(async (req: Request, res: Response) => {
       message: 'Payments created successfully',
     })
   } catch (error) {
-    console.error(error)
     res.status(500).send({
       success: false,
       message: 'Internal server error',
@@ -129,7 +119,35 @@ const webhook = async (req: Request, res: Response) => {
       evenType = req.body.type
 
       if (evenType === 'checkout.session.completed') {
-        console.log(data)
+        const email = await prisma.user.findFirst({
+          where: {
+            email: data.customer_details.email,
+          },
+        })
+        const cartInfo = await prisma.cartProduct.findMany({
+          where: {
+            userId: email?.id,
+            paymentStatus: true,
+            orderStatus: false,
+          },
+        })
+
+        if (cartInfo.length > 0) {
+          for (const cart of cartInfo) {
+            await prisma.cartProduct.updateMany({
+              where: {
+                id: cart.id,
+              },
+              data: { orderStatus: true },
+            })
+          }
+        }
+
+        await prisma.cartProduct.deleteMany({
+          where: {
+            userId: email?.id,
+          },
+        })
       } else {
         // console.log(data)
       }

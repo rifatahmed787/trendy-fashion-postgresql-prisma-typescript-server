@@ -79,6 +79,7 @@ const get_cart_by_user_id = async (
   const user_cart = await prisma.cartProduct.findMany({
     where: {
       userId: user_id,
+      orderStatus: false,
     },
     include: {
       product: true,
