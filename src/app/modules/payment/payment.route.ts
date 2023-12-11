@@ -1,6 +1,7 @@
 import express from 'express'
-import { PaymentController } from './payment.controller'
+
 import authHandler from '../../middlewares/authHandler'
+import { PaymentController } from './payment.controllers'
 
 const router = express.Router()
 
