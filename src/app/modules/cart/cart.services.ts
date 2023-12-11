@@ -20,7 +20,7 @@ const add_to_cart = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found')
   }
 
-  // Now, check if the product (book) exists
+  // Now, check if the product exists
   const product = await prisma.products.findUnique({
     where: {
       id: productId,
@@ -49,6 +49,7 @@ const add_to_cart = async (
     where: {
       userId,
       productId,
+      orderStatus: false,
     },
   })
 

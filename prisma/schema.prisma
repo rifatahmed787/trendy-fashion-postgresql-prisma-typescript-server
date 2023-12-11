@@ -17,7 +17,7 @@ model User {
   email    String       @unique
   password String
   avatar   String         @default("https://res.cloudinary.com/dztlowlu0/image/upload/v1700031261/avatar_ylo9mt.png")
-  role       String        @default("USER")
+  role                  String     @default("USER")
   address Address?
   purchasedProducts     Products[]
   reviewProducts        ProductReview[]
@@ -25,7 +25,6 @@ model User {
   cartProducts          CartProduct[]
   wishLists             WishList[] 
   stripeCustomerId      String?
-  payments              Payment[] 
   @@map("Users")
 }
 
@@ -70,7 +69,6 @@ model Products {
   productReviews      ProductReview[]
   wishLists           WishList[]
   cartProducts        CartProduct[]
-  orderProducts       Payment[]
   createdAt  DateTime @default(now())
 }
 
@@ -101,17 +99,8 @@ model CartProduct {
   orderStatus    Boolean  @default(false)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-}
-
-
-// order model
-model Payment{
-  id                 Int       @id @default(autoincrement())
-  userId             Int
-  user               User       @relation(fields: [userId], references: [id])
-  sessionId          String
-  productId          Int
-  orderProducts      Products @relation(fields: [productId], references: [id])
+  status         Status   @default(Pending)
+  receipt_url    String   @default("")
 }
 
 
@@ -164,10 +153,14 @@ model Post{
   @@map("Posts")
 }
 
-
+enum Role {
+  USER
+  ADMIN
+}
 enum Status {
   Pending
   Accepted
   Rejected
 }
+
 

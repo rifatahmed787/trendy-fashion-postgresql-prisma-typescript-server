@@ -118,6 +118,8 @@ const webhook = async (req: Request, res: Response) => {
       data = req.body.data.object
       evenType = req.body.type
 
+      console.log(data)
+
       if (evenType === 'checkout.session.completed') {
         const email = await prisma.user.findFirst({
           where: {
@@ -138,16 +140,10 @@ const webhook = async (req: Request, res: Response) => {
               where: {
                 id: cart.id,
               },
-              data: { orderStatus: true },
+              data: { orderStatus: true, receipt_url: data.receipt_url },
             })
           }
         }
-
-        await prisma.cartProduct.deleteMany({
-          where: {
-            userId: email?.id,
-          },
-        })
       } else {
         // console.log(data)
       }
