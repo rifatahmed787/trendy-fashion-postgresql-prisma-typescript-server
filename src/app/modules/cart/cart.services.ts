@@ -183,6 +183,7 @@ const clear_cart = async (userId: number): Promise<CartProduct[] | null> => {
   await prisma.cartProduct.deleteMany({
     where: {
       userId,
+      orderStatus: false,
     },
   })
 
