@@ -4,7 +4,7 @@ import { IClothFilter } from './product.interface'
 export const filter_cloth_conditions = (
   filters: IClothFilter
 ): { [key: string]: unknown } | undefined => {
-  const { searchTerm, ...filter_keys } = filters // Remove 'age' from destructuring
+  const { searchTerm, ...filter_keys } = filters
 
   const conditions = []
 

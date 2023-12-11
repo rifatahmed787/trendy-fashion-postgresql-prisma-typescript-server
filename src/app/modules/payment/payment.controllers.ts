@@ -5,13 +5,20 @@ import httpStatus from 'http-status'
 import { PaymentServices } from './payment.services'
 import { PrismaClient } from '@prisma/client'
 import config from '../../../config'
+import Stripe from 'stripe'
 const prisma = new PrismaClient()
+const stripeSK = config.stripe_sk
 
+if (!stripeSK) {
+  throw new Error('Stripe secret key is not set in environment variables')
+}
+const stripeInstance = new Stripe(stripeSK, { apiVersion: '2023-10-16' })
 const createPayment = catchAsync(async (req: Request, res: Response) => {
   const { email, id } = req.logged_in_user
+  const shipping = req.query.shipping as string
   const userId = parseInt(id)
 
-  const result = await PaymentServices.createPayment(email, userId)
+  const result = await PaymentServices.createPayment(email, userId, shipping)
 
   sendResponse(res, {
     status_code: httpStatus.OK,
@@ -23,15 +30,13 @@ const createPayment = catchAsync(async (req: Request, res: Response) => {
 
 const webhook = async (req: Request, res: Response) => {
   const endpointSecret = config.webhook_endpoint
+
   let data
   let evenType
   if (endpointSecret) {
     try {
       data = req.body.data.object
       evenType = req.body.type
-
-      console.log('this is full payment data', data)
-      console.log('this is receipt url', data.receipt_url)
 
       if (evenType === 'checkout.session.completed') {
         const email = await prisma.user.findFirst({
@@ -46,16 +51,31 @@ const webhook = async (req: Request, res: Response) => {
             orderStatus: false,
           },
         })
+        const payment = await stripeInstance.paymentIntents.retrieve(
+          data.payment_intent
+        )
 
-        console.log('this is receipr url', data.receipt_url)
+        let recieptUrl
+        if (payment.latest_charge) {
+          const charge = await stripeInstance.charges.retrieve(
+            payment.latest_charge.toString()
+          )
+
+          if (charge.receipt_url) {
+            recieptUrl = charge.receipt_url
+          }
+        }
+
+        console.log('recieptURL', recieptUrl)
 
         if (cartInfo.length > 0) {
           for (const cart of cartInfo) {
+            console.log('Cart Object:', cart)
             await prisma.cartProduct.updateMany({
               where: {
                 id: cart.id,
               },
-              data: { orderStatus: true, receipt_url: data.receipt_url },
+              data: { orderStatus: true, receipt_url: recieptUrl },
             })
           }
         }

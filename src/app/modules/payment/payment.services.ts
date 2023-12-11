@@ -13,7 +13,8 @@ const stripeInstance = new Stripe(stripeSK, { apiVersion: '2023-10-16' })
 
 const createPayment = async (
   email: string,
-  userId: number
+  userId: number,
+  shipping: string
 ): Promise<Stripe.Checkout.Session> => {
   const carts: CartProduct[] = []
   const cartInfo = await prisma.cartProduct.findMany({
@@ -44,6 +45,14 @@ const createPayment = async (
 
   for (const cart of carts) {
     totalPrice = totalPrice + cart.totalPrice
+  }
+
+  if (shipping === '1') {
+    totalPrice = totalPrice + 10
+  } else if (shipping === '2') {
+    totalPrice = totalPrice + 8
+  } else if (shipping === '5') {
+    totalPrice = totalPrice + 5
   }
 
   const amount = Number((totalPrice * 100).toFixed(2))
