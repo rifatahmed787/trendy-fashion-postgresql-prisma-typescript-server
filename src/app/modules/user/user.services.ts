@@ -4,10 +4,10 @@ import { User } from '@prisma/client'
 import { prisma } from '../../../config/database'
 
 //MY  profile
-const my_profile = async (id: string): Promise<Partial<User> | null> => {
+const my_profile = async (userId: string): Promise<Partial<User> | null> => {
   const user = await prisma.user.findUnique({
     where: {
-      id: parseInt(id),
+      id: parseInt(userId),
     },
     include: {
       address: true,
@@ -19,13 +19,7 @@ const my_profile = async (id: string): Promise<Partial<User> | null> => {
   }
 
   // we can return only the necessary fields if we want a partial user profile.
-  return {
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    role: user.role,
-    avatar: user.avatar,
-  }
+  return user
 }
 
 // get all the user

@@ -11,6 +11,7 @@ const getOrderProductByUser = async (
     },
     include: {
       product: true,
+      user: true,
     },
   })
   return getOrder

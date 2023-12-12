@@ -22,7 +22,7 @@ const addToCart = catchAsync(async (req: Request, res: Response) => {
 
 // get all cart data
 const getCart = catchAsync(async (req: Request, res: Response) => {
-  const result = await CartServices.get_cart_by_user_id(req.logged_in_user?._id)
+  const result = await CartServices.get_cart_by_user_id(req.logged_in_user?.id)
 
   sendResponse<CartProduct[], null>(res, {
     status_code: httpStatus.OK,

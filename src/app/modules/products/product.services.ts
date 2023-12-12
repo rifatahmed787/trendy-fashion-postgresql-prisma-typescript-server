@@ -8,7 +8,7 @@ import {
   IClothFilteringItems as IClothUniqueFilteringItems,
 } from './product.interface'
 import httpStatus from 'http-status'
-import { Products, PrismaClient } from '@prisma/client'
+import { Products, PrismaClient, Role } from '@prisma/client'
 import { JwtPayload } from 'jsonwebtoken'
 const prisma = new PrismaClient()
 
@@ -18,7 +18,7 @@ const create_new_cloth = async (
   user: JwtPayload
 ): Promise<Products | null> => {
   // Check if the user is an admin
-  if (user.role !== 'ADMIN') {
+  if (user?.role !== Role.ADMIN) {
     throw new ApiError(
       httpStatus.FORBIDDEN,
       'Only admin users can create products'

@@ -17,7 +17,8 @@ const allUsers = catchAsync(async (req: Request, res: Response) => {
 
 //  Get   user profile information
 const userProfile = catchAsync(async (req: Request, res: Response) => {
-  const result = await UserServices.my_profile(req.params.id)
+  const userId = req.logged_in_user?.id
+  const result = await UserServices.my_profile(userId)
 
   sendResponse(res, {
     status_code: httpStatus.OK,

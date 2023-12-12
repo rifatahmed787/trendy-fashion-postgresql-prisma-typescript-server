@@ -1,5 +1,5 @@
 import express from 'express'
-import { UserRoute } from '../app/modules/user/user.routes'
+import { UserRoute } from '../app/modules/user/user.route'
 import { AuthRoute } from '../app/modules/auth/auth.route'
 import { UploadRoute } from '../app/modules/cloudinary/upload.route'
 import { ClothRoute } from '../app/modules/products/product.routes'
@@ -16,7 +16,6 @@ const router = express.Router()
 const all_routes = [
   { path: '/auth', router: AuthRoute },
   { path: '/upload', router: UploadRoute },
-  { path: '/', router: UserRoute },
   { path: '/user', router: UserRoute },
   { path: '/product', router: ClothRoute },
   { path: '/reviews', router: ReviewRoute },
