@@ -93,6 +93,7 @@ model CartProduct {
   user           User     @relation(fields: [userId], references: [id])
   productId      Int
   product        Products @relation(fields: [productId], references: [id])
+  receipt_url    String?   @default("")
   quantity       Int      @default(1)
   totalPrice     Float    @default(0.0)
   paymentStatus  Boolean  @default(false)
@@ -100,7 +101,7 @@ model CartProduct {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   status         Status   @default(Pending)
-  receipt_url    String?   
+  
 }
 
 

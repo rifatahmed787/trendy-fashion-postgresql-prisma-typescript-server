@@ -13,6 +13,7 @@ if (!stripeSK) {
   throw new Error('Stripe secret key is not set in environment variables')
 }
 const stripeInstance = new Stripe(stripeSK, { apiVersion: '2023-10-16' })
+
 const createPayment = catchAsync(async (req: Request, res: Response) => {
   const { email, id } = req.logged_in_user
   const shipping = req.query.shipping as string
@@ -66,11 +67,8 @@ const webhook = async (req: Request, res: Response) => {
           }
         }
 
-        console.log('recieptURL', recieptUrl)
-
-        if (cartInfo.length > 0) {
+        if (cartInfo.length > 0 && recieptUrl) {
           for (const cart of cartInfo) {
-            console.log('Cart Object:', cart)
             await prisma.cartProduct.updateMany({
               where: {
                 id: cart.id,
