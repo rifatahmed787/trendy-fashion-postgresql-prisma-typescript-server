@@ -50,7 +50,7 @@ const allUsers = async (): Promise<User[]> => {
 
 const createAddress = async (
   userId: string,
-  address_data: Omit<Address, 'user'>
+  address_data: Address
 ): Promise<Address | null> => {
   const userParseId = parseInt(userId)
 
