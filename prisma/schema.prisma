@@ -136,8 +136,6 @@ model Category{
 }
 
 
-
-
 model Post{
   id Int @id @default(autoincrement())
   title String
@@ -147,9 +145,24 @@ model Post{
   category Category @relation(fields: [category_id], references:[id] )
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  comments  Json
-  likes     Int     @default(0)
+  comments  PostComment[]
+  likes     PostLike[]
   @@map("Posts")
+}
+
+
+model PostComment{
+  id Int @id @default(autoincrement())
+  comment        String
+  post_id Int
+  post Post @relation(fields: [post_id], references: [id])
+}
+
+model PostLike{
+  id Int @id @default(autoincrement())
+  like    Int  @default(0)
+  post_id  Int 
+  post  Post @relation(fields: [post_id], references: [id])
 }
 
 enum Role {
