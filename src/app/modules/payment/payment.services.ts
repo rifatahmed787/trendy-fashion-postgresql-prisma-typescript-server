@@ -90,8 +90,8 @@ const createPayment = async (
         quantity: 1,
       },
     ],
-    success_url: 'http://localhost:3000/payment/success',
-    cancel_url: 'http://localhost:3000/payment/failed',
+    success_url: 'https://trendy-fashion.vercel.app/payment/success',
+    cancel_url: 'https://trendy-fashion.vercel.app/payment/failed',
   })
 
   for (const cart of carts) {
