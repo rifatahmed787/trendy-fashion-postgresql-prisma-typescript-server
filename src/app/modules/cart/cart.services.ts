@@ -1,6 +1,8 @@
-import { CartProduct, PrismaClient } from '@prisma/client'
+import { CartProduct, PrismaClient, Role } from '@prisma/client'
 import ApiError from '../../errors/ApiError'
 import httpStatus from 'http-status'
+import { pushNotification } from '../../../helpers/pushNotification'
+import { JwtPayload } from 'jsonwebtoken'
 
 const prisma = new PrismaClient()
 
@@ -68,9 +70,74 @@ const add_to_cart = async (
       quantity: 1,
       totalPrice: product.productPrice,
     },
+    include: {
+      user: true,
+      product: true,
+    },
   })
 
+  const tokens = await prisma.deviceToken.findMany()
+  if (tokens.length) {
+    for (const token of tokens) {
+      await pushNotification(token.deviceToken, JSON.stringify(createdCart))
+    }
+  }
+
   return createdCart
+}
+
+// get all the cart
+const getCart = async (user: JwtPayload): Promise<CartProduct[] | null> => {
+  if (user?.role !== Role.ADMIN) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'Only admin users can create products'
+    )
+  }
+  const getCart = await prisma.cartProduct.findMany({
+    include: {
+      product: true,
+      user: true,
+    },
+  })
+  return getCart
+}
+
+const acceptCart = async (
+  user: JwtPayload,
+  id: number
+): Promise<CartProduct | null> => {
+  if (user?.role === Role.ADMIN) {
+    const cartProduct = await prisma.cartProduct.update({
+      where: {
+        id: id,
+      },
+      data: {
+        status: 'Accepted',
+      },
+    })
+
+    return cartProduct
+  }
+  return null
+}
+const rejectCart = async (
+  user: JwtPayload,
+  id: number
+): Promise<CartProduct | null> => {
+  if (user?.role === Role.ADMIN) {
+    const cartProduct = await prisma.cartProduct.update({
+      where: {
+        id: id,
+      },
+      data: {
+        status: 'Rejected',
+      },
+    })
+
+    return cartProduct
+  }
+  return null
 }
 
 // get_cart_by_id
@@ -196,4 +263,7 @@ export const CartServices = {
   remove_from_cart,
   update_quantity,
   clear_cart,
+  getCart,
+  acceptCart,
+  rejectCart,
 }

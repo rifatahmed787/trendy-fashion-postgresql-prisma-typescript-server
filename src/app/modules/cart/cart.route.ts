@@ -14,6 +14,9 @@ router.post(
 )
 
 router.get('/cartdata', authHandler(), CartController.getCart)
+router.get('/all-cart', authHandler(), CartController.getAllCart)
+router.put('/accept/:id', authHandler(), CartController.makeAccept)
+router.put('/reject/:id', authHandler(), CartController.makeReject)
 
 router.patch('/:id', authHandler(), CartController.updateQuantity)
 

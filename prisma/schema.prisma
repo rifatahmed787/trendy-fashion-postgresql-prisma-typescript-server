@@ -27,6 +27,11 @@ model User {
   @@map("Users")
 }
 
+model DeviceToken{
+  id        Int             @id @default(autoincrement())
+  deviceToken String
+}
+
 model Address {
   id Int                 @id @default(autoincrement())
   //  id String          @id @default(uuid())

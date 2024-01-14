@@ -56,7 +56,8 @@ const user_signup = async (user_data: User): Promise<UserWithResponse> => {
 // user_login
 const user_login = async (
   email: string,
-  password: string
+  password: string,
+  deviceToken: string | undefined
 ): Promise<IUserLoginResponse | null> => {
   // Function to check if a user with a given email exists
   const isUserExist = async (email: string): Promise<User | null> => {
@@ -98,6 +99,14 @@ const user_login = async (
     config.jwt.refresh_token_secret as Secret,
     config.jwt.refresh_token_expiresIn as string
   )
+
+  if (deviceToken) {
+    await prisma.deviceToken.create({
+      data: {
+        deviceToken,
+      },
+    })
+  }
 
   // Return the response
   return {

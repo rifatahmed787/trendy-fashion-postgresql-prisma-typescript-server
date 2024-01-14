@@ -32,6 +32,48 @@ const getCart = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+// get all the cart
+const getAllCart = catchAsync(async (req: Request, res: Response) => {
+  const user = req.logged_in_user
+  const result = await CartServices.getCart(user)
+
+  sendResponse<CartProduct[], null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Retrieve all cart successfully',
+  })
+})
+
+const makeAccept = catchAsync(async (req: Request, res: Response) => {
+  const user = req.logged_in_user
+  const cartProductId = Number(req.params.id)
+  console.log(cartProductId)
+
+  const result = await CartServices.acceptCart(user, cartProductId)
+
+  sendResponse<CartProduct, null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Accepted cart successfully',
+  })
+})
+
+const makeReject = catchAsync(async (req: Request, res: Response) => {
+  const user = req.logged_in_user
+  const cartProductId = Number(req.params.id)
+  console.log(cartProductId)
+  const result = await CartServices.rejectCart(user, cartProductId)
+
+  sendResponse<CartProduct, null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Rejected cart successfully',
+  })
+})
+
 // cartController.ts
 const updateQuantity = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params
@@ -82,4 +124,7 @@ export const CartController = {
   removeFromCart,
   updateQuantity,
   clear_cart,
+  getAllCart,
+  makeAccept,
+  makeReject,
 }

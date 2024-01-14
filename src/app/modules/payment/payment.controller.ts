@@ -118,8 +118,8 @@ const webhook = async (req: Request, res: Response) => {
       data = req.body.data.object
       evenType = req.body.type
 
-      console.log('this is full payment data', data)
-      console.log('this is receipt url', data.receipt_url)
+      // console.log('this is full payment data', data)
+      // console.log('this is receipt url', data.receipt_url)
 
       if (evenType === 'checkout.session.completed') {
         const email = await prisma.user.findFirst({
