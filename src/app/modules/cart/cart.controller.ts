@@ -48,7 +48,7 @@ const getAllCart = catchAsync(async (req: Request, res: Response) => {
 const makeAccept = catchAsync(async (req: Request, res: Response) => {
   const user = req.logged_in_user
   const cartProductId = Number(req.params.id)
-  console.log(cartProductId)
+  // console.log(cartProductId)
 
   const result = await CartServices.acceptCart(user, cartProductId)
 
@@ -63,7 +63,7 @@ const makeAccept = catchAsync(async (req: Request, res: Response) => {
 const makeReject = catchAsync(async (req: Request, res: Response) => {
   const user = req.logged_in_user
   const cartProductId = Number(req.params.id)
-  console.log(cartProductId)
+  // console.log(cartProductId)
   const result = await CartServices.rejectCart(user, cartProductId)
 
   sendResponse<CartProduct, null>(res, {
