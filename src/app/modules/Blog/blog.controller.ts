@@ -1,4 +1,4 @@
-import httpStatus from 'http-status'
+import httpStatus, { OK } from 'http-status'
 import catchAsync from '../../../shared/catchAsync'
 import sendResponse from '../../../shared/sendResponse'
 import { Request, Response } from 'express'
@@ -16,6 +16,17 @@ const createBlogCategory = catchAsync(async (req: Request, res: Response) => {
     success: true,
     data: result,
     message: 'Category created successfully',
+  })
+})
+
+const get_blog_category = catchAsync(async (req: Request, res: Response) => {
+  const result = await BlogServices.get_blog_category()
+
+  sendResponse(res, {
+    status_code: OK,
+    success: true,
+    data: result,
+    message: 'Blog category retrieve successfully',
   })
 })
 
@@ -50,4 +61,5 @@ export const BlogController = {
   createBlog,
   getBlogs,
   createBlogCategory,
+  get_blog_category,
 }

@@ -16,7 +16,7 @@ const createBlogCetagory = async (
   if (user?.role !== Role.ADMIN || Role.SUPERADMIN) {
     throw new ApiError(
       httpStatus.FORBIDDEN,
-      'Only superadmin and admin users can create blogs'
+      'Only superadmin and admin users can create blogs category'
     )
   }
 
@@ -24,6 +24,12 @@ const createBlogCetagory = async (
     data: blog_category,
   })
   return create_blog_category
+}
+
+// get all the post category
+const get_blog_category = async (): Promise<PostCategory[] | null> => {
+  const getBlogCategory = await prisma.postCategory.findMany({})
+  return getBlogCategory
 }
 
 const blogCreate = async (
@@ -86,4 +92,5 @@ export const BlogServices = {
   blogCreate,
   get_all_blogs,
   createBlogCetagory,
+  get_blog_category,
 }

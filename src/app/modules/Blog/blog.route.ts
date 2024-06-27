@@ -23,6 +23,7 @@ router.post(
 )
 
 router.get('/allblogs', BlogController.getBlogs)
+router.get('/blog-category', BlogController.get_blog_category)
 // router.get('/latest-ten', ClothController.latestTenCloths)
 // router.get('/best-seller', ClothController.bestSellingCloths)
 // router.get('/unique-filter-items', ClothController.uniqueFilteringData)
