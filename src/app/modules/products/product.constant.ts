@@ -8,5 +8,6 @@ export const product_filter_keys = [
   'productName',
   'productCategory',
   'productGender',
+  'productPrice',
   'searchTerm',
 ]

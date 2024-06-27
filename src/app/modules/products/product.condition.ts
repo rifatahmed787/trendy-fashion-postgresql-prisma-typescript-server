@@ -28,6 +28,8 @@ export const filter_cloth_conditions = (
           return { productCategory: { contains: value, mode: 'insensitive' } }
         } else if (key === 'productGender') {
           return { productGender: { contains: value, mode: 'insensitive' } }
+        } else if (key === 'productPrice') {
+          return { productPrice: { contains: value, mode: 'insensitive' } }
         } else {
           return { [key]: value }
         }

@@ -12,7 +12,7 @@ import { Products, PrismaClient, Role } from '@prisma/client'
 import { JwtPayload } from 'jsonwebtoken'
 const prisma = new PrismaClient()
 
-// Create new cloth product
+// Create new product
 const create_new_cloth = async (
   cloth_data: Products,
   user: JwtPayload
@@ -32,7 +32,7 @@ const create_new_cloth = async (
   return created_cloth
 }
 
-//  gel_all_cloths
+//  gel_all_products
 const get_all_cloths = async (
   filters: IClothFilter,
   pagination_data: Partial<IPagination>

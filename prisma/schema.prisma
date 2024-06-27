@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,168 +7,169 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 // user model
 
 model User {
-  id       Int          @id @default(autoincrement())
-  username String   
-  email    String       @unique
-  password String
-  avatar   String         @default("https://res.cloudinary.com/dztlowlu0/image/upload/v1700031261/avatar_ylo9mt.png")
-  role                  Role    @default(USER)
-  address Address?
-  purchasedProducts     Products[]
-  reviewProducts        ProductReview[]
-  posts                 Post[]
-  cartProducts          CartProduct[]
-  wishLists             WishList[] 
+  id                Int             @id @default(autoincrement())
+  username          String
+  email             String          @unique
+  password          String
+  avatar            String          @default("https://res.cloudinary.com/dztlowlu0/image/upload/v1700031261/avatar_ylo9mt.png")
+  role              Role            @default(USER)
+  address           Address?
+  purchasedProducts Products[]
+  reviewProducts    ProductReview[]
+  posts             Post[]
+  cartProducts      CartProduct[]
+  wishLists         WishList[]
+  PostComment       PostComment[]
+  PostLike          PostLike[]
+
   @@map("Users")
 }
 
-model DeviceToken{
-  id        Int             @id @default(autoincrement())
+model DeviceToken {
+  id          Int    @id @default(autoincrement())
   deviceToken String
 }
 
 model Address {
-  id Int                 @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   //  id String          @id @default(uuid())
   street_address String
-  city String
-  postal_code String
-  country String
-  phone_number String
-  district_name String
-  address_id Int         @unique
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
-  user User              @relation(fields: [address_id], references: [id])
+  city           String
+  postal_code    String
+  country        String
+  phone_number   String
+  district_name  String
+  address_id     Int      @unique
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  user           User     @relation(fields: [address_id], references: [id])
 }
-
 
 // Products model
 
 model Products {
-  id                  Int       @id @default(autoincrement())
-  productId           String    @unique
-  productName         String
-  productDetails      String?
-  productColor        String[]
-  productQuality      String    
-  productImage        String[]
-  productSize         String[]
-  oldPrice            Float @default(0.0)
-  productPrice        Float
-  productRating       Float?
+  id                   Int             @id @default(autoincrement())
+  productId            String          @unique
+  productName          String
+  productDetails       String?
+  productColor         String[]
+  productQuality       String
+  productImage         String[]
+  productSize          String[]
+  oldPrice             Float           @default(0.0)
+  productPrice         Float
+  productRating        Float?
   productSpecification String[]
-  productCategory     String   
-  productGender       String   
-  age                 String[]   
-  relatedProducts     String[]
-  quantity            Int 
-  buyerId Int?
-  buyer               User? @relation(fields: [buyerId], references: [id])
-  productReviews      ProductReview[]
-  wishLists           WishList[]
-  cartProducts        CartProduct[]
-  createdAt  DateTime @default(now())
+  productCategory      String
+  productType          String
+  productGender        String
+  age                  String[]
+  relatedProducts      String[]
+  quantity             Int
+  buyerId              Int?
+  buyer                User?           @relation(fields: [buyerId], references: [id])
+  productReviews       ProductReview[]
+  wishLists            WishList[]
+  cartProducts         CartProduct[]
+  createdAt            DateTime        @default(now())
 }
-
 
 // product reviews
 model ProductReview {
-  id           Int      @id @default(autoincrement())
-  rating       Int      
-  reviewText   String?  
-  createdAt  DateTime @default(now()) 
-  reviewer     User     @relation( fields: [reviewerId], references: [id]) 
-  reviewerId   Int
-  productId    Int      @map("product_id")
-  review      Products  @relation(fields: [productId], references: [id])
+  id         Int      @id @default(autoincrement())
+  rating     Int
+  reviewText String?
+  createdAt  DateTime @default(now())
+  reviewer   User     @relation(fields: [reviewerId], references: [id])
+  reviewerId Int
+  productId  Int      @map("product_id")
+  review     Products @relation(fields: [productId], references: [id])
 }
-
 
 // cart model
 model CartProduct {
-  id             Int      @id @default(autoincrement())
-  userId         Int
-  user           User     @relation(fields: [userId], references: [id])
-  productId      Int
-  product        Products @relation(fields: [productId], references: [id])
-  receipt_url    String?   @default("")
-  quantity       Int      @default(1)
-  productSize    String[]
-  productColor   String[]
-  totalPrice     Float    @default(0.0)
-  paymentStatus  Boolean  @default(false)
-  orderStatus    Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  status         Status   @default(Pending)
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id])
+  productId     Int
+  product       Products @relation(fields: [productId], references: [id])
+  receipt_url   String?  @default("")
+  quantity      Int      @default(1)
+  productSize   String[]
+  productColor  String[]
+  totalPrice    Float    @default(0.0)
+  paymentStatus Boolean  @default(false)
+  orderStatus   Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  status        Status   @default(Pending)
 }
-
-
-
 
 // wish list model
 
 model WishList {
-  id      Int    @id @default(autoincrement())
-  userId  Int
-  user    User   @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
   productId Int
-  product Products @relation(fields: [productId], references: [id])
+  product   Products @relation(fields: [productId], references: [id])
 }
-
 
 // faq/accordian model
 
 model ProductAccordian {
-  id        Int      @id @default(autoincrement())
-  question  String
-  answer    String
+  id       Int    @id @default(autoincrement())
+  question String
+  answer   String
   category String
 }
 
-
 // blog post model
 
-model Category{
-  id Int @id @default(autoincrement())
-  name String
+model PostCategory {
+  id    Int    @id @default(autoincrement())
+  name  String
   posts Post[]
-  @@map("Categories")
+
+  @@map("PostCategories")
 }
 
-
-model Post{
-  id Int @id @default(autoincrement())
-  title String
-  author_id Int
-  author User @relation(fields: [author_id], references: [id])
+model Post {
+  id          Int           @id @default(autoincrement())
+  title       String
+  content     String?
+  published   Boolean       @default(false)
+  author_id   Int
+  author      User          @relation(fields: [author_id], references: [id])
   category_id Int
-  category Category @relation(fields: [category_id], references:[id] )
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  comments  PostComment[]
-  likes     PostLike[]
+  category    PostCategory      @relation(fields: [category_id], references: [id])
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  comments    PostComment[]
+  likes       PostLike[]
+
   @@map("Posts")
 }
 
-
-model PostComment{
-  id Int @id @default(autoincrement())
-  comment        String
-  post_id Int
-  post Post @relation(fields: [post_id], references: [id])
+model PostComment {
+  id          Int    @id @default(autoincrement())
+  comment     String
+  post_id     Int
+  post        Post   @relation(fields: [post_id], references: [id])
+  commenterId Int
+  commenter   User   @relation(fields: [commenterId], references: [id])
 }
 
-model PostLike{
-  id Int @id @default(autoincrement())
+model PostLike {
+  id      Int  @id @default(autoincrement())
   like    Int  @default(0)
-  post_id  Int 
-  post  Post @relation(fields: [post_id], references: [id])
+  post_id Int
+  post    Post @relation(fields: [post_id], references: [id])
+  likerId Int
+  liker   User @relation(fields: [likerId], references: [id])
 }
 
 enum Role {
@@ -177,10 +177,9 @@ enum Role {
   ADMIN
   SUPERADMIN
 }
+
 enum Status {
   Pending
   Accepted
   Rejected
 }
-
-

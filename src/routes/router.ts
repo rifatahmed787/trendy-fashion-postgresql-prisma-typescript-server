@@ -9,7 +9,7 @@ import { CartRoute } from '../app/modules/cart/cart.route'
 import { AccordianRouter } from '../app/modules/accordian/accordian.route'
 import { PaymentRouter } from '../app/modules/payment/payment.route'
 import { OrderRouter } from '../app/modules/order/order.route'
-// import { BlogRoute } from '../app/modules/blog/blog.routes'
+import { BlogRoute } from '../app/modules/blog/blog.route'
 
 const router = express.Router()
 
@@ -21,7 +21,7 @@ const all_routes = [
   { path: '/reviews', router: ReviewRoute },
   { path: '/wish', router: WishRoute },
   { path: '/cart', router: CartRoute },
-  // { path: '/blog', router: BlogRoute },
+  { path: '/blog', router: BlogRoute },
   { path: '/accordian', router: AccordianRouter },
   { path: '/payment', router: PaymentRouter },
   { path: '/order', router: OrderRouter },
