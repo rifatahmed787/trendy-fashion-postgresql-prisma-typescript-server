@@ -13,6 +13,7 @@ export const create_cloth_zod_schema = z.object({
     }),
     productImage: z.array(z.string({ required_error: 'Image is required' })),
     productCategory: z.string({ required_error: 'Category is required' }),
+    productType: z.string({ required_error: 'Type is required' }),
     productGender: z.string({ required_error: 'Gender is required' }),
     age: z.array(z.string({ required_error: 'Age is required' })),
     productSpecification: z.array(
@@ -51,6 +52,7 @@ export const update_cloth_zod_schema = z.object({
       .string({ required_error: 'Gender is required' })
       .optional(),
     age: z.string({ required_error: 'Age is required' }).optional(),
+    productType: z.string({ required_error: 'Type is required' }).optional(),
     productSpecification: z
       .array(z.string({ required_error: 'Specification is required' }))
       .optional(),
