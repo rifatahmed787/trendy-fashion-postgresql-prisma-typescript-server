@@ -10,6 +10,7 @@ import { AccordianRouter } from '../app/modules/accordian/accordian.route'
 import { PaymentRouter } from '../app/modules/payment/payment.route'
 import { OrderRouter } from '../app/modules/order/order.route'
 import { BlogRoute } from '../app/modules/blog/blog.route'
+import { CommentRoute } from '../app/modules/comment/comment.route'
 
 const router = express.Router()
 
@@ -25,6 +26,7 @@ const all_routes = [
   { path: '/accordian', router: AccordianRouter },
   { path: '/payment', router: PaymentRouter },
   { path: '/order', router: OrderRouter },
+  { path: '/comment', router: CommentRoute },
 ]
 
 all_routes.map(item => router.use(item.path, item.router))
