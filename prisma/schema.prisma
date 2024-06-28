@@ -170,6 +170,7 @@ model PostLike {
   post    Post @relation(fields: [post_id], references: [id])
   likerId Int
   liker   User @relation(fields: [likerId], references: [id])
+  @@unique([post_id, likerId])
 }
 
 enum Role {
