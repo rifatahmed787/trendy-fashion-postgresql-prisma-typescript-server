@@ -169,6 +169,94 @@ const get_all_blogs = async (
   }
 }
 
+const single_blog = async (id: string) => {
+  const postId = parseInt(id)
+
+  const blogDetails = await prisma.post.findUnique({
+    where: {
+      id: postId,
+    },
+    include: {
+      comments: true,
+      likes: true,
+    },
+  })
+
+  if (!blogDetails) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Blog not found')
+  }
+
+  return blogDetails
+}
+
+const update_blog = async (
+  id: string,
+  post_data: Partial<Post>,
+  user: JwtPayload
+): Promise<Post | null> => {
+  // Check if the user is an admin or has the necessary permissions
+  if (user?.role !== Role.ADMIN || Role.SUPERADMIN) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'You do not have permission to update post'
+    )
+  }
+
+  const existingPostId = parseInt(id)
+  const existingPost = await prisma.post.findUnique({
+    where: {
+      id: existingPostId,
+    },
+  })
+
+  if (!existingPost) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found')
+  }
+
+  // Now, update the post
+  const updatePostId = parseInt(id)
+  const updated_post_data = await prisma.post.update({
+    where: {
+      id: updatePostId,
+    },
+    data: post_data,
+  })
+
+  return updated_post_data
+}
+
+const delete_blog = async (
+  id: string,
+  user: JwtPayload
+): Promise<Post | null> => {
+  // Check if the user is an admin or superadmin
+  if (user?.role !== Role.ADMIN && user?.role !== Role.SUPERADMIN) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Only admin users can delete post')
+  }
+
+  const postId = parseInt(id)
+
+  // Check if the post exists
+  const post = await prisma.post.findUnique({
+    where: {
+      id: postId,
+    },
+  })
+
+  if (!post) {
+    throw new ApiError(httpStatus.EXPECTATION_FAILED, 'Failed to delete post')
+  }
+
+  // Delete the post
+  const deletedPost = await prisma.post.delete({
+    where: {
+      id: postId,
+    },
+  })
+
+  return deletedPost
+}
+
 export const BlogServices = {
   blogCreate,
   get_all_blogs,
@@ -176,4 +264,7 @@ export const BlogServices = {
   get_blog_category,
   update_blog_category,
   delete_category,
+  update_blog,
+  delete_blog,
+  single_blog,
 }

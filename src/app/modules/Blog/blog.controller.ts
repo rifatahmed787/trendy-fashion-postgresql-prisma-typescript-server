@@ -85,6 +85,43 @@ const getBlogs = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const get_single_blog = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const result = await BlogServices.single_blog(id)
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Single Blog retrieved successfully',
+  })
+})
+
+const updateBlog = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const { ...post_data } = req.body
+  const user_data = req.logged_in_user
+
+  const result = await BlogServices.update_blog(id, post_data, user_data)
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Post updated successfully',
+  })
+})
+
+const deleteBlog = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const user_data = req.logged_in_user
+  const result = await BlogServices.delete_blog(id, user_data)
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Post deleted successfully',
+  })
+})
+
 export const BlogController = {
   createBlog,
   getBlogs,
@@ -92,4 +129,7 @@ export const BlogController = {
   get_blog_category,
   update_blog_category,
   delete_blog_category,
+  get_single_blog,
+  updateBlog,
+  deleteBlog,
 }
