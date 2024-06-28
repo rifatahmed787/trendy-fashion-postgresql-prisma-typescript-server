@@ -30,6 +30,34 @@ const get_blog_category = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const update_blog_category = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const { ...category_data } = req.body
+  const user_data = req.logged_in_user
+  const result = await BlogServices.update_blog_category(
+    id,
+    category_data,
+    user_data
+  )
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Category updated successfully',
+  })
+})
+const delete_blog_category = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const user_data = req.logged_in_user
+  const result = await BlogServices.delete_category(id, user_data)
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Category deleted successfully',
+  })
+})
+
 const createBlog = catchAsync(async (req: Request, res: Response) => {
   const { ...blog_data } = req.body
   const user_data = req.logged_in_user
@@ -62,4 +90,6 @@ export const BlogController = {
   getBlogs,
   createBlogCategory,
   get_blog_category,
+  update_blog_category,
+  delete_blog_category,
 }

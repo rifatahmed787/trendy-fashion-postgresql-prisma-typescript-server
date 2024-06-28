@@ -32,6 +32,87 @@ const get_blog_category = async (): Promise<PostCategory[] | null> => {
   return getBlogCategory
 }
 
+const update_blog_category = async (
+  id: string,
+  category_data: Partial<PostCategory>,
+  user: JwtPayload
+): Promise<PostCategory | null> => {
+  // Check if the user is an admin or has the necessary permissions
+  if (user?.role !== Role.ADMIN || Role.SUPERADMIN) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'You do not have permission to update post'
+    )
+  }
+
+  const existingCategoryId = parseInt(id)
+  const existingCategory = await prisma.postCategory.findUnique({
+    where: {
+      id: existingCategoryId,
+    },
+  })
+
+  if (!existingCategory) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Post not found')
+  }
+
+  // Now, update the post category
+  const updateCategoryId = parseInt(id)
+  const updated_category_data = await prisma.postCategory.update({
+    where: {
+      id: updateCategoryId,
+    },
+    data: category_data,
+  })
+
+  return updated_category_data
+}
+
+const delete_category = async (
+  id: string,
+  user: JwtPayload
+): Promise<PostCategory | null> => {
+  // Check if the user is an admin or superadmin
+  if (user?.role !== Role.ADMIN && user?.role !== Role.SUPERADMIN) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'Only admin users can delete post categories'
+    )
+  }
+
+  const categoryId = parseInt(id)
+
+  // Check if the category exists
+  const category = await prisma.postCategory.findUnique({
+    where: {
+      id: categoryId,
+    },
+  })
+
+  if (!category) {
+    throw new ApiError(
+      httpStatus.EXPECTATION_FAILED,
+      'Failed to delete post category'
+    )
+  }
+
+  // Delete all posts in the category
+  await prisma.post.deleteMany({
+    where: {
+      category_id: categoryId,
+    },
+  })
+
+  // Delete the post category
+  const deletedCategory = await prisma.postCategory.delete({
+    where: {
+      id: categoryId,
+    },
+  })
+
+  return deletedCategory
+}
+
 const blogCreate = async (
   blog_data: Post,
   user: JwtPayload
@@ -93,4 +174,6 @@ export const BlogServices = {
   get_all_blogs,
   createBlogCetagory,
   get_blog_category,
+  update_blog_category,
+  delete_category,
 }

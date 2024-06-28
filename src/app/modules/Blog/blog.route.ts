@@ -5,6 +5,7 @@ import { BlogController } from './blog.controller'
 import {
   create_category_zod_schema,
   create_post_zod_schema,
+  update_category_zod_schema,
 } from './blog.validation'
 
 const router = express.Router()
@@ -15,6 +16,15 @@ router.post(
   requestValidationHandler(create_category_zod_schema),
   BlogController.createBlogCategory
 )
+
+router.put(
+  '/:id',
+  authHandler(),
+  requestValidationHandler(update_category_zod_schema),
+  BlogController.update_blog_category
+)
+
+router.delete('/:id', authHandler(), BlogController.delete_blog_category)
 router.post(
   '/',
   authHandler(),
@@ -22,8 +32,9 @@ router.post(
   BlogController.createBlog
 )
 
-router.get('/allblogs', BlogController.getBlogs)
 router.get('/blog-category', BlogController.get_blog_category)
+router.get('/allblogs', BlogController.getBlogs)
+
 // router.get('/latest-ten', ClothController.latestTenCloths)
 // router.get('/best-seller', ClothController.bestSellingCloths)
 // router.get('/unique-filter-items', ClothController.uniqueFilteringData)

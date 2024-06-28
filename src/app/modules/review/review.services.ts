@@ -87,14 +87,6 @@ const delete_review = async (
   id: string,
   user: JwtPayload
 ): Promise<ProductReview | null> => {
-  // Check if the user is an admin
-  if (user.role !== 'ADMIN') {
-    throw new ApiError(
-      httpStatus.FORBIDDEN,
-      'Only admin users can delete products'
-    )
-  }
-
   const reviewId = parseInt(id)
 
   // Check if the review exists
@@ -106,6 +98,14 @@ const delete_review = async (
 
   if (!review) {
     throw new ApiError(httpStatus.EXPECTATION_FAILED, 'Failed to delete review')
+  }
+
+  // Check if the user is an admin
+  if (review.reviewerId === user?.id) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'Only author users can delete review'
+    )
   }
 
   // Delete the review
