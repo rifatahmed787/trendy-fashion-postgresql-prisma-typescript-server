@@ -9,9 +9,9 @@ import { CartRoute } from '../app/modules/cart/cart.route'
 import { AccordianRouter } from '../app/modules/accordian/accordian.route'
 import { PaymentRouter } from '../app/modules/payment/payment.route'
 import { OrderRouter } from '../app/modules/order/order.route'
-import { BlogRoute } from '../app/modules/blog/blog.route'
 import { CommentRoute } from '../app/modules/comment/comment.route'
 import { LikeRoute } from '../app/modules/like/like.route'
+import { BlogRoute } from '../app/modules/blog/blog.route'
 
 const router = express.Router()
 
