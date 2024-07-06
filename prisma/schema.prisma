@@ -55,9 +55,19 @@ model slider {
   img   String
 }
 
-model modalImg{
-  id   Int @id @default(autoincrement())
-  img  String
+model service{
+  id  Int @id @default(autoincrement())
+  value String
+  service String
+  paymentDetails String
+  shipmentDetails String
+}
+
+model ModalImg {
+  id        Int      @id @default(autoincrement())
+  img       String
+  startTime DateTime
+  endTime   DateTime
 }
 
 // Products model
@@ -192,6 +202,14 @@ model PostComment {
   post        Post   @relation(fields: [post_id], references: [id])
   commenterId Int
   commenter   User   @relation(fields: [commenterId], references: [id])
+}
+
+model socialLink{
+  id      Int @id@default(autoincrement())
+  facebook String
+  twitter  String
+  instagram String
+  youtube String
 }
 
 model PostLike {
