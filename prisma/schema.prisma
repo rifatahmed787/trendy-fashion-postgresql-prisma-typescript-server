@@ -48,6 +48,18 @@ model Address {
   user           User     @relation(fields: [address_id], references: [id])
 }
 
+model slider {
+  id    Int    @id @default(autoincrement())
+  title String
+  des   String
+  img   String
+}
+
+model modalImg{
+  id   Int @id @default(autoincrement())
+  img  String
+}
+
 // Products model
 
 model ProductCategory {
@@ -95,7 +107,6 @@ model Products {
   cartProducts          CartProduct[]
   createdAt             DateTime        @default(now())
 }
-
 
 // product reviews
 model ProductReview {
@@ -191,6 +202,12 @@ model PostLike {
   likerId Int
   liker   User @relation(fields: [likerId], references: [id])
   // @@unique([post_id, likerId])
+}
+
+
+model termsConditon{
+  id  Int @id @default(autoincrement())
+  title String[]
 }
 
 enum Role {
