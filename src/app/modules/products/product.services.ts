@@ -1,11 +1,11 @@
 import { pagination_map } from '../../../helpers/pagination'
 import { GenericResponse } from '../../../interfaces/common'
 import { IPagination } from '../../../interfaces/pagination'
-import { filter_cloth_conditions } from './product.condition'
+import { filter_product_conditions } from './product.condition'
 import ApiError from '../../errors/ApiError'
 import {
-  IClothFilter,
-  IClothFilteringItems as IClothUniqueFilteringItems,
+  IProductFilter,
+  IProductFilteringItems as IProductUniqueFilteringItems,
 } from './product.interface'
 import httpStatus from 'http-status'
 import { Products, PrismaClient, Role } from '@prisma/client'
@@ -13,8 +13,8 @@ import { JwtPayload } from 'jsonwebtoken'
 const prisma = new PrismaClient()
 
 // Create new product
-const create_new_cloth = async (
-  cloth_data: Products,
+const create_new_product = async (
+  product_data: Products,
   user: JwtPayload
 ): Promise<Products | null> => {
   // Check if the user is an admin
@@ -25,25 +25,25 @@ const create_new_cloth = async (
     )
   }
 
-  const created_cloth = await prisma.products.create({
-    data: cloth_data,
+  const created_product = await prisma.products.create({
+    data: product_data,
   })
 
-  return created_cloth
+  return created_product
 }
 
 //  gel_all_products
-const get_all_cloths = async (
-  filters: IClothFilter,
+const get_all_products = async (
+  filters: IProductFilter,
   pagination_data: Partial<IPagination>
 ): Promise<GenericResponse<Products[]> | null> => {
   const { page, limit, skip, sortObject } = pagination_map(pagination_data)
 
   // Define conditions (for search and filter)
-  const filterConditions = filter_cloth_conditions(filters) ?? {}
+  const filterConditions = filter_product_conditions(filters) ?? {}
 
   // Use the dynamic 'sortObject' in the 'orderBy' clause
-  const allCloths = await prisma.products.findMany({
+  const allproducts = await prisma.products.findMany({
     where: filterConditions,
     orderBy: sortObject,
     skip: skip,
@@ -53,7 +53,7 @@ const get_all_cloths = async (
     },
   })
 
-  // Get the total count of cloth products that match the conditions
+  // Get the total count of product products that match the conditions
   const total = await prisma.products.count({
     where: filterConditions,
   })
@@ -64,13 +64,13 @@ const get_all_cloths = async (
       limit: limit,
       total: total,
     },
-    data: allCloths,
+    data: allproducts,
   }
 }
 
-//  latestTenCloths
-const latest_ten_cloths = async (): Promise<Products[] | null> => {
-  const latestCloths = await prisma.products.findMany({
+//  latestTenproducts
+const latest_ten_products = async (): Promise<Products[] | null> => {
+  const latestProducts = await prisma.products.findMany({
     take: 50,
     orderBy: { id: 'desc' },
     include: {
@@ -78,11 +78,11 @@ const latest_ten_cloths = async (): Promise<Products[] | null> => {
     },
   })
 
-  return latestCloths
+  return latestProducts
 }
 
 //best seller
-const bestSellingCloths = async (): Promise<Products[] | null> => {
+const bestSellingProducts = async (): Promise<Products[] | null> => {
   const bestSellers = await prisma.products.findMany({
     where: {
       productRating: {
@@ -103,7 +103,7 @@ const bestSellingCloths = async (): Promise<Products[] | null> => {
 
 //  gel_all_category
 const get__unique_filtering_items =
-  async (): Promise<GenericResponse<IClothUniqueFilteringItems> | null> => {
+  async (): Promise<GenericResponse<IProductUniqueFilteringItems> | null> => {
     // and conditions (for search and filter)
     const distinctGender = await prisma.products.groupBy({
       by: ['productGender'],
@@ -120,17 +120,18 @@ const get__unique_filtering_items =
       data: {
         all_gender: allGender,
         all_category: allCategories,
+        all_type: [],
       },
     }
   }
 
 //products details
-const get_cloths_details = async (id: string): Promise<Products | null> => {
-  const clothId = parseInt(id)
+const get_product_details = async (id: string): Promise<Products | null> => {
+  const productId = parseInt(id)
 
-  const clothDetails = await prisma.products.findUnique({
+  const productDetails = await prisma.products.findUnique({
     where: {
-      id: clothId,
+      id: productId,
     },
     include: {
       productReviews: {
@@ -147,11 +148,11 @@ const get_cloths_details = async (id: string): Promise<Products | null> => {
     },
   })
 
-  if (!clothDetails) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Cloth not found')
+  if (!productDetails) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found')
   }
 
-  return clothDetails
+  return productDetails
 }
 
 //relatedproducts
@@ -179,10 +180,10 @@ const getRelatedProducts = async (productId: string): Promise<Products[]> => {
   return relatedProducts
 }
 
-// Update cloths
-const update_cloth = async (
+// Update products
+const update_product = async (
   id: string,
-  cloth_data: Partial<Products>,
+  product_data: Partial<Products>,
   user: JwtPayload
 ): Promise<Products | null> => {
   // Check if the user is an admin or has the necessary permissions
@@ -206,17 +207,17 @@ const update_cloth = async (
 
   // Now, update the product
   const updateProductId = parseInt(id)
-  const updated_cloth_data = await prisma.products.update({
+  const updated_product_data = await prisma.products.update({
     where: {
       id: updateProductId,
     },
-    data: cloth_data,
+    data: product_data,
   })
 
-  return updated_cloth_data
+  return updated_product_data
 }
 
-//  Delete cloth
+//  Delete product
 const delete_product = async (
   id: string,
   user: JwtPayload
@@ -279,14 +280,14 @@ const delete_product = async (
   return deletedProduct
 }
 
-export const ClothServices = {
-  create_new_cloth,
-  update_cloth,
-  get_all_cloths,
-  get_cloths_details,
+export const ProductServices = {
+  create_new_product,
+  update_product,
+  get_all_products,
+  get_product_details,
   getRelatedProducts,
   delete_product,
   get__unique_filtering_items,
-  latest_ten_cloths,
-  bestSellingCloths,
+  latest_ten_products,
+  bestSellingProducts,
 }

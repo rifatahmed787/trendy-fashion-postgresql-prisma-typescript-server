@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const create_cloth_zod_schema = z.object({
+export const create_product_zod_schema = z.object({
   body: z.object({
     productName: z.string({ required_error: 'Name is required' }),
     productColor: z.array(z.string({ required_error: 'Color is required' })),
@@ -25,7 +25,7 @@ export const create_cloth_zod_schema = z.object({
   }),
 })
 
-export const update_cloth_zod_schema = z.object({
+export const update_product_zod_schema = z.object({
   body: z.object({
     productName: z.string({ required_error: 'Name is required' }).optional(),
     productColor: z.string({ required_error: 'Color is required' }).optional(),

@@ -50,32 +50,52 @@ model Address {
 
 // Products model
 
-model Products {
-  id                   Int             @id @default(autoincrement())
-  productId            String          @unique
-  productName          String
-  productDetails       String?
-  productColor         String[]
-  productQuality       String
-  productImage         String[]
-  productSize          String[]
-  oldPrice             Float           @default(0.0)
-  productPrice         Float
-  productRating        Float?
-  productSpecification String[]
-  productCategory      String
-  productType          String
-  productGender        String
-  age                  String[]
-  relatedProducts      String[]
-  quantity             Int
-  buyerId              Int?
-  buyer                User?           @relation(fields: [buyerId], references: [id])
-  productReviews       ProductReview[]
-  wishLists            WishList[]
-  cartProducts         CartProduct[]
-  createdAt            DateTime        @default(now())
+model ProductCategory {
+  id           Int        @id @default(autoincrement())
+  categoryName String
+  products     Products[]
 }
+
+model ProductSize {
+  id       Int        @id @default(autoincrement())
+  size     String
+  products Products[] @relation("ProductSizes")
+}
+
+model ProductColor {
+  id       Int        @id @default(autoincrement())
+  color    String
+  products Products[] @relation("ProductColors")
+}
+
+model Products {
+  id                    Int             @id @default(autoincrement())
+  productId             String          @unique
+  productName           String
+  productDetails        String?
+  productColors         ProductColor[]  @relation("ProductColors")
+  productQualities      String[]
+  productImages         String[]
+  productSizes          ProductSize[]   @relation("ProductSizes")
+  oldPrice              Float           @default(0.0)
+  productPrice          Float
+  productRating         Float?
+  productSpecifications String[]
+  category_id           Int
+  productCategory       ProductCategory @relation(fields: [category_id], references: [id])
+  productType           String
+  productGender         String
+  ages                  String[]
+  relatedProducts       String[]
+  quantity              Int
+  buyerId               Int?
+  buyer                 User?           @relation(fields: [buyerId], references: [id])
+  productReviews        ProductReview[]
+  wishLists             WishList[]
+  cartProducts          CartProduct[]
+  createdAt             DateTime        @default(now())
+}
+
 
 // product reviews
 model ProductReview {
@@ -145,7 +165,7 @@ model Post {
   author_id   Int
   author      User          @relation(fields: [author_id], references: [id])
   category_id Int
-  category    PostCategory      @relation(fields: [category_id], references: [id])
+  category    PostCategory  @relation(fields: [category_id], references: [id])
   created_at  DateTime      @default(now())
   updated_at  DateTime      @updatedAt
   comments    PostComment[]
@@ -170,7 +190,7 @@ model PostLike {
   post    Post @relation(fields: [post_id], references: [id])
   likerId Int
   liker   User @relation(fields: [likerId], references: [id])
-  @@unique([post_id, likerId])
+  // @@unique([post_id, likerId])
 }
 
 enum Role {

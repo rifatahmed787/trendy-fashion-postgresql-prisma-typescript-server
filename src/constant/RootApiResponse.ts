@@ -1,5 +1,5 @@
 const root_api_response = {
-  welcomeMessage: 'Welcome to the Book catalog Backend API documentation!',
+  welcomeMessage: 'Welcome to the Trendy Fashion Backend API documentation!',
   LiveUrl: ' https://book-catalog-backend.example.com/api/v1',
   // GithubURL:
   //   'https://github.com/Porgramming-Hero-web-course/l2b1a4-cow-hut-admin-auth-Ahsan-Ullah1871',

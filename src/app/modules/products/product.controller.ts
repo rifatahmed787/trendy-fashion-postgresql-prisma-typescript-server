@@ -6,13 +6,16 @@ import sendResponse from '../../../shared/sendResponse'
 import pick from '../../../shared/pick'
 import { product_filter_keys } from './product.constant'
 import { pagination_keys } from '../../../constant/common'
-import { ClothServices } from './product.services'
+import { ProductServices } from './product.services'
 
-// Create cloth
-const createCloth = catchAsync(async (req: Request, res: Response) => {
-  const { ...cloth_data } = req.body
+// Create product
+const createProduct = catchAsync(async (req: Request, res: Response) => {
+  const { ...product_data } = req.body
   const user_data = req.logged_in_user
-  const result = await ClothServices.create_new_cloth(cloth_data, user_data)
+  const result = await ProductServices.create_new_product(
+    product_data,
+    user_data
+  )
 
   sendResponse(res, {
     status_code: httpStatus.OK,
@@ -23,13 +26,17 @@ const createCloth = catchAsync(async (req: Request, res: Response) => {
 })
 
 //  update product
-const updateCloth = catchAsync(async (req: Request, res: Response) => {
+const updateProduct = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params
 
   const user_data = req.logged_in_user
 
-  const { ...cloth_data } = req.body
-  const result = await ClothServices.update_cloth(id, cloth_data, user_data)
+  const { ...product_data } = req.body
+  const result = await ProductServices.update_product(
+    id,
+    product_data,
+    user_data
+  )
 
   sendResponse(res, {
     status_code: httpStatus.OK,
@@ -39,12 +46,12 @@ const updateCloth = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-//  Get all cloth
-const allCloths = catchAsync(async (req: Request, res: Response) => {
+//  Get all product
+const allProducts = catchAsync(async (req: Request, res: Response) => {
   const filers = pick(req.query, product_filter_keys)
   const pagination = pick(req.query, pagination_keys)
 
-  const result = await ClothServices.get_all_cloths(filers, pagination)
+  const result = await ProductServices.get_all_products(filers, pagination)
 
   sendResponse(res, {
     status_code: httpStatus.OK,
@@ -53,9 +60,9 @@ const allCloths = catchAsync(async (req: Request, res: Response) => {
     message: 'Product retrieved successfully',
   })
 })
-//  Get all latestTencloth
-const latestTenCloths = catchAsync(async (req: Request, res: Response) => {
-  const result = await ClothServices.latest_ten_cloths()
+//  Get all latestTenproducts
+const latestTenProducts = catchAsync(async (req: Request, res: Response) => {
+  const result = await ProductServices.latest_ten_products()
 
   sendResponse(res, {
     status_code: httpStatus.OK,
@@ -66,8 +73,8 @@ const latestTenCloths = catchAsync(async (req: Request, res: Response) => {
 })
 
 //best seller
-const bestSellingCloths = catchAsync(async (req: Request, res: Response) => {
-  const result = await ClothServices.bestSellingCloths()
+const bestSellingProducts = catchAsync(async (req: Request, res: Response) => {
+  const result = await ProductServices.bestSellingProducts()
   sendResponse(res, {
     status_code: httpStatus.OK,
     success: true,
@@ -76,9 +83,9 @@ const bestSellingCloths = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-//  Get all cloths
+//  Get all products
 const uniqueFilteringData = catchAsync(async (req: Request, res: Response) => {
-  const result = await ClothServices.get__unique_filtering_items()
+  const result = await ProductServices.get__unique_filtering_items()
 
   sendResponse(res, {
     status_code: httpStatus.OK,
@@ -88,11 +95,11 @@ const uniqueFilteringData = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-//   Get cloth Details
-const clothDetails = catchAsync(async (req: Request, res: Response) => {
+//   Get product Details
+const productDetails = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params
 
-  const result = await ClothServices.get_cloths_details(id)
+  const result = await ProductServices.get_product_details(id)
 
   sendResponse(res, {
     status_code: httpStatus.OK,
@@ -105,7 +112,7 @@ const clothDetails = catchAsync(async (req: Request, res: Response) => {
 const getRelatedProducts = catchAsync(async (req: Request, res: Response) => {
   const { productId } = req.params
 
-  const relatedProducts = await ClothServices.getRelatedProducts(productId)
+  const relatedProducts = await ProductServices.getRelatedProducts(productId)
 
   sendResponse(res, {
     status_code: httpStatus.OK,
@@ -115,11 +122,11 @@ const getRelatedProducts = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-//  Delete cloth
-const deleteCloth = catchAsync(async (req: Request, res: Response) => {
+//  Delete product
+const deleteProduct = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params
   const user_data = req.logged_in_user
-  const result = await ClothServices.delete_product(id, user_data)
+  const result = await ProductServices.delete_product(id, user_data)
 
   sendResponse(res, {
     status_code: httpStatus.OK,
@@ -129,14 +136,14 @@ const deleteCloth = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const ClothController = {
-  createCloth,
-  clothDetails,
-  updateCloth,
-  deleteCloth,
-  allCloths,
+export const ProductController = {
+  createProduct,
+  productDetails,
+  updateProduct,
+  deleteProduct,
+  allProducts,
   uniqueFilteringData,
-  latestTenCloths,
-  bestSellingCloths,
+  latestTenProducts,
+  bestSellingProducts,
   getRelatedProducts,
 }

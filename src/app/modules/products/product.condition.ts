@@ -1,8 +1,8 @@
-import { cloth_search_condition_keys } from './product.constant'
-import { IClothFilter } from './product.interface'
+import { product_search_condition_keys } from './product.constant'
+import { IProductFilter } from './product.interface'
 
-export const filter_cloth_conditions = (
-  filters: IClothFilter
+export const filter_product_conditions = (
+  filters: IProductFilter
 ): { [key: string]: unknown } | undefined => {
   const { searchTerm, ...filter_keys } = filters
 
@@ -10,7 +10,7 @@ export const filter_cloth_conditions = (
 
   if (searchTerm) {
     conditions.push({
-      OR: cloth_search_condition_keys.map(item => ({
+      OR: product_search_condition_keys.map(item => ({
         [item]: {
           contains: searchTerm,
           mode: 'insensitive',

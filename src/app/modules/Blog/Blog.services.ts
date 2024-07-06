@@ -154,7 +154,7 @@ const get_all_blogs = async (
     },
   })
 
-  // Get the total count of cloth products that match the conditions
+  // Get the total count of blog products that match the conditions
   const total = await prisma.post.count({
     where: filterConditions,
   })

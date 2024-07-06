@@ -1,4 +1,5 @@
 import { PrismaClient, PostLike } from '@prisma/client'
+
 const prisma = new PrismaClient()
 
 const postLike = async (
@@ -8,12 +9,10 @@ const postLike = async (
   const { post_id } = like_data
 
   // Check if the like already exists
-  const existingLike = await prisma.postLike.findUnique({
+  const existingLike = await prisma.postLike.findFirst({
     where: {
-      post_id_likerId: {
-        post_id: post_id,
-        likerId: likerId,
-      },
+      post_id: post_id,
+      likerId: likerId,
     },
   })
 
@@ -21,10 +20,7 @@ const postLike = async (
     // If like exists, remove it (withdraw the like)
     await prisma.postLike.delete({
       where: {
-        post_id_likerId: {
-          post_id: post_id,
-          likerId: likerId,
-        },
+        id: existingLike.id,
       },
     })
     return null // Return null to indicate the like was withdrawn

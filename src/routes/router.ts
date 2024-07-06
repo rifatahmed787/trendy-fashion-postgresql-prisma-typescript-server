@@ -2,7 +2,7 @@ import express from 'express'
 import { UserRoute } from '../app/modules/user/user.route'
 import { AuthRoute } from '../app/modules/auth/auth.route'
 import { UploadRoute } from '../app/modules/cloudinary/upload.route'
-import { ClothRoute } from '../app/modules/products/product.routes'
+import { ProductRoute } from '../app/modules/products/product.routes'
 import { ReviewRoute } from '../app/modules/review/review.route'
 import { WishRoute } from '../app/modules/wish/wish.route'
 import { CartRoute } from '../app/modules/cart/cart.route'
@@ -19,7 +19,7 @@ const all_routes = [
   { path: '/auth', router: AuthRoute },
   { path: '/upload', router: UploadRoute },
   { path: '/user', router: UserRoute },
-  { path: '/product', router: ClothRoute },
+  { path: '/product', router: ProductRoute },
   { path: '/reviews', router: ReviewRoute },
   { path: '/wish', router: WishRoute },
   { path: '/cart', router: CartRoute },
