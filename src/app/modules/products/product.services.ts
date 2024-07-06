@@ -109,12 +109,12 @@ const get__unique_filtering_items =
       by: ['productGender'],
     })
 
-    const distinctCategories = await prisma.products.groupBy({
-      by: ['productCategory'],
+    const distinctCategories = await prisma.productCategory.groupBy({
+      by: ['categoryName'],
     })
 
     const allGender = distinctGender.map(item => item.productGender)
-    const allCategories = distinctCategories.map(item => item.productCategory)
+    const allCategories = distinctCategories.map(item => item.categoryName)
 
     return {
       data: {
