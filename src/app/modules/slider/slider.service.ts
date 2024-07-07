@@ -13,7 +13,7 @@ const create_slider = async (
   if (user?.role !== Role.ADMIN) {
     throw new ApiError(
       httpStatus.FORBIDDEN,
-      'Only admin users can create products'
+      'Only admin users can create modal'
     )
   }
 
