@@ -4,6 +4,7 @@ import ApiError from '../../errors/ApiError'
 import httpStatus from 'http-status'
 
 const prisma = new PrismaClient()
+
 const create_slider = async (
   slider_data: slider,
   user: JwtPayload
@@ -16,12 +17,18 @@ const create_slider = async (
     )
   }
 
-  const createSlider = prisma.slider.create({
+  const createSlider = await prisma.slider.create({
     data: slider_data,
   })
   return createSlider
 }
 
+const getSlider = async (): Promise<slider[]> => {
+  const getData = await prisma.slider.findMany()
+  return getData
+}
+
 export const SliderService = {
   create_slider,
+  getSlider,
 }
