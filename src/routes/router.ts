@@ -13,6 +13,7 @@ import { CommentRoute } from '../app/modules/comment/comment.route'
 import { LikeRoute } from '../app/modules/like/like.route'
 import { BlogRoute } from '../app/modules/blog/blog.route'
 import { SliderRoute } from '../app/modules/slider/slider.route'
+import { ModalRoute } from '../app/modules/modal/modal.route'
 
 const router = express.Router()
 
@@ -21,6 +22,7 @@ const all_routes = [
   { path: '/upload', router: UploadRoute },
   { path: '/user', router: UserRoute },
   { path: '/slider', router: SliderRoute },
+  { path: '/modal', router: ModalRoute },
   { path: '/product', router: ProductRoute },
   { path: '/reviews', router: ReviewRoute },
   { path: '/wish', router: WishRoute },
