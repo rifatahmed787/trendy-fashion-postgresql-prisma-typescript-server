@@ -12,6 +12,7 @@ import { OrderRouter } from '../app/modules/order/order.route'
 import { CommentRoute } from '../app/modules/comment/comment.route'
 import { LikeRoute } from '../app/modules/like/like.route'
 import { BlogRoute } from '../app/modules/blog/blog.route'
+import { SliderRoute } from '../app/modules/slider/slider.route'
 
 const router = express.Router()
 
@@ -19,6 +20,7 @@ const all_routes = [
   { path: '/auth', router: AuthRoute },
   { path: '/upload', router: UploadRoute },
   { path: '/user', router: UserRoute },
+  { path: '/slider', router: SliderRoute },
   { path: '/product', router: ProductRoute },
   { path: '/reviews', router: ReviewRoute },
   { path: '/wish', router: WishRoute },
