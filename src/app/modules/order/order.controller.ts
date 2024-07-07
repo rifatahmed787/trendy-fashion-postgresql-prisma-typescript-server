@@ -4,12 +4,15 @@ import { Request, Response } from 'express'
 import sendResponse from '../../../shared/sendResponse'
 import httpStatus from 'http-status'
 import { OrderService } from './order.services'
+import pick from '../../../shared/pick'
+import { pagination_keys } from '../../../constant/common'
 
 const getAllOrder = catchAsync(async (req: Request, res: Response) => {
   const user = req.logged_in_user
-  const result = await OrderService.getAllOrder(user)
+  const pagination = pick(req.query, pagination_keys)
+  const result = await OrderService.getAllOrder(user, pagination)
 
-  sendResponse<CartProduct[], null>(res, {
+  sendResponse(res, {
     status_code: httpStatus.OK,
     success: true,
     data: result,

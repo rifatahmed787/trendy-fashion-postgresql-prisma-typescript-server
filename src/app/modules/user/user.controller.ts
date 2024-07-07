@@ -3,10 +3,13 @@ import httpStatus from 'http-status'
 import { UserServices } from './user.services'
 import catchAsync from '../../../shared/catchAsync'
 import sendResponse from '../../../shared/sendResponse'
+import pick from '../../../shared/pick'
+import { pagination_keys } from '../../../constant/common'
 
 //get all user
 const allUsers = catchAsync(async (req: Request, res: Response) => {
-  const result = await UserServices.allUsers()
+  const pagination = pick(req.query, pagination_keys)
+  const result = await UserServices.allUsers(pagination)
   sendResponse(res, {
     status_code: httpStatus.OK,
     success: true,

@@ -7,8 +7,8 @@ import { IPagination } from '../../../interfaces/pagination'
 const prisma = new PrismaClient()
 
 const getAllOrder = async (
-  pagination_data: Partial<IPagination>,
-  user: JwtPayload
+  user: JwtPayload,
+  pagination_data: Partial<IPagination>
 ): Promise<{
   meta: { page: number; limit: number; total: number }
   data: CartProduct[]
