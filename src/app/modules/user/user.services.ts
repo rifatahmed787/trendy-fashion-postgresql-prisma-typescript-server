@@ -1,6 +1,8 @@
 import httpStatus from 'http-status'
 import ApiError from '../../errors/ApiError'
 import { Address, PrismaClient, User } from '@prisma/client'
+import { pagination_map } from '../../../helpers/pagination'
+import { IPagination } from '../../../interfaces/pagination'
 
 const prisma = new PrismaClient()
 //MY  profile
@@ -38,14 +40,35 @@ const my_profile = async (userId: string): Promise<Partial<User> | null> => {
 }
 
 // get all the user
-const allUsers = async (): Promise<User[]> => {
+const allUsers = async (
+  pagination_data: Partial<IPagination>
+): Promise<{
+  meta: { page: number; limit: number; total: number }
+  data: User[]
+}> => {
+  const { page, limit, skip, sortObject } = pagination_map(pagination_data)
+
+  // Count the total number of users
+  const total = await prisma.user.count()
+
   const users = await prisma.user.findMany({
+    orderBy: sortObject,
+    skip: skip,
+    take: limit,
     include: {
       address: true,
       reviewProducts: true,
     },
   })
-  return users
+
+  return {
+    meta: {
+      page: page,
+      limit: limit,
+      total: total,
+    },
+    data: users,
+  }
 }
 
 const createAddress = async (
