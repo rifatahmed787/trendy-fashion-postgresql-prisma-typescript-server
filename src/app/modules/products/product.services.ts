@@ -104,7 +104,7 @@ const bestSellingProducts = async (): Promise<Products[] | null> => {
 //  gel_all_category
 const get__unique_filtering_items =
   async (): Promise<GenericResponse<IProductUniqueFilteringItems> | null> => {
-    // and conditions (for search and filter)
+    // and conditions (for search and  filter)
     const distinctGender = await prisma.products.groupBy({
       by: ['productGender'],
     })
