@@ -18,6 +18,32 @@ const createSlider = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const getSlider = catchAsync(async (req: Request, res: Response) => {
+  const result = await SliderService.getSlider()
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Slider retrieved successfully',
+  })
+})
+
+const updateSlider = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const user = req.logged_in_user
+  const { ...slider_data } = req.body
+  const result = await SliderService.update_slider(id, slider_data, user)
+
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Slider updated successfully',
+  })
+})
+
 export const SliderController = {
   createSlider,
+  getSlider,
+  updateSlider,
 }
