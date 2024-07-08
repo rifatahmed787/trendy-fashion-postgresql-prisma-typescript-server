@@ -42,7 +42,7 @@ const updatemodal = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const modalController = {
+export const ModalController = {
   createmodal,
   getModal,
   updatemodal,
