@@ -15,6 +15,7 @@ import { BlogRoute } from '../app/modules/blog/blog.route'
 import { SliderRoute } from '../app/modules/slider/slider.route'
 import { ModalRoute } from '../app/modules/modal/modal.route'
 import { ServiceRoute } from '../app/modules/service/service.route'
+import { ProductCategoryRoute } from '../app/modules/productCategory/productCategory.route'
 
 const router = express.Router()
 
@@ -25,6 +26,7 @@ const all_routes = [
   { path: '/slider', router: SliderRoute },
   { path: '/modal', router: ModalRoute },
   { path: '/service', router: ServiceRoute },
+  { path: '/product_category', router: ProductCategoryRoute },
   { path: '/product', router: ProductRoute },
   { path: '/reviews', router: ReviewRoute },
   { path: '/wish', router: WishRoute },

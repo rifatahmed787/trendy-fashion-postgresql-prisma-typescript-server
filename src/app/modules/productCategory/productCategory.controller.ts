@@ -62,7 +62,7 @@ const deleteCategory = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const ServiceController = {
+export const ProductCategoryController = {
   createCategory,
   getCategory,
   updateCategory,
