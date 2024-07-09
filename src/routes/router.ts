@@ -11,7 +11,7 @@ import { PaymentRouter } from '../app/modules/payment/payment.route'
 import { OrderRouter } from '../app/modules/order/order.route'
 import { CommentRoute } from '../app/modules/comment/comment.route'
 import { LikeRoute } from '../app/modules/like/like.route'
-import { BlogRoute } from '../app/modules/blog/blog.route'
+// import { BlogRoute } from '../app/modules/blog/blog.route'
 import { SliderRoute } from '../app/modules/slider/slider.route'
 import { ModalRoute } from '../app/modules/modal/modal.route'
 import { ServiceRoute } from '../app/modules/service/service.route'
@@ -29,7 +29,7 @@ const all_routes = [
   { path: '/reviews', router: ReviewRoute },
   { path: '/wish', router: WishRoute },
   { path: '/cart', router: CartRoute },
-  { path: '/blog', router: BlogRoute },
+  // { path: '/blog', router: BlogRoute },
   { path: '/accordian', router: AccordianRouter },
   { path: '/payment', router: PaymentRouter },
   { path: '/order', router: OrderRouter },
