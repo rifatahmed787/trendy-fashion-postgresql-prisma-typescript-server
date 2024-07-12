@@ -45,7 +45,7 @@ const updateHero = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const HeroHeroController = {
+export const HeroController = {
   createHero,
   getHero,
   updateHero,
