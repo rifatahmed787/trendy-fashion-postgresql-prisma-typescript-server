@@ -17,6 +17,7 @@ import { ModalRoute } from '../app/modules/modal/modal.route'
 import { ServiceRoute } from '../app/modules/service/service.route'
 import { ProductCategoryRoute } from '../app/modules/productCategory/productCategory.route'
 import { SliderHeroRoute } from '../app/modules/sliderHero/sliderHero.route'
+import { LatestHeroRoute } from '../app/modules/latestSectionHero/latestSectionHero.route'
 
 const router = express.Router()
 
@@ -33,6 +34,7 @@ const all_routes = [
   { path: '/reviews', router: ReviewRoute },
   { path: '/wish', router: WishRoute },
   { path: '/cart', router: CartRoute },
+  { path: '/latest_section', router: LatestHeroRoute },
   { path: '/blog', router: BlogRoute },
   { path: '/accordian', router: AccordianRouter },
   { path: '/payment', router: PaymentRouter },

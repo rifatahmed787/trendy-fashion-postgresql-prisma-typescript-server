@@ -176,6 +176,14 @@ model latestSectionHero {
   imgTwo   String
 }
 
+model HeroSection {
+  id        Int    @id @default(autoincrement())
+  subTitle  String
+  title     String
+  paragraph String
+  img       String
+}
+
 // faq/accordian model
 
 model ProductAccordian {
