@@ -168,6 +168,14 @@ model WishList {
   product   Products @relation(fields: [productId], references: [id])
 }
 
+model latestSectionHero {
+  id       Int    @id @default(autoincrement())
+  title    String
+  subTitle String
+  imgOne   String
+  imgTwo   String
+}
+
 // faq/accordian model
 
 model ProductAccordian {
