@@ -54,20 +54,22 @@ model slider {
   des   String
   img   String
 }
+
 model sliderHero {
-  id        Int    @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   title     String
   subTitle  String
-  img       String
+  lgImg     String
+  smImg     String
   startDate DateTime
   endDate   DateTime
 }
 
-model service{
-  id  Int @id @default(autoincrement())
-  value String
-  service String
-  paymentDetails String
+model service {
+  id              Int    @id @default(autoincrement())
+  value           String
+  service         String
+  paymentDetails  String
   shipmentDetails String
 }
 
@@ -211,12 +213,12 @@ model PostComment {
   commenter   User   @relation(fields: [commenterId], references: [id])
 }
 
-model socialLink{
-  id      Int @id@default(autoincrement())
-  facebook String
-  twitter  String
+model socialLink {
+  id        Int    @id @default(autoincrement())
+  facebook  String
+  twitter   String
   instagram String
-  youtube String
+  youtube   String
 }
 
 model PostLike {
@@ -229,9 +231,8 @@ model PostLike {
   // @@unique([post_id, likerId])
 }
 
-
-model termsConditon{
-  id  Int @id @default(autoincrement())
+model termsConditon {
+  id    Int      @id @default(autoincrement())
   title String[]
 }
 

@@ -5,7 +5,8 @@ export const createSliderHeroSchema = z.object({
     .object({
       title: z.string().min(1, { message: 'Title is required' }),
       subTitle: z.string().min(1, { message: 'Subtitle is required' }),
-      img: z.string().url({ message: 'Image must be a valid URL' }),
+      lgImg: z.string().url({ message: 'Image must be a valid URL' }),
+      smImg: z.string().url({ message: 'Image must be a valid URL' }),
       startDate: z.string().refine(val => !isNaN(Date.parse(val)), {
         message: 'Start Date must be a valid DateTime',
       }),
@@ -34,7 +35,14 @@ export const updateSliderHeroSchema = z.object({
         .string()
         .min(1, { message: 'Subtitle is required' })
         .optional(),
-      img: z.string().url({ message: 'Image must be a valid URL' }).optional(),
+      lgImg: z
+        .string()
+        .url({ message: 'Image must be a valid URL' })
+        .optional(),
+      smImg: z
+        .string()
+        .url({ message: 'Image must be a valid URL' })
+        .optional(),
       startDate: z
         .string()
         .refine(val => !isNaN(Date.parse(val)), {
