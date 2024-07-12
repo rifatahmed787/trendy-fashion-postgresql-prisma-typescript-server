@@ -61,7 +61,7 @@ const update_hero = async (
   return updated_Hero_data
 }
 
-export const HeroHeroService = {
+export const HeroSectionService = {
   create_hero_section,
   getHero,
   update_hero,
