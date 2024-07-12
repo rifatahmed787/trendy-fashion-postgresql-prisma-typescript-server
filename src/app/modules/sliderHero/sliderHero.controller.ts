@@ -49,7 +49,7 @@ const updateSliderHero = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const SliderController = {
+export const SliderHeroController = {
   createSliderHero,
   getSliderHero,
   updateSliderHero,
