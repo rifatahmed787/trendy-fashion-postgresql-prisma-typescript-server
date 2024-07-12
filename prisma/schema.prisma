@@ -184,6 +184,15 @@ model HeroSection {
   img       String
 }
 
+model dealSection{
+  id  Int @id @default(autoincrement())
+  campaign String
+  shipping String
+  smImgOne String
+  smImgTwo String
+  lgImg String
+}
+
 // faq/accordian model
 
 model ProductAccordian {

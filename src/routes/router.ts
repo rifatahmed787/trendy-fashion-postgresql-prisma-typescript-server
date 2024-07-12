@@ -18,6 +18,7 @@ import { ServiceRoute } from '../app/modules/service/service.route'
 import { ProductCategoryRoute } from '../app/modules/productCategory/productCategory.route'
 import { SliderHeroRoute } from '../app/modules/sliderHero/sliderHero.route'
 import { LatestHeroRoute } from '../app/modules/latestSectionHero/latestSectionHero.route'
+import { HeroRoute } from '../app/modules/heroSection/heroSection.route'
 
 const router = express.Router()
 
@@ -35,6 +36,7 @@ const all_routes = [
   { path: '/wish', router: WishRoute },
   { path: '/cart', router: CartRoute },
   { path: '/latest_section', router: LatestHeroRoute },
+  { path: '/hero_section', router: HeroRoute },
   { path: '/blog', router: BlogRoute },
   { path: '/accordian', router: AccordianRouter },
   { path: '/payment', router: PaymentRouter },
