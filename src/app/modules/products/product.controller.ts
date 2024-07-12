@@ -109,19 +109,6 @@ const productDetails = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-const getRelatedProducts = catchAsync(async (req: Request, res: Response) => {
-  const { productId } = req.params
-
-  const relatedProducts = await ProductServices.getRelatedProducts(productId)
-
-  sendResponse(res, {
-    status_code: httpStatus.OK,
-    success: true,
-    data: relatedProducts,
-    message: 'Data retrieve successfully',
-  })
-})
-
 //  Delete product
 const deleteProduct = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params
@@ -145,5 +132,4 @@ export const ProductController = {
   uniqueFilteringData,
   latestTenProducts,
   bestSellingProducts,
-  getRelatedProducts,
 }

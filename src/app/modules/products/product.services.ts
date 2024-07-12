@@ -155,31 +155,6 @@ const get_product_details = async (id: string): Promise<Products | null> => {
   return productDetails
 }
 
-//relatedproducts
-const getRelatedProducts = async (productId: string): Promise<Products[]> => {
-  const mainProductDetails = await prisma.products.findUnique({
-    where: {
-      productId: productId,
-    },
-  })
-
-  if (!mainProductDetails) {
-    throw new Error('Main product not found')
-  }
-
-  const relatedProductIds = mainProductDetails.relatedProducts
-
-  const relatedProducts = await prisma.products.findMany({
-    where: {
-      productId: {
-        in: relatedProductIds,
-      },
-    },
-  })
-
-  return relatedProducts
-}
-
 // Update products
 const update_product = async (
   id: string,
@@ -285,7 +260,6 @@ export const ProductServices = {
   update_product,
   get_all_products,
   get_product_details,
-  getRelatedProducts,
   delete_product,
   get__unique_filtering_items,
   latest_ten_products,

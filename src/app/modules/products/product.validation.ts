@@ -42,7 +42,7 @@ export const createProductSchema = z.object({
       .refine(val => !isNaN(Date.parse(val)), {
         message: 'Creation date must be a valid DateTime',
       })
-      .optional(), // default value is set in the model
+      .optional(),
   }),
 })
 
@@ -68,7 +68,7 @@ export const updateProductSchema = z.object({
       .optional(),
     productSizes: z
       .array(z.string().min(1, { message: 'Product Size is required' }))
-      .optional(), // Assuming size is a string here, adjust as needed
+      .optional(),
     oldPrice: z
       .number()
       .min(0, { message: 'Old Price must be zero or positive' })
