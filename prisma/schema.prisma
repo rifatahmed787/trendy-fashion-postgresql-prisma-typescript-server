@@ -54,6 +54,14 @@ model slider {
   des   String
   img   String
 }
+model sliderHero {
+  id        Int    @id @default(autoincrement())
+  title     String
+  subTitle  String
+  img       String
+  startDate DateTime
+  endDate   DateTime
+}
 
 model service{
   id  Int @id @default(autoincrement())
@@ -108,7 +116,6 @@ model Products {
   productType           String
   productGender         String
   ages                  String[]
-  relatedProducts       String[]
   quantity              Int
   buyerId               Int?
   buyer                 User?           @relation(fields: [buyerId], references: [id])
