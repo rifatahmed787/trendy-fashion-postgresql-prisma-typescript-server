@@ -7,6 +7,7 @@ import { SliderService } from './slider.service'
 // Create slider
 const createSlider = catchAsync(async (req: Request, res: Response) => {
   const { ...slider_data } = req.body
+
   const user_data = req.logged_in_user
   const result = await SliderService.create_slider(slider_data, user_data)
 

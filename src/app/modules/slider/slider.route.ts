@@ -8,8 +8,8 @@ const router = express.Router()
 
 router.post(
   '/',
-  requestValidationHandler(createSliderSchema),
   authHandler(),
+  requestValidationHandler(createSliderSchema),
   SliderController.createSlider
 )
 

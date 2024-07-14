@@ -1,14 +1,17 @@
 import { z } from 'zod'
 
 export const createSliderSchema = z.object({
-  title: z.string().min(1, { message: 'Title is required' }),
-  des: z.string().min(1, { message: 'Description is required' }),
-  img: z.string().url({ message: 'Image must be a valid URL' }),
+  body: z.object({
+    title: z.string({ required_error: 'Title is required' }),
+    des: z.string({ required_error: 'Des is required' }),
+    img: z.string({ required_error: 'Image is required' }),
+  }),
 })
 
 export const updateSliderSchema = z.object({
-  id: z.number().int().positive({ message: 'ID must be a positive integer' }),
-  title: z.string().min(1, { message: 'Title is required' }).optional(),
-  des: z.string().min(1, { message: 'Description is required' }).optional(),
-  img: z.string().url({ message: 'Image must be a valid URL' }).optional(),
+  body: z.object({
+    title: z.string().optional(),
+    des: z.string().optional(),
+    img: z.string().optional(),
+  }),
 })
