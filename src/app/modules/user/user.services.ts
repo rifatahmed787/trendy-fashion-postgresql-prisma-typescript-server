@@ -53,7 +53,7 @@ const allUsers = async (
   const total = await prisma.user.count()
 
   const users = await prisma.user.findMany({
-    orderBy: sortObject,
+    orderBy: sortObject || { id: 'asc' },
     skip: skip,
     take: limit,
     include: {
