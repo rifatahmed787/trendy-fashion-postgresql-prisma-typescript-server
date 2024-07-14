@@ -58,9 +58,39 @@ const updatedUser = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const update_user_superadmin = catchAsync(
+  async (req: Request, res: Response) => {
+    const { id } = req.params
+    const user = req.logged_in_user
+    const result = await UserServices.update_user_superadmin(id, user)
+
+    sendResponse(res, {
+      status_code: httpStatus.OK,
+      success: true,
+      data: result,
+      message: 'User role updated successfully',
+    })
+  }
+)
+
+const update_user_admin = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const user = req.logged_in_user
+  const result = await UserServices.update_user_admin(id, user)
+
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'User role updated successfully',
+  })
+})
+
 export const UserController = {
   userProfile,
   allUsers,
   createAddress,
   updatedUser,
+  update_user_superadmin,
+  update_user_admin,
 }
