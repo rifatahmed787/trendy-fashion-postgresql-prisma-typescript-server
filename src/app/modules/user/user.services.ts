@@ -3,6 +3,7 @@ import ApiError from '../../errors/ApiError'
 import { Address, PrismaClient, User } from '@prisma/client'
 import { pagination_map } from '../../../helpers/pagination'
 import { IPagination } from '../../../interfaces/pagination'
+import { JwtPayload } from 'jsonwebtoken'
 
 const prisma = new PrismaClient()
 //MY  profile
@@ -157,9 +158,82 @@ const updateUser = async (
   return updatedUser
 }
 
+const update_user_superadmin = async (
+  id: string,
+  user: JwtPayload
+): Promise<User | null> => {
+  // Check if the user is an admin or has the necessary permissions
+  if (user.role !== 'ADMIN') {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'You do not have permission to update user'
+    )
+  }
+
+  const existingUserId = parseInt(id)
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      id: existingUserId,
+    },
+  })
+
+  if (!existingUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found')
+  }
+
+  // Now, update the User's role to SUPERADMIN
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: existingUserId,
+    },
+    data: {
+      role: 'SUPERADMIN',
+    },
+  })
+
+  return updatedUser
+}
+const update_user_admin = async (
+  id: string,
+  user: JwtPayload
+): Promise<User | null> => {
+  // Check if the user is an admin or has the necessary permissions
+  if (user.role !== 'SUPERADMIN') {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'You do not have permission to update user'
+    )
+  }
+
+  const existingUserId = parseInt(id)
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      id: existingUserId,
+    },
+  })
+
+  if (!existingUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found')
+  }
+
+  // Now, update the User's role to SUPERADMIN
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: existingUserId,
+    },
+    data: {
+      role: 'ADMIN',
+    },
+  })
+
+  return updatedUser
+}
+
 export const UserServices = {
   my_profile,
   allUsers,
   createAddress,
   updateUser,
+  update_user_superadmin,
+  update_user_admin,
 }
