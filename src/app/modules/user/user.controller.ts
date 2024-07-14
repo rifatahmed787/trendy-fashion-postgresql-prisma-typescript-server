@@ -86,6 +86,19 @@ const update_user_admin = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const deleteUser = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const user = req.logged_in_user
+  const result = await UserServices.delete_user(id, user)
+
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'User deleted successfully',
+  })
+})
+
 export const UserController = {
   userProfile,
   allUsers,
@@ -93,4 +106,5 @@ export const UserController = {
   updatedUser,
   update_user_superadmin,
   update_user_admin,
+  deleteUser,
 }

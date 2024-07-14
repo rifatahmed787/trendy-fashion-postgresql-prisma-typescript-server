@@ -229,6 +229,62 @@ const update_user_admin = async (
   return updatedUser
 }
 
+const delete_user = async (
+  id: string,
+  user: JwtPayload
+): Promise<User | null> => {
+  // Check if the user is an admin
+  if (user.role !== 'ADMIN') {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Only admin users can delete user')
+  }
+
+  const userId = parseInt(id)
+
+  // Check if the user exists
+  const findUser = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    include: {
+      reviewProducts: true,
+      wishLists: true,
+      cartProducts: true,
+    },
+  })
+
+  if (!findUser) {
+    throw new ApiError(httpStatus.EXPECTATION_FAILED, 'Failed to delete user')
+  }
+
+  // Delete related data
+  await prisma.productReview.deleteMany({
+    where: {
+      reviewerId: userId,
+    },
+  })
+
+  await prisma.wishList.deleteMany({
+    where: {
+      userId,
+    },
+  })
+
+  await prisma.cartProduct.deleteMany({
+    where: {
+      userId,
+    },
+  })
+
+  // Delete the user
+  const deletedUser = await prisma.user.delete({
+    where: {
+      id: userId,
+    },
+  })
+
+  return deletedUser
+}
+
 export const UserServices = {
   my_profile,
   allUsers,
@@ -236,4 +292,5 @@ export const UserServices = {
   updateUser,
   update_user_superadmin,
   update_user_admin,
+  delete_user,
 }

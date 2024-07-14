@@ -9,7 +9,12 @@ router.get('/allusers', UserController.allUsers)
 router.get('/userinfo', authHandler(), UserController.userProfile)
 router.post('/address', authHandler(), UserController.createAddress)
 router.patch('/updateuser', authHandler(), UserController.updatedUser)
-router.put('/:id', authHandler(), UserController.update_user_superadmin)
-router.put('/:id', authHandler(), UserController.update_user_admin)
+router.put(
+  'superadmin/:id',
+  authHandler(),
+  UserController.update_user_superadmin
+)
+router.put('admin/:id', authHandler(), UserController.update_user_admin)
+router.delete('/:id', authHandler(), UserController.deleteUser)
 
 export const UserRoute = router
