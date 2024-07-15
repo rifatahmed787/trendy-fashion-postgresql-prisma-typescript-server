@@ -28,6 +28,20 @@ const getService = async (): Promise<service[]> => {
   return getData
 }
 
+const getSingleService = async (id: string): Promise<service | null> => {
+  const serviceId = parseInt(id)
+  const serviceDetails = await prisma.service.findUnique({
+    where: {
+      id: serviceId,
+    },
+  })
+  if (!serviceDetails) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found')
+  }
+
+  return serviceDetails
+}
+
 const update_service = async (
   id: string,
   service_data: Partial<service>,
@@ -68,4 +82,5 @@ export const ServiceService = {
   create_service,
   getService,
   update_service,
+  getSingleService,
 }

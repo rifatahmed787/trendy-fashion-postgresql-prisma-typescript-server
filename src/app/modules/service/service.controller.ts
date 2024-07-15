@@ -27,6 +27,16 @@ const getService = catchAsync(async (req: Request, res: Response) => {
     message: 'Service retrieved successfully',
   })
 })
+const getSingleService = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const result = await ServiceService.getSingleService(id)
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Single service retrieved successfully',
+  })
+})
 
 const updateService = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params
@@ -46,4 +56,5 @@ export const ServiceController = {
   createService,
   getService,
   updateService,
+  getSingleService,
 }

@@ -14,6 +14,7 @@ router.post(
 )
 
 router.get('/', ServiceController.getService)
+router.get('/:id', ServiceController.getSingleService)
 
 router.put(
   '/:id',
