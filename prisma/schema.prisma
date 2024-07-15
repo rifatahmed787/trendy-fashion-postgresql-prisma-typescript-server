@@ -71,8 +71,7 @@ model service {
   id              Int    @id @default(autoincrement())
   value           String
   service         String
-  paymentDetails  String
-  shipmentDetails String
+  img             String 
 }
 
 model ModalImg {
