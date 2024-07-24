@@ -4,6 +4,8 @@ import { z } from 'zod'
 export const createModalImgSchema = z
   .object({
     img: z.string().url({ message: 'Image must be a valid URL' }),
+    percent: z.number({ required_error: 'Percentage is required' }),
+    categoryName: z.string({ required_error: 'Category name must be given' }),
     startTime: z.date().optional(),
     endTime: z.date().optional(),
   })
@@ -24,6 +26,8 @@ export const createModalImgSchema = z
 export const updateModalImgSchema = z
   .object({
     img: z.string().url({ message: 'Image must be a valid URL' }).optional(),
+    percent: z.number().optional(),
+    categoryName: z.string().optional(),
     startTime: z.date().optional(),
     endTime: z.date().optional(),
   })

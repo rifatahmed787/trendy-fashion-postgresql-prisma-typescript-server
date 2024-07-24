@@ -29,6 +29,7 @@ const getService = catchAsync(async (req: Request, res: Response) => {
 })
 const getSingleService = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params
+  console.log(id)
   const result = await ServiceService.getSingleService(id)
   sendResponse(res, {
     status_code: httpStatus.OK,
