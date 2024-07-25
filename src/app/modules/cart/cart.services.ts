@@ -36,7 +36,7 @@ const add_to_cart = async (
   const product_quantity = await prisma.products.findFirst({
     where: {
       id: productId,
-      quantity: {
+      productQuantity: {
         equals: 0,
       },
     },
