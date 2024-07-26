@@ -99,7 +99,7 @@ const deletecolor = async (
   return deletecolor
 }
 
-export const ProductcolorService = {
+export const ProductColorService = {
   createProductcolor,
   getcolor,
   updatecolor,
