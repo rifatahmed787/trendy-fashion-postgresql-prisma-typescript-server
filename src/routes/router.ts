@@ -23,6 +23,7 @@ import { DealRoute } from '../app/modules/dealSection/dealSection.route'
 import { ProductColorRoute } from '../app/modules/productColor/productColor.route'
 import { ProductSizeRoute } from '../app/modules/productSize/productSize.route'
 import { ProductTagRoute } from '../app/modules/productTag/productTag.route'
+import { ProductTypeRoute } from '../app/modules/productType/productType.route'
 
 const router = express.Router()
 
@@ -38,6 +39,7 @@ const all_routes = [
   { path: '/product_color', router: ProductColorRoute },
   { path: '/product_size', router: ProductSizeRoute },
   { path: '/product_tag', router: ProductTagRoute },
+  { path: '/product_type', router: ProductTypeRoute },
   { path: '/product', router: ProductRoute },
   { path: '/reviews', router: ReviewRoute },
   { path: '/wish', router: WishRoute },
