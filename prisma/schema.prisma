@@ -90,16 +90,25 @@ model ProductCategory {
   products     Products[]
 }
 
-model ProductSize {
+model ProductType {
   id       Int        @id @default(autoincrement())
-  size     String
-  products Products[] @relation("ProductSizes")
+  typeName String
+  products Products[]
+}
+
+model ProductSize {
+  id   Int    @id @default(autoincrement())
+  size String
 }
 
 model ProductColor {
-  id       Int        @id @default(autoincrement())
-  color    String
-  products Products[] @relation("ProductColors")
+  id    Int    @id @default(autoincrement())
+  color String
+}
+
+model ProductTag {
+  id   Int    @id @default(autoincrement())
+  tags String
 }
 
 model Products {
@@ -108,10 +117,10 @@ model Products {
   productName           String
   brandName             String
   productDetails        String?
-  productColors         ProductColor[]  @relation("ProductColors")
+  productColors         String[]
   productQualities      String[]
   productImages         String[]
-  productSizes          ProductSize[]   @relation("ProductSizes")
+  productSizes          String[]
   oldPrice              Float           @default(0.0)
   productPrice          Float
   productRating         Float?
@@ -119,7 +128,8 @@ model Products {
   tags                  String[]
   category_id           Int
   productCategory       ProductCategory @relation(fields: [category_id], references: [id])
-  productType           String
+  type_id               Int
+  productType           ProductType     @relation(fields: [type_id], references: [id])
   newArrival            Boolean
   stockOut              Boolean         @default(false)
   productQuantity       Int
@@ -134,7 +144,6 @@ model Products {
   cartProducts          CartProduct[]
   createdAt             DateTime        @default(now())
 }
-
 
 // product reviews
 model ProductReview {
