@@ -23,7 +23,14 @@ const createProductCategory = async (
   return createCategory
 }
 
-const getCategory = async (): Promise<ProductCategory[]> => {
+const getCategory = async (user: JwtPayload): Promise<ProductCategory[]> => {
+  // Check if the user is an admin
+  if (user?.role !== Role.ADMIN) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'Only admin users can get category'
+    )
+  }
   const getData = await prisma.productCategory.findMany()
   return getData
 }

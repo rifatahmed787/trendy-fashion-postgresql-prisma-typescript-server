@@ -20,6 +20,7 @@ import { SliderHeroRoute } from '../app/modules/sliderHero/sliderHero.route'
 import { LatestHeroRoute } from '../app/modules/latestSectionHero/latestSectionHero.route'
 import { HeroRoute } from '../app/modules/heroSection/heroSection.route'
 import { DealRoute } from '../app/modules/dealSection/dealSection.route'
+import { ProductColorRoute } from '../app/modules/productColor/productColor.route'
 
 const router = express.Router()
 
@@ -32,6 +33,7 @@ const all_routes = [
   { path: '/modal', router: ModalRoute },
   { path: '/service', router: ServiceRoute },
   { path: '/product_category', router: ProductCategoryRoute },
+  { path: '/product_color', router: ProductColorRoute },
   { path: '/product', router: ProductRoute },
   { path: '/reviews', router: ReviewRoute },
   { path: '/wish', router: WishRoute },

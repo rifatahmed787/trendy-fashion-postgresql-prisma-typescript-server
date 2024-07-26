@@ -22,7 +22,8 @@ const createCategory = catchAsync(async (req: Request, res: Response) => {
 })
 
 const getCategory = catchAsync(async (req: Request, res: Response) => {
-  const result = await ProductCategoryService.getCategory()
+  const user = req.logged_in_user
+  const result = await ProductCategoryService.getCategory(user)
   sendResponse(res, {
     status_code: httpStatus.OK,
     success: true,

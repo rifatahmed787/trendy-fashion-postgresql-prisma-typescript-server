@@ -22,7 +22,8 @@ const createcolor = catchAsync(async (req: Request, res: Response) => {
 })
 
 const getcolor = catchAsync(async (req: Request, res: Response) => {
-  const result = await ProductColorService.getcolor()
+  const user = req.logged_in_user
+  const result = await ProductColorService.getcolor(user)
   sendResponse(res, {
     status_code: httpStatus.OK,
     success: true,
@@ -58,7 +59,7 @@ const deletecolor = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
-export const ProductcolorController = {
+export const ProductColorController = {
   createcolor,
   getcolor,
   updatecolor,

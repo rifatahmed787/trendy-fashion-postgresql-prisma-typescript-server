@@ -23,7 +23,15 @@ const createProductcolor = async (
   return createcolor
 }
 
-const getcolor = async (): Promise<ProductColor[]> => {
+const getcolor = async (user: JwtPayload): Promise<ProductColor[]> => {
+  // Check if the user is an admin
+  if (user?.role !== Role.ADMIN) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'Only admin users can get the color'
+    )
+  }
+
   const getData = await prisma.productColor.findMany()
   return getData
 }
