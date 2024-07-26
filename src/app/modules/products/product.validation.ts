@@ -7,11 +7,7 @@ export const createProductSchema = z.object({
     brandName: z.string().min(1, { message: 'Brand Name is required' }),
     productDetails: z.string().optional(),
     productColors: z.array(
-      z
-        .number()
-        .int()
-        .nonnegative()
-        .min(1, { message: 'Color ID must be a positive integer' })
+      z.string().min(1, { message: 'Product colors is required' })
     ),
     productQualities: z.array(
       z.string().min(1, { message: 'Product Quality is required' })
@@ -20,11 +16,7 @@ export const createProductSchema = z.object({
       z.string().url({ message: 'Product Image must be a valid URL' })
     ),
     productSizes: z.array(
-      z
-        .number()
-        .int()
-        .nonnegative()
-        .min(1, { message: 'Size ID must be a positive integer' })
+      z.string().min(1, { message: 'Product size is required' })
     ),
     oldPrice: z
       .number()
@@ -39,7 +31,7 @@ export const createProductSchema = z.object({
     ),
     tags: z.array(z.string().min(1, { message: 'Tag is required' })),
     category_id: z.number().int({ message: 'Category ID must be an integer' }),
-    productType: z.string().min(1, { message: 'Product Type is required' }),
+    type_id: z.number().int({ message: 'Type ID must be an integer' }),
     newArrival: z.boolean(),
     stockOut: z.boolean().default(false),
     productQuantity: z
@@ -59,17 +51,17 @@ export const updateProductSchema = z.object({
     productName: z.string().min(1).optional(),
     brandName: z.string().min(1).optional(),
     productDetails: z.string().optional(),
-    productColors: z.array(z.number().int().nonnegative().min(1)).optional(),
+    productColors: z.array(z.string().min(1)).optional(),
     productQualities: z.array(z.string().min(1)).optional(),
     productImages: z.array(z.string().url()).optional(),
-    productSizes: z.array(z.number().int().nonnegative().min(1)).optional(),
+    productSizes: z.array(z.string().min(1)).optional(),
     oldPrice: z.number().min(0).default(0.0).optional(),
     productPrice: z.number().min(0).optional(),
     productRating: z.number().min(0).max(5).optional(),
     productSpecifications: z.array(z.string().min(1)).optional(),
     tags: z.array(z.string().min(1)).optional(),
     category_id: z.number().int().optional(),
-    productType: z.string().min(1).optional(),
+    type_id: z.number().int().optional(),
     newArrival: z.boolean(),
     stockOut: z.boolean().default(false),
     productQuantity: z.number().int().min(0).optional(),

@@ -4,7 +4,7 @@ import { IProductFilter } from './product.interface'
 export const filter_product_conditions = (
   filters: IProductFilter
 ): { [key: string]: unknown } | undefined => {
-  const { searchTerm, ...filter_keys } = filters
+  const { searchTerm, tags, ...filter_keys } = filters
 
   const conditions = []
 
@@ -34,6 +34,15 @@ export const filter_product_conditions = (
           return { [key]: value }
         }
       }),
+    })
+  }
+
+  // Add filtering for tags
+  if (tags && tags.length) {
+    conditions.push({
+      tags: {
+        hasSome: tags,
+      },
     })
   }
 

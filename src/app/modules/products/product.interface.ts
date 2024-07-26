@@ -4,6 +4,7 @@ export type IProductFilter = {
   productType?: string
   productGender?: string
   searchTerm?: string
+  tags?: string[]
 }
 
 export type IProductFilteringItems = {

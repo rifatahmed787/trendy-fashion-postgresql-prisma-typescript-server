@@ -12,4 +12,5 @@ export const product_filter_keys = [
   'productGender',
   'productPrice',
   'searchTerm',
+  'tags',
 ]
