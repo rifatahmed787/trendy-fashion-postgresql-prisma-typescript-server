@@ -21,6 +21,7 @@ import { LatestHeroRoute } from '../app/modules/latestSectionHero/latestSectionH
 import { HeroRoute } from '../app/modules/heroSection/heroSection.route'
 import { DealRoute } from '../app/modules/dealSection/dealSection.route'
 import { ProductColorRoute } from '../app/modules/productColor/productColor.route'
+import { ProductSizeRoute } from '../app/modules/productSize/productSize.route'
 
 const router = express.Router()
 
@@ -34,6 +35,7 @@ const all_routes = [
   { path: '/service', router: ServiceRoute },
   { path: '/product_category', router: ProductCategoryRoute },
   { path: '/product_color', router: ProductColorRoute },
+  { path: '/product_size', router: ProductSizeRoute },
   { path: '/product', router: ProductRoute },
   { path: '/reviews', router: ReviewRoute },
   { path: '/wish', router: WishRoute },
