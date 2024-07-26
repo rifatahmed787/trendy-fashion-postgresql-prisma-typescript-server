@@ -39,6 +39,7 @@ const add_to_cart = async (
       productQuantity: {
         equals: 0,
       },
+      stockOut: true,
     },
   })
 
@@ -116,6 +117,29 @@ const acceptCart = async (
         status: 'Accepted',
       },
     })
+
+    const product = await prisma.products.findUnique({
+      where: {
+        id: cartProduct.productId,
+      },
+    })
+
+    if (!product) {
+      throw new Error('Product not found')
+    }
+
+    if (cartProduct.status === 'Accepted') {
+      const updatedQuantity = product.productQuantity - cartProduct.quantity
+      await prisma.products.update({
+        where: {
+          id: product.id,
+        },
+        data: {
+          productQuantity: updatedQuantity,
+          stockOut: updatedQuantity === 0,
+        },
+      })
+    }
 
     return cartProduct
   }

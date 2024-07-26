@@ -4,6 +4,7 @@ export const createProductSchema = z.object({
   body: z.object({
     productId: z.string().min(1, { message: 'Product ID is required' }),
     productName: z.string().min(1, { message: 'Product Name is required' }),
+    brandName: z.string().min(1, { message: 'Brand Name is required' }),
     productDetails: z.string().optional(),
     productColors: z.array(
       z.string().min(1, { message: 'Product Color is required' })
@@ -16,7 +17,7 @@ export const createProductSchema = z.object({
     ),
     productSizes: z.array(
       z.string().min(1, { message: 'Product Size is required' })
-    ), // Assuming size is a string here, adjust as needed
+    ),
     oldPrice: z
       .number()
       .min(0, { message: 'Old Price must be zero or positive' })
@@ -24,90 +25,57 @@ export const createProductSchema = z.object({
     productPrice: z
       .number()
       .min(0, { message: 'Product Price must be zero or positive' }),
-    productRating: z.number().min(0).max(5).optional(), // Assuming rating is between 0 and 5
+    productRating: z.number().min(0).max(5).optional(),
     productSpecifications: z.array(
       z.string().min(1, { message: 'Product Specification is required' })
     ),
+    tags: z.array(z.string().min(1, { message: 'Tag is required' })),
     category_id: z.number().int({ message: 'Category ID must be an integer' }),
     productType: z.string().min(1, { message: 'Product Type is required' }),
-    productGender: z.string().min(1, { message: 'Product Gender is required' }),
-    ages: z.array(z.string().min(1, { message: 'Age is required' })),
-    quantity: z
+    newArrival: z.boolean(),
+    stockOut: z.boolean().default(false),
+    productQuantity: z
       .number()
       .int()
-      .min(0, { message: 'Quantity must be zero or positive' }),
+      .min(0, { message: 'Product Quantity must be zero or positive' }),
+    bestSelling: z.boolean().default(false),
+    productVerified: z.boolean().default(false),
+    productGender: z.string().min(1, { message: 'Product Gender is required' }),
+    ages: z.array(z.string().min(1, { message: 'Age is required' })),
     buyerId: z.number().int().optional(),
-    createdAt: z
-      .string()
-      .refine(val => !isNaN(Date.parse(val)), {
-        message: 'Creation date must be a valid DateTime',
-      })
-      .optional(),
+    productReviews: z.array(z.object({})).optional(),
+    wishLists: z.array(z.object({})).optional(),
+    cartProducts: z.array(z.object({})).optional(),
   }),
 })
 
 export const updateProductSchema = z.object({
   body: z.object({
-    productId: z
-      .string()
-      .min(1, { message: 'Product ID is required' })
-      .optional(),
-    productName: z
-      .string()
-      .min(1, { message: 'Product Name is required' })
-      .optional(),
+    productId: z.string().min(1).optional(),
+    productName: z.string().min(1).optional(),
+    brandName: z.string().min(1).optional(),
     productDetails: z.string().optional(),
-    productColors: z
-      .array(z.string().min(1, { message: 'Product Color is required' }))
-      .optional(),
-    productQualities: z
-      .array(z.string().min(1, { message: 'Product Quality is required' }))
-      .optional(),
-    productImages: z
-      .array(z.string().url({ message: 'Product Image must be a valid URL' }))
-      .optional(),
-    productSizes: z
-      .array(z.string().min(1, { message: 'Product Size is required' }))
-      .optional(),
-    oldPrice: z
-      .number()
-      .min(0, { message: 'Old Price must be zero or positive' })
-      .default(0.0)
-      .optional(),
-    productPrice: z
-      .number()
-      .min(0, { message: 'Product Price must be zero or positive' })
-      .optional(),
-    productRating: z.number().min(0).max(5).optional(), // Assuming rating is between 0 and 5
-    productSpecifications: z
-      .array(
-        z.string().min(1, { message: 'Product Specification is required' })
-      )
-      .optional(),
-    category_id: z
-      .number()
-      .int({ message: 'Category ID must be an integer' })
-      .optional(),
-    productType: z
-      .string()
-      .min(1, { message: 'Product Type is required' })
-      .optional(),
-    productGender: z
-      .string()
-      .min(1, { message: 'Product Gender is required' })
-      .optional(),
-    ages: z.array(z.string().min(1, { message: 'Age is required' })).optional(),
-    quantity: z
-      .number()
-      .int()
-      .min(0, { message: 'Quantity must be zero or positive' })
-      .optional(),
+    productColors: z.array(z.string().min(1)).optional(),
+    productQualities: z.array(z.string().min(1)).optional(),
+    productImages: z.array(z.string().url()).optional(),
+    productSizes: z.array(z.string().min(1)).optional(),
+    oldPrice: z.number().min(0).default(0.0).optional(),
+    productPrice: z.number().min(0).optional(),
+    productRating: z.number().min(0).max(5).optional(),
+    productSpecifications: z.array(z.string().min(1)).optional(),
+    tags: z.array(z.string().min(1)).optional(),
+    category_id: z.number().int().optional(),
+    productType: z.string().min(1).optional(),
+    newArrival: z.boolean().optional(),
+    stockOut: z.boolean().default(false),
+    productQuantity: z.number().int().min(0).optional(),
+    bestSelling: z.boolean().default(false),
+    productVerified: z.boolean().default(false),
+    productGender: z.string().min(1).optional(),
+    ages: z.array(z.string().min(1).optional()),
     buyerId: z.number().int().optional(),
-    createdAt: z
-      .string()
-      .refine(val => !isNaN(Date.parse(val)), {
-        message: 'Creation date must be a valid DateTime',
-      })
-      .optional(),
+    productReviews: z.array(z.object({})).optional(),
+    wishLists: z.array(z.object({})).optional(),
+    cartProducts: z.array(z.object({})).optional(),
   }),
 })

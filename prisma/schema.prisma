@@ -135,13 +135,6 @@ model Products {
   createdAt             DateTime        @default(now())
 }
 
-// "ratings": {
-// "ratingFive": 29,
-// "ratingFour": 48,
-// "ratingThree": 80,
-// "ratingTwo": 50,
-// "ratingOne": 36
-// },
 
 // product reviews
 model ProductReview {
