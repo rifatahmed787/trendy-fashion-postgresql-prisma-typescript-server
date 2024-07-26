@@ -30,6 +30,8 @@ export const filter_product_conditions = (
           return { productGender: { contains: value, mode: 'insensitive' } }
         } else if (key === 'productPrice') {
           return { productPrice: { contains: value, mode: 'insensitive' } }
+        } else if (key === 'tags') {
+          return { tags: { hasSome: value } }
         } else {
           return { [key]: value }
         }

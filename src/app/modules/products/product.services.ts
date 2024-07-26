@@ -50,6 +50,8 @@ const get_all_products = async (
     take: limit,
     include: {
       productReviews: true,
+      productCategory: true,
+      productType: true,
     },
   })
 
@@ -75,6 +77,8 @@ const latest_ten_products = async (): Promise<Products[] | null> => {
     orderBy: { id: 'desc' },
     include: {
       productReviews: true,
+      productCategory: true,
+      productType: true,
     },
   })
 
@@ -95,6 +99,8 @@ const bestSellingProducts = async (): Promise<Products[] | null> => {
     take: 10,
     include: {
       productReviews: true,
+      productCategory: true,
+      productType: true,
     },
   })
 
@@ -145,6 +151,8 @@ const get_product_details = async (id: string): Promise<Products | null> => {
           },
         },
       },
+      productCategory: true,
+      productType: true,
     },
   })
 

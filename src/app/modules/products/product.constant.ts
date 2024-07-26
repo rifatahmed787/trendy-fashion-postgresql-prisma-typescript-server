@@ -3,6 +3,7 @@ export const product_search_condition_keys = [
   'productCategory',
   'productGender',
   'productType',
+  'tags',
 ]
 
 export const product_filter_keys = [
