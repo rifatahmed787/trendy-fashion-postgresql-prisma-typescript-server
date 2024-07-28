@@ -1,9 +1,10 @@
 export type IProductFilter = {
   productName?: string
   categoryName?: string
-  productType?: string
+  typeName?: string
   productGender?: string
   searchTerm?: string
+  productPrice?: number
   tags?: string[]
 }
 

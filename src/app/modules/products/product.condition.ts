@@ -6,7 +6,7 @@ export const filter_product_conditions = (
 ): { [key: string]: unknown } | undefined => {
   const { searchTerm, tags, ...filter_keys } = filters
 
-  const conditions = []
+  const conditions: Array<{ [key: string]: unknown }> = []
 
   if (searchTerm) {
     conditions.push({
@@ -22,15 +22,23 @@ export const filter_product_conditions = (
   if (Object.keys(filter_keys).length) {
     conditions.push({
       AND: Object.entries(filter_keys).map(([key, value]) => {
-        if (key === 'productName') {
+        if (key === 'productName' && typeof value === 'string') {
           return { productName: { startsWith: value } }
-        } else if (key === 'productCategory') {
-          return { productCategory: { contains: value, mode: 'insensitive' } }
-        } else if (key === 'productGender') {
+        } else if (key === 'categoryName' && typeof value === 'string') {
+          return {
+            productCategory: {
+              categoryName: { contains: value, mode: 'insensitive' },
+            },
+          }
+        } else if (key === 'typeName' && typeof value === 'string') {
+          return {
+            productType: { typeName: { contains: value, mode: 'insensitive' } },
+          }
+        } else if (key === 'productGender' && typeof value === 'string') {
           return { productGender: { contains: value, mode: 'insensitive' } }
         } else if (key === 'productPrice') {
-          return { productPrice: { contains: value, mode: 'insensitive' } }
-        } else if (key === 'tags') {
+          return { productPrice: parseFloat(value as string) }
+        } else if (key === 'tags' && Array.isArray(value)) {
           return { tags: { hasSome: value } }
         } else {
           return { [key]: value }
@@ -39,8 +47,7 @@ export const filter_product_conditions = (
     })
   }
 
-  // Add filtering for tags
-  if (tags && tags.length) {
+  if (tags && Array.isArray(tags) && tags.length) {
     conditions.push({
       tags: {
         hasSome: tags,
@@ -48,5 +55,5 @@ export const filter_product_conditions = (
     })
   }
 
-  return conditions?.length > 0 ? { AND: conditions } : undefined
+  return conditions.length > 0 ? { AND: conditions } : undefined
 }
