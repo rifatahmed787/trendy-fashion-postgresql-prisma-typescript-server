@@ -10,12 +10,35 @@ export const filter_product_conditions = (
 
   if (searchTerm) {
     conditions.push({
-      OR: product_search_condition_keys.map(item => ({
-        [item]: {
-          contains: searchTerm,
-          mode: 'insensitive',
+      OR: [
+        ...product_search_condition_keys.map(item => ({
+          [item]: {
+            contains: searchTerm,
+            mode: 'insensitive',
+          },
+        })),
+        {
+          productCategory: {
+            categoryName: {
+              contains: searchTerm,
+              mode: 'insensitive',
+            },
+          },
         },
-      })),
+        {
+          productType: {
+            typeName: {
+              contains: searchTerm,
+              mode: 'insensitive',
+            },
+          },
+        },
+        {
+          tags: {
+            has: searchTerm,
+          },
+        },
+      ],
     })
   }
 
@@ -31,13 +54,11 @@ export const filter_product_conditions = (
             },
           }
         } else if (key === 'typeName' && typeof value === 'string') {
-          return {
-            productType: { typeName: { contains: value, mode: 'insensitive' } },
-          }
+          return { productType: { typeName: { contains: value } } }
         } else if (key === 'productGender' && typeof value === 'string') {
-          return { productGender: { contains: value, mode: 'insensitive' } }
+          return { productGender: { contains: value } }
         } else if (key === 'productPrice') {
-          return { productPrice: parseFloat(value as string) }
+          return { productPrice: Number(value) }
         } else if (key === 'tags' && Array.isArray(value)) {
           return { tags: { hasSome: value } }
         } else {

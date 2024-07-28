@@ -1,11 +1,15 @@
 const pick = <T extends object, K extends keyof T>(
-  obj: T,
+  obj: Partial<T>,
   keys: K[]
 ): Partial<T> => {
   const finalObject: Partial<T> = {}
 
   for (const key of keys) {
-    if (obj && Object.hasOwnProperty.call(obj, key)) {
+    if (
+      obj &&
+      Object.prototype.hasOwnProperty.call(obj, key) &&
+      obj[key] !== undefined
+    ) {
       finalObject[key] = obj[key]
     }
   }
