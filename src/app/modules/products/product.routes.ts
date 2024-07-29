@@ -21,7 +21,7 @@ router.get('/unique-filter-items', ProductController.uniqueFilteringData)
 
 router.get('/:id', ProductController.productDetails)
 
-router.patch(
+router.put(
   '/:id',
   authHandler(),
   requestValidationHandler(updateProductSchema),

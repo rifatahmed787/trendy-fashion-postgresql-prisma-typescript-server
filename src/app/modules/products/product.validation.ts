@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const createProductSchema = z.object({
   body: z.object({
-    productId: z.string().min(1, { message: 'Product ID is required' }),
+    productId: z.string().optional(),
     productName: z.string().min(1, { message: 'Product Name is required' }),
     brandName: z.string().min(1, { message: 'Brand Name is required' }),
     productDetails: z.string().optional(),
@@ -62,8 +62,8 @@ export const updateProductSchema = z.object({
     tags: z.array(z.string().min(1)).optional(),
     category_id: z.number().int().optional(),
     type_id: z.number().int().optional(),
-    newArrival: z.boolean(),
-    stockOut: z.boolean().default(false),
+    newArrival: z.boolean().optional(),
+    stockOut: z.boolean().default(false).optional(),
     productQuantity: z.number().int().min(0).optional(),
     bestSelling: z.boolean().default(false).optional(),
     productVerified: z.boolean().default(false).optional(),

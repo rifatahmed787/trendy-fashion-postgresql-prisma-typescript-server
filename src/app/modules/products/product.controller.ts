@@ -7,10 +7,15 @@ import pick from '../../../shared/pick'
 import { product_filter_keys } from './product.constant'
 import { pagination_keys } from '../../../constant/common'
 import { ProductServices } from './product.services'
+import { generateProductId } from '../../../shared/uniqueId'
 
 // Create product
 const createProduct = catchAsync(async (req: Request, res: Response) => {
+  const product_Id = generateProductId(5)
   const { ...product_data } = req.body
+  if (!product_data.productId) {
+    product_data.productId = product_Id
+  }
   const user_data = req.logged_in_user
   const result = await ProductServices.create_new_product(
     product_data,
