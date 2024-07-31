@@ -17,6 +17,13 @@ router.get('/cartdata', authHandler(), CartController.getCart)
 router.get('/all-cart', authHandler(), CartController.getAllCart)
 router.put('/accept/:id', authHandler(), CartController.makeAccept)
 router.put('/reject/:id', authHandler(), CartController.makeReject)
+router.put('/ongoing/:id', authHandler(), CartController.makeOngoing)
+router.put('/shipping_done/:id', authHandler(), CartController.makeShippingDone)
+router.put(
+  '/shipping_return/:id',
+  authHandler(),
+  CartController.makeShippingReturn
+)
 
 router.patch('/:id', authHandler(), CartController.updateQuantity)
 

@@ -163,6 +163,83 @@ const rejectCart = async (
   }
   return null
 }
+const onGoingProduct = async (
+  user: JwtPayload,
+  id: number
+): Promise<CartProduct | null> => {
+  if (user?.role === Role.ADMIN) {
+    const cartProduct = await prisma.cartProduct.update({
+      where: {
+        id: id,
+      },
+      data: {
+        shipping: 'ONGOING',
+      },
+    })
+
+    return cartProduct
+  }
+  return null
+}
+const shippingDone = async (
+  user: JwtPayload,
+  id: number
+): Promise<CartProduct | null> => {
+  if (user?.role === Role.ADMIN) {
+    const cartProduct = await prisma.cartProduct.update({
+      where: {
+        id: id,
+      },
+      data: {
+        shipping: 'DONE',
+      },
+    })
+
+    return cartProduct
+  }
+  return null
+}
+const returnProduct = async (
+  user: JwtPayload,
+  id: number
+): Promise<CartProduct | null> => {
+  if (user?.role === Role.ADMIN) {
+    const cartProduct = await prisma.cartProduct.update({
+      where: {
+        id: id,
+      },
+      data: {
+        shipping: 'RETURN',
+      },
+    })
+
+    const product = await prisma.products.findUnique({
+      where: {
+        id: cartProduct.productId,
+      },
+    })
+
+    if (!product) {
+      throw new Error('Product not found')
+    }
+
+    if (cartProduct.shipping === 'RETURN') {
+      const updatedQuantity = product.productQuantity + cartProduct.quantity
+      await prisma.products.update({
+        where: {
+          id: product.id,
+        },
+        data: {
+          productQuantity: updatedQuantity,
+          stockOut: updatedQuantity === 0,
+        },
+      })
+    }
+
+    return cartProduct
+  }
+  return null
+}
 
 // get_cart_by_id
 const get_cart_by_user_id = async (
@@ -290,4 +367,7 @@ export const CartServices = {
   getCart,
   acceptCart,
   rejectCart,
+  onGoingProduct,
+  shippingDone,
+  returnProduct,
 }

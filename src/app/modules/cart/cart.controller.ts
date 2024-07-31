@@ -73,6 +73,45 @@ const makeReject = catchAsync(async (req: Request, res: Response) => {
     message: 'Rejected cart successfully',
   })
 })
+const makeOngoing = catchAsync(async (req: Request, res: Response) => {
+  const user = req.logged_in_user
+  const cartProductId = Number(req.params.id)
+  // console.log(cartProductId)
+  const result = await CartServices.onGoingProduct(user, cartProductId)
+
+  sendResponse<CartProduct, null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Ongoing product cart successfully',
+  })
+})
+const makeShippingDone = catchAsync(async (req: Request, res: Response) => {
+  const user = req.logged_in_user
+  const cartProductId = Number(req.params.id)
+  // console.log(cartProductId)
+  const result = await CartServices.shippingDone(user, cartProductId)
+
+  sendResponse<CartProduct, null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Shipping done successfully',
+  })
+})
+const makeShippingReturn = catchAsync(async (req: Request, res: Response) => {
+  const user = req.logged_in_user
+  const cartProductId = Number(req.params.id)
+  // console.log(cartProductId)
+  const result = await CartServices.returnProduct(user, cartProductId)
+
+  sendResponse<CartProduct, null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Shipping return successfully',
+  })
+})
 
 // cartController.ts
 const updateQuantity = catchAsync(async (req: Request, res: Response) => {
@@ -127,4 +166,7 @@ export const CartController = {
   getAllCart,
   makeAccept,
   makeReject,
+  makeOngoing,
+  makeShippingDone,
+  makeShippingReturn,
 }
