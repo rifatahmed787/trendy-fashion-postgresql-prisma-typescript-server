@@ -176,7 +176,7 @@ model CartProduct {
   status        Status   @default(Pending)
   shipping      Shipping @default(ONSTART)
   deliveryTime  String @default("2 days")
-  paymentType String @default("Online")
+  paymentType   String @default("Online")
 }
 
 // wish list model
