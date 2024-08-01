@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "CartProduct" ALTER COLUMN "totalPrice" DROP NOT NULL,
+ALTER COLUMN "productColor" SET DEFAULT ARRAY[]::TEXT[],
+ALTER COLUMN "productSize" SET DEFAULT ARRAY[]::TEXT[];
