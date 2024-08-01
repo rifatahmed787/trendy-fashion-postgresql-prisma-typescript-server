@@ -117,6 +117,7 @@ model Products {
   productName           String
   brandName             String
   productDetails        String?
+  video                 String? @default("https://www.youtube.com/watch?v=p0YQWOB_kPE")
   productColors         String[]
   productQualities      String[]
   productImages         String[]
