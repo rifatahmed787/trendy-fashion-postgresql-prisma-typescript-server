@@ -24,6 +24,7 @@ import { ProductColorRoute } from '../app/modules/productColor/productColor.rout
 import { ProductSizeRoute } from '../app/modules/productSize/productSize.route'
 import { ProductTagRoute } from '../app/modules/productTag/productTag.route'
 import { ProductTypeRoute } from '../app/modules/productType/productType.route'
+import { AccordianCategoryRoute } from '../app/modules/accordianCategory/accordianCategory.route'
 
 const router = express.Router()
 
@@ -48,6 +49,7 @@ const all_routes = [
   { path: '/hero_section', router: HeroRoute },
   { path: '/deal_section', router: DealRoute },
   { path: '/blog', router: BlogRoute },
+  { path: '/accordian_category', router: AccordianCategoryRoute },
   { path: '/accordian', router: AccordianRouter },
   { path: '/payment', router: PaymentRouter },
   { path: '/order', router: OrderRouter },
