@@ -74,12 +74,13 @@ model service {
 }
 
 model ModalImg {
-  id           Int      @id @default(autoincrement())
-  img          String
-  percent      Float
-  categoryName String
-  startTime    DateTime
-  endTime      DateTime
+  id              Int             @id @default(autoincrement())
+  img             String
+  percent         Float
+  category_id     Int
+  productCategory ProductCategory @relation(fields: [category_id], references: [id])
+  startTime       DateTime
+  endTime         DateTime
 }
 
 // Products model
@@ -88,6 +89,7 @@ model ProductCategory {
   id           Int        @id @default(autoincrement())
   categoryName String
   products     Products[]
+  modalImg     ModalImg[]
 }
 
 model ProductType {
@@ -117,7 +119,7 @@ model Products {
   productName           String
   brandName             String
   productDetails        String?
-  video                 String? @default("https://www.youtube.com/watch?v=p0YQWOB_kPE")
+  video                 String?         @default("https://www.youtube.com/watch?v=p0YQWOB_kPE")
   productColors         String[]
   productQualities      String[]
   productImages         String[]
@@ -167,8 +169,8 @@ model CartProduct {
   product       Products @relation(fields: [productId], references: [id])
   receipt_url   String?  @default("")
   quantity      Int      @default(1)
-  productSize   String[]  @default([])
-  productColor  String[]  @default([]) 
+  productSize   String[]
+  productColor  String[]
   totalPrice    Float    @default(0.0)
   paymentStatus Boolean  @default(false)
   orderStatus   Boolean  @default(false)
@@ -176,8 +178,8 @@ model CartProduct {
   updatedAt     DateTime @updatedAt
   status        Status   @default(Pending)
   shipping      Shipping @default(ONSTART)
-  deliveryTime  String @default("2 days")
-  paymentType   String @default("Online")
+  deliveryTime  String   @default("2 days")
+  paymentType   String   @default("Online")
 }
 
 // wish list model
@@ -216,12 +218,18 @@ model dealSection {
 }
 
 // faq/accordian model
+model accordianCategory {
+  id           Int    @id @default(autoincrement())
+  categoryName String
+  ProductAccordian ProductAccordian[]
+}
 
 model ProductAccordian {
-  id       Int    @id @default(autoincrement())
-  question String
-  answer   String
-  category String
+  id          Int               @id @default(autoincrement())
+  question    String
+  answer      String
+  category_id Int
+  category    accordianCategory @relation(fields: [category_id], references: [id])
 }
 
 // blog post model
@@ -294,13 +302,10 @@ enum Status {
   Accepted
   Rejected
 }
+
 enum Shipping {
   ONSTART
   ONGOING
   DONE
   RETURN
 }
-
-
-
-

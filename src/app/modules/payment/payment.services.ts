@@ -95,12 +95,16 @@ const createPayment = async (
   })
 
   for (const cart of carts) {
-    await prisma.cartProduct.updateMany({
-      where: {
-        id: cart.id,
-      },
-      data: { paymentStatus: true },
-    })
+    if (session?.success_url) {
+      {
+        await prisma.cartProduct.updateMany({
+          where: {
+            id: cart.id,
+          },
+          data: { paymentStatus: true },
+        })
+      }
+    }
   }
 
   return session

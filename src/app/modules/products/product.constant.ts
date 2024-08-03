@@ -1,4 +1,10 @@
-export const product_search_condition_keys = ['productName', 'productGender']
+export const product_search_condition_keys = [
+  'productName',
+  'categoryName',
+  'productGender',
+  'typeName',
+  'tags',
+]
 
 export const product_filter_keys = [
   'productName',

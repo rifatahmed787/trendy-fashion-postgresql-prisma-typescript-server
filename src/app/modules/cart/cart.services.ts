@@ -3,13 +3,18 @@ import ApiError from '../../errors/ApiError'
 import httpStatus from 'http-status'
 import { pushNotification } from '../../../helpers/pushNotification'
 import { JwtPayload } from 'jsonwebtoken'
+import { pagination_map } from '../../../helpers/pagination'
+import { IPagination } from '../../../interfaces/pagination'
+import { filter_product_conditions } from '../products/product.condition'
+import { IProductFilter } from '../products/product.interface'
+import { GenericResponse } from '../../../interfaces/common'
 
 const prisma = new PrismaClient()
 
 // Add in wish list
 const add_to_cart = async (
   userId: number,
-  productId: number
+  cart_data: CartProduct
 ): Promise<CartProduct | null> => {
   // First, check if the user exists
   const user = await prisma.user.findUnique({
@@ -25,7 +30,7 @@ const add_to_cart = async (
   // Now, check if the product exists
   const product = await prisma.products.findUnique({
     where: {
-      id: productId,
+      id: cart_data.productId,
     },
   })
 
@@ -35,7 +40,7 @@ const add_to_cart = async (
 
   const product_quantity = await prisma.products.findFirst({
     where: {
-      id: productId,
+      id: cart_data.productId,
       productQuantity: {
         equals: 0,
       },
@@ -51,7 +56,6 @@ const add_to_cart = async (
   const isInCart = await prisma.cartProduct.findFirst({
     where: {
       userId,
-      productId,
       orderStatus: false,
     },
   })
@@ -67,7 +71,9 @@ const add_to_cart = async (
   const createdCart = await prisma.cartProduct.create({
     data: {
       userId,
-      productId,
+      productId: cart_data.productId,
+      productSize: cart_data.productSize,
+      productColor: cart_data.productColor,
       quantity: 1,
       totalPrice: product.productPrice,
     },
@@ -88,20 +94,43 @@ const add_to_cart = async (
 }
 
 // get all the cart
-const getCart = async (user: JwtPayload): Promise<CartProduct[] | null> => {
+const getCart = async (
+  user: JwtPayload,
+  filters: IProductFilter,
+  pagination_data: Partial<IPagination>
+): Promise<GenericResponse<CartProduct[] | null>> => {
   if (user?.role !== Role.ADMIN) {
     throw new ApiError(
       httpStatus.FORBIDDEN,
-      'Only admin users can create products'
+      'Only admin users can get the cart'
     )
   }
+  const { page, limit, skip, sortObject } = pagination_map(pagination_data)
+  // Define conditions (for search and filter)
+  const filterConditions = filter_product_conditions(filters) ?? {}
   const getCart = await prisma.cartProduct.findMany({
+    where: filterConditions,
+    orderBy: sortObject,
+    skip: skip,
+    take: limit,
     include: {
       product: true,
       user: true,
     },
   })
-  return getCart
+
+  const total = await prisma.products.count({
+    where: filterConditions,
+  })
+
+  return {
+    meta: {
+      page: page,
+      limit: limit,
+      total: total,
+    },
+    data: getCart,
+  }
 }
 
 const acceptCart = async (

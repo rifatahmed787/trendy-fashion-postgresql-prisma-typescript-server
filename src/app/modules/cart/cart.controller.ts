@@ -4,13 +4,16 @@ import catchAsync from '../../../shared/catchAsync'
 import { Request, Response } from 'express'
 import { CartServices } from './cart.services'
 import { CartProduct } from '@prisma/client'
+import { cart_filter_keys } from './cart.constant'
+import pick from '../../../shared/pick'
+import { pagination_keys } from '../../../constant/common'
 
 // post review]
 const addToCart = catchAsync(async (req: Request, res: Response) => {
   const { ...cart_data } = req.body
   const userId = req.logged_in_user.id
   // console.log(cart_data.productId)
-  const result = await CartServices.add_to_cart(userId, cart_data.productId)
+  const result = await CartServices.add_to_cart(userId, cart_data)
 
   sendResponse<CartProduct, null>(res, {
     status_code: httpStatus.OK,
@@ -34,10 +37,12 @@ const getCart = catchAsync(async (req: Request, res: Response) => {
 
 // get all the cart
 const getAllCart = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, cart_filter_keys)
+  const pagination = pick(req.query, pagination_keys)
   const user = req.logged_in_user
-  const result = await CartServices.getCart(user)
+  const result = await CartServices.getCart(user, filters, pagination)
 
-  sendResponse<CartProduct[], null>(res, {
+  sendResponse(res, {
     status_code: httpStatus.OK,
     success: true,
     data: result,

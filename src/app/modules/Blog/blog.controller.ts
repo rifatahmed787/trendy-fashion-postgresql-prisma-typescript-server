@@ -72,10 +72,10 @@ const createBlog = catchAsync(async (req: Request, res: Response) => {
 })
 
 const getBlogs = catchAsync(async (req: Request, res: Response) => {
-  const filers = pick(req.query, blog_filter_keys)
+  const filters = pick(req.query, blog_filter_keys)
   const pagination = pick(req.query, pagination_keys)
 
-  const result = await BlogServices.get_all_blogs(filers, pagination)
+  const result = await BlogServices.get_all_blogs(filters, pagination)
 
   sendResponse(res, {
     status_code: httpStatus.OK,
