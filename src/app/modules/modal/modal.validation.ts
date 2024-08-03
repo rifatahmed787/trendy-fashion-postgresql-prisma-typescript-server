@@ -6,7 +6,7 @@ export const createModalImgSchema = z.object({
     .object({
       img: z.string().url({ message: 'Image must be a valid URL' }),
       percent: z.number({ required_error: 'Percentage is required' }),
-      categoryName: z.string({ required_error: 'Category name must be given' }),
+      category_id: z.number({ required_error: 'Category id must be given' }),
       startTime: z.string().refine(val => !isNaN(Date.parse(val)), {
         message: 'Start Date must be a valid DateTime',
       }),
@@ -33,7 +33,7 @@ export const updateModalImgSchema = z.object({
     .object({
       img: z.string().url({ message: 'Image must be a valid URL' }).optional(),
       percent: z.number().optional(),
-      categoryName: z.string().optional(),
+      category_id: z.number().optional(),
       startTime: z
         .string()
         .refine(val => !isNaN(Date.parse(val)), {

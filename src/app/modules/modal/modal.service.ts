@@ -24,7 +24,11 @@ const create_modal = async (
 }
 
 const getModal = async (): Promise<ModalImg[]> => {
-  const getData = await prisma.modalImg.findMany()
+  const getData = await prisma.modalImg.findMany({
+    include: {
+      productCategory: true,
+    },
+  })
   return getData
 }
 
