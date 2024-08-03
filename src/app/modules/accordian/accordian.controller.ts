@@ -33,7 +33,38 @@ const getProductAccordian = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const updateAccordian = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id
+  const user = req.logged_in_user
+  const accordian_data = req.body
+  const result = await AccordianService.updateAccordian(
+    id,
+    user,
+    accordian_data
+  )
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Accordian update successfully',
+  })
+})
+
+const deleteAccordian = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id
+  const user = req.logged_in_user
+  const result = await AccordianService.deleteAccordian(id, user)
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Accordian delete successfully',
+  })
+})
+
 export const AccordianController = {
   productAccordian,
   getProductAccordian,
+  updateAccordian,
+  deleteAccordian,
 }

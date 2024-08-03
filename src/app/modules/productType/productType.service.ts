@@ -77,7 +77,7 @@ const deleteType = async (
   if (user.role !== 'ADMIN') {
     throw new ApiError(
       httpStatus.FORBIDDEN,
-      'You do not have permission to update Type'
+      'You do not have permission to delete Type'
     )
   }
 
