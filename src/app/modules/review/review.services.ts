@@ -100,8 +100,8 @@ const delete_review = async (
     throw new ApiError(httpStatus.EXPECTATION_FAILED, 'Failed to delete review')
   }
 
-  // Check if the user is an admin
-  if (review.reviewerId === user?.id) {
+  // Check if the user is an author
+  if (review.reviewerId !== user?.id) {
     throw new ApiError(
       httpStatus.FORBIDDEN,
       'Only author users can delete review'

@@ -56,7 +56,7 @@ const add_to_cart = async (
   const isInCart = await prisma.cartProduct.findFirst({
     where: {
       userId,
-      orderStatus: false,
+      productId: cart_data.productId,
     },
   })
 
