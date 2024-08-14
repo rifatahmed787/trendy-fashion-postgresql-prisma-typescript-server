@@ -45,6 +45,20 @@ const post_review = async (
   return createdReview
 }
 
+const get_single_review = async (id: string): Promise<ProductReview | null> => {
+  const reviewId = parseInt(id)
+  const existingReview = await prisma.productReview.findUnique({
+    where: {
+      id: reviewId,
+    },
+  })
+  if (!existingReview) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Review not found')
+  }
+
+  return existingReview
+}
+
 // Update review
 const update_review = async (
   id: string,
@@ -122,4 +136,5 @@ export const ReviewServices = {
   post_review,
   update_review,
   delete_review,
+  get_single_review,
 }

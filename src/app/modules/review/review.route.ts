@@ -16,6 +16,8 @@ router.post(
   ReviewController.postReview
 )
 
+router.get('/:id', ReviewController.get_single_review)
+
 router.put(
   '/:id',
   requestValidationHandler(review_edit_zod_schema),

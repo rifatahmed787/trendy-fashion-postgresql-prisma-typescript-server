@@ -21,6 +21,18 @@ const postReview = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const get_single_review = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const result = await ReviewServices.get_single_review(id)
+
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Single Review retrieved successfully',
+  })
+})
+
 const updateReview = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params
 
@@ -54,4 +66,5 @@ export const ReviewController = {
   postReview,
   updateReview,
   deleteReview,
+  get_single_review,
 }
