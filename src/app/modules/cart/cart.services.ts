@@ -228,6 +228,7 @@ const shippingDone = async (
   }
   return null
 }
+
 const returnProduct = async (
   user: JwtPayload,
   id: number
@@ -387,11 +388,114 @@ const clear_cart = async (userId: number): Promise<CartProduct[] | null> => {
   return deletedCartProducts
 }
 
+const update_color = async (
+  userId: number,
+  id: string,
+  data: CartProduct
+): Promise<CartProduct | null> => {
+  const existingCartId = parseInt(id)
+  const existingCartProduct = await prisma.cartProduct.findFirst({
+    where: {
+      userId,
+      id: existingCartId,
+    },
+    include: {
+      product: true,
+    },
+  })
+
+  if (!existingCartProduct) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart entry not found')
+  }
+
+  // Update color
+  const updatedColor = await prisma.cartProduct.update({
+    where: {
+      id: existingCartProduct.id,
+    },
+    data: {
+      productColor: data.productColor,
+    },
+  })
+  return updatedColor
+}
+const update_size = async (
+  userId: number,
+  id: string,
+  data: CartProduct
+): Promise<CartProduct | null> => {
+  const existingCartId = parseInt(id)
+  const existingCartProduct = await prisma.cartProduct.findFirst({
+    where: {
+      userId,
+      id: existingCartId,
+    },
+    include: {
+      product: true,
+    },
+  })
+
+  if (!existingCartProduct) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart entry not found')
+  }
+
+  // Update size
+  const updatedSize = await prisma.cartProduct.update({
+    where: {
+      id: existingCartProduct.id,
+    },
+    data: {
+      productSize: data.productSize,
+    },
+  })
+  return updatedSize
+}
+
+const createOrder = async (
+  userId: number,
+  data: CartProduct[]
+): Promise<CartProduct[] | null> => {
+  const updatedOrder: CartProduct[] = []
+
+  for (const cart of data) {
+    const existingCartProduct = await prisma.cartProduct.findFirst({
+      where: {
+        userId,
+        id: cart?.id,
+      },
+      include: {
+        product: true,
+      },
+    })
+
+    if (!existingCartProduct) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Cart entry not found')
+    }
+
+    // Update order status
+    const updatedProduct = await prisma.cartProduct.update({
+      where: {
+        id: cart?.id,
+      },
+      data: {
+        orderStatus: true,
+      },
+    })
+
+    updatedOrder.push(updatedProduct)
+  }
+
+  return updatedOrder.length > 0 ? updatedOrder : null
+}
+
 export const CartServices = {
   add_to_cart,
   get_cart_by_user_id,
   remove_from_cart,
   update_quantity,
+  update_color,
+  update_size,
+  createOrder,
   clear_cart,
   getCart,
   acceptCart,

@@ -135,6 +135,50 @@ const updateQuantity = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const updateColor = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const { data } = req.body
+
+  const userId = req.logged_in_user.id
+
+  const result = await CartServices.update_color(userId, id, data)
+
+  sendResponse<CartProduct, null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Color updated successfully',
+  })
+})
+const updateSize = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const { data } = req.body
+
+  const userId = req.logged_in_user.id
+
+  const result = await CartServices.update_size(userId, id, data)
+
+  sendResponse<CartProduct, null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Size updated successfully',
+  })
+})
+
+const createOrder = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.logged_in_user.id
+  const { data } = req.body
+  const result = await CartServices.createOrder(userId, data)
+
+  sendResponse<CartProduct[], null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Order created successfully',
+  })
+})
+
 // delete from cart
 const removeFromCart = catchAsync(async (req: Request, res: Response) => {
   const { ...cart_data } = req.body
@@ -169,6 +213,9 @@ export const CartController = {
   updateQuantity,
   clear_cart,
   getAllCart,
+  updateColor,
+  updateSize,
+  createOrder,
   makeAccept,
   makeReject,
   makeOngoing,
