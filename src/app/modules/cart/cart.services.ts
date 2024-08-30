@@ -282,7 +282,11 @@ const get_cart_by_user_id = async (
     },
     include: {
       product: true,
-      user: true,
+      user: {
+        include: {
+          address: true,
+        },
+      },
     },
   })
 
