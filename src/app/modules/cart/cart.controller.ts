@@ -169,6 +169,7 @@ const updateSize = catchAsync(async (req: Request, res: Response) => {
 const createOrder = catchAsync(async (req: Request, res: Response) => {
   const userId = req.logged_in_user.id
   const { data } = req.body
+
   const result = await CartServices.createOrder(userId, data)
 
   sendResponse<CartProduct[], null>(res, {

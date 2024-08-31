@@ -484,6 +484,7 @@ const createOrder = async (
       },
       data: {
         orderStatus: true,
+        paymentType: cart.paymentType,
       },
     })
 
