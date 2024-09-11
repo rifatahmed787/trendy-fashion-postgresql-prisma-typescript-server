@@ -28,6 +28,7 @@
     "@types/node": "^20.8.4",
     "@types/swagger-jsdoc": "^6.0.1",
     "@types/swagger-ui-express": "^4.1.4",
+    "@types/ws": "^8.5.12",
     "@types/yamljs": "^0.2.32",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-standard-with-typescript": "^35.0.0",
@@ -69,6 +70,7 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "ts-node": "^10.9.1",
+    "ws": "^8.18.0",
     "yamljs": "^0.3.0",
     "zod": "^3.21.4"
   }

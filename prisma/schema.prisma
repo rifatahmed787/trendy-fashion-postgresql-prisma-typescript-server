@@ -24,6 +24,7 @@ model User {
   wishLists         WishList[]
   PostComment       PostComment[]
   PostLike          PostLike[]
+  isActive          Boolean         @default(false)
   createdAt         DateTime        @default(now())
 
   @@map("Users")
