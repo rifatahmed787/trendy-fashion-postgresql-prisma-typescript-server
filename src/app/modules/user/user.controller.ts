@@ -9,7 +9,9 @@ import { pagination_keys } from '../../../constant/common'
 //get all user
 const allUsers = catchAsync(async (req: Request, res: Response) => {
   const pagination = pick(req.query, pagination_keys)
-  const result = await UserServices.allUsers(pagination)
+  const search = req.query.search?.toString() || ''
+  const activeOnly = req.query.activeOnly === 'true'
+  const result = await UserServices.allUsers(pagination, search, activeOnly)
   sendResponse(res, {
     status_code: httpStatus.OK,
     success: true,

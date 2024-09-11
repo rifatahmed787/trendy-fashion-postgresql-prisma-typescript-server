@@ -1,6 +1,6 @@
 import httpStatus from 'http-status'
 import ApiError from '../../errors/ApiError'
-import { Address, PrismaClient, User } from '@prisma/client'
+import { Address, Prisma, PrismaClient, User } from '@prisma/client'
 import { pagination_map } from '../../../helpers/pagination'
 import { IPagination } from '../../../interfaces/pagination'
 import { JwtPayload } from 'jsonwebtoken'
@@ -42,17 +42,69 @@ const my_profile = async (userId: string): Promise<Partial<User> | null> => {
 
 // get all the user
 const allUsers = async (
-  pagination_data: Partial<IPagination>
+  pagination_data: Partial<IPagination>,
+  search = '',
+  activeOnly = false
 ): Promise<{
   meta: { page: number; limit: number; total: number }
   data: User[]
 }> => {
   const { page, limit, skip, sortObject } = pagination_map(pagination_data)
 
-  // Count the total number of users
-  const total = await prisma.user.count()
+  // Count the total number of users based on filters
+  const total = await prisma.user.count({
+    where: {
+      AND: [
+        // Apply active filter if needed
+        activeOnly ? { isActive: true } : {},
+        // Search filter on username or email
+        search
+          ? {
+              OR: [
+                {
+                  username: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+                {
+                  email: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+              ],
+            }
+          : {},
+      ],
+    },
+  })
 
+  // Fetch users with filters, pagination, and sorting
   const users = await prisma.user.findMany({
+    where: {
+      AND: [
+        activeOnly ? { isActive: true } : {},
+        search
+          ? {
+              OR: [
+                {
+                  username: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+                {
+                  email: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+              ],
+            }
+          : {},
+      ],
+    },
     orderBy: sortObject || { id: 'asc' },
     skip: skip,
     take: limit,
