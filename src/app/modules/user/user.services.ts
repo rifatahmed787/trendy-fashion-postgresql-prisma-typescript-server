@@ -51,13 +51,18 @@ const allUsers = async (
 }> => {
   const { page, limit, skip, sortObject } = pagination_map(pagination_data)
 
+  // Check for active users based on DeviceToken presence
+  const activeUserIds = await prisma.deviceToken
+    .findMany({
+      select: { id: true },
+    })
+    .then(tokens => tokens.map(token => token.id))
+
   // Count the total number of users based on filters
   const total = await prisma.user.count({
     where: {
       AND: [
-        // Apply active filter if needed
-        activeOnly ? { isActive: true } : {},
-        // Search filter on username or email
+        activeOnly ? { id: { in: activeUserIds } } : {},
         search
           ? {
               OR: [
@@ -84,7 +89,7 @@ const allUsers = async (
   const users = await prisma.user.findMany({
     where: {
       AND: [
-        activeOnly ? { isActive: true } : {},
+        activeOnly ? { id: { in: activeUserIds } } : {},
         search
           ? {
               OR: [

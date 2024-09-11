@@ -14,10 +14,7 @@ const getAllOrder = async (
   data: CartProduct[]
 }> => {
   if (user?.role !== Role.ADMIN) {
-    throw new ApiError(
-      httpStatus.FORBIDDEN,
-      'Only admin users can create products'
-    )
+    throw new ApiError(httpStatus.FORBIDDEN, 'Only admin users can get orders')
   }
   const { page, limit, skip, sortObject } = pagination_map(pagination_data)
 
