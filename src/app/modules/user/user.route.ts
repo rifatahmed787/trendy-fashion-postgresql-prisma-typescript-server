@@ -6,6 +6,7 @@ import authHandler from '../../middlewares/authHandler'
 const router = express.Router()
 
 router.get('/allusers', UserController.allUsers)
+router.get('/active_user', UserController.activeUsers)
 router.get('/userinfo', authHandler(), UserController.userProfile)
 router.post('/address', authHandler(), UserController.createAddress)
 router.patch('/updateuser', authHandler(), UserController.updatedUser)

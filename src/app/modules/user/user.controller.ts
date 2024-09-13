@@ -10,8 +10,19 @@ import { pagination_keys } from '../../../constant/common'
 const allUsers = catchAsync(async (req: Request, res: Response) => {
   const pagination = pick(req.query, pagination_keys)
   const search = req.query.search?.toString() || ''
-  const activeOnly = req.query.activeOnly === 'true'
-  const result = await UserServices.allUsers(pagination, search, activeOnly)
+  const result = await UserServices.allUsers(pagination, search)
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: 'Users retrieved successfully',
+  })
+})
+//get all user
+const activeUsers = catchAsync(async (req: Request, res: Response) => {
+  const pagination = pick(req.query, pagination_keys)
+  const search = req.query.search?.toString() || ''
+  const result = await UserServices.activeUser(pagination, search)
   sendResponse(res, {
     status_code: httpStatus.OK,
     success: true,
@@ -104,6 +115,7 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
 export const UserController = {
   userProfile,
   allUsers,
+  activeUsers,
   createAddress,
   updatedUser,
   update_user_superadmin,

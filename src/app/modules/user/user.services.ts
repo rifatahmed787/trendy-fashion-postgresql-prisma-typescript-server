@@ -43,26 +43,17 @@ const my_profile = async (userId: string): Promise<Partial<User> | null> => {
 // get all the user
 const allUsers = async (
   pagination_data: Partial<IPagination>,
-  search = '',
-  activeOnly = false
+  search = ''
 ): Promise<{
   meta: { page: number; limit: number; total: number }
   data: User[]
 }> => {
   const { page, limit, skip, sortObject } = pagination_map(pagination_data)
 
-  // Check for active users based on DeviceToken presence
-  const activeUserIds = await prisma.deviceToken
-    .findMany({
-      select: { id: true },
-    })
-    .then(tokens => tokens.map(token => token.id))
-
   // Count the total number of users based on filters
   const total = await prisma.user.count({
     where: {
       AND: [
-        activeOnly ? { id: { in: activeUserIds } } : {},
         search
           ? {
               OR: [
@@ -89,7 +80,87 @@ const allUsers = async (
   const users = await prisma.user.findMany({
     where: {
       AND: [
-        activeOnly ? { id: { in: activeUserIds } } : {},
+        search
+          ? {
+              OR: [
+                {
+                  username: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+                {
+                  email: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+              ],
+            }
+          : {},
+      ],
+    },
+    orderBy: sortObject || { id: 'asc' },
+    skip: skip,
+    take: limit,
+    include: {
+      address: true,
+      reviewProducts: true,
+    },
+  })
+
+  return {
+    meta: {
+      page: page,
+      limit: limit,
+      total: total,
+    },
+    data: users,
+  }
+}
+
+// get all active user
+const activeUser = async (
+  pagination_data: Partial<IPagination>,
+  search = ''
+): Promise<{
+  meta: { page: number; limit: number; total: number }
+  data: User[]
+}> => {
+  const { page, limit, skip, sortObject } = pagination_map(pagination_data)
+
+  // Count the total number of active users
+  const total = await prisma.user.count({
+    where: {
+      isActive: true,
+      AND: [
+        search
+          ? {
+              OR: [
+                {
+                  username: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+                {
+                  email: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+              ],
+            }
+          : {},
+      ],
+    },
+  })
+
+  // Fetch active users with filters, pagination, and sorting
+  const users = await prisma.user.findMany({
+    where: {
+      isActive: true,
+      AND: [
         search
           ? {
               OR: [
@@ -347,6 +418,7 @@ export const UserServices = {
   allUsers,
   createAddress,
   updateUser,
+  activeUser,
   update_user_superadmin,
   update_user_admin,
   delete_user,
