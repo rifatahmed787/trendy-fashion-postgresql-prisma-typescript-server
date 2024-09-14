@@ -18,11 +18,11 @@ const allUsers = catchAsync(async (req: Request, res: Response) => {
     message: 'Users retrieved successfully',
   })
 })
-//get all user
-const activeUsers = catchAsync(async (req: Request, res: Response) => {
+//get all admin user
+const adminUsers = catchAsync(async (req: Request, res: Response) => {
   const pagination = pick(req.query, pagination_keys)
   const search = req.query.search?.toString() || ''
-  const result = await UserServices.activeUser(pagination, search)
+  const result = await UserServices.adminUser(pagination, search)
   sendResponse(res, {
     status_code: httpStatus.OK,
     success: true,
@@ -115,7 +115,7 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
 export const UserController = {
   userProfile,
   allUsers,
-  activeUsers,
+  adminUsers,
   createAddress,
   updatedUser,
   update_user_superadmin,

@@ -22,6 +22,7 @@ const user_signup = async (user_data: User): Promise<UserWithResponse> => {
       password: hashedPassword,
       role: user_data.role,
       avatar: avatar,
+      isActive: true,
     },
   })
 
@@ -32,6 +33,7 @@ const user_signup = async (user_data: User): Promise<UserWithResponse> => {
     role: created_user.role,
     avatar: created_user.avatar,
   }
+
   delete userWithoutPassword.password
 
   const accessToken = jwtHelper.create_token(
@@ -118,6 +120,7 @@ const user_login = async (
       email: user.email,
       role: user.role,
       avatar: user.avatar,
+      isActive: true,
     },
   }
 }

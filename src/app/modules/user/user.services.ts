@@ -1,6 +1,6 @@
 import httpStatus from 'http-status'
 import ApiError from '../../errors/ApiError'
-import { Address, Prisma, PrismaClient, User } from '@prisma/client'
+import { Address, Prisma, PrismaClient, Role, User } from '@prisma/client'
 import { pagination_map } from '../../../helpers/pagination'
 import { IPagination } from '../../../interfaces/pagination'
 import { JwtPayload } from 'jsonwebtoken'
@@ -119,8 +119,8 @@ const allUsers = async (
   }
 }
 
-// get all active user
-const activeUser = async (
+// get all admin user
+const adminUser = async (
   pagination_data: Partial<IPagination>,
   search = ''
 ): Promise<{
@@ -129,10 +129,10 @@ const activeUser = async (
 }> => {
   const { page, limit, skip, sortObject } = pagination_map(pagination_data)
 
-  // Count the total number of active users
+  // Count the total number of admin users
   const total = await prisma.user.count({
     where: {
-      isActive: true,
+      role: Role.ADMIN,
       AND: [
         search
           ? {
@@ -159,7 +159,7 @@ const activeUser = async (
   // Fetch active users with filters, pagination, and sorting
   const users = await prisma.user.findMany({
     where: {
-      isActive: true,
+      role: Role.ADMIN,
       AND: [
         search
           ? {
@@ -418,7 +418,7 @@ export const UserServices = {
   allUsers,
   createAddress,
   updateUser,
-  activeUser,
+  adminUser,
   update_user_superadmin,
   update_user_admin,
   delete_user,
