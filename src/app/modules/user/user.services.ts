@@ -317,6 +317,9 @@ const updateUser = async (
     data: {
       username: user_data.username,
       avatar: user_data.avatar,
+      gender: user_data.gender,
+      password: user_data.password,
+      email: user_data.email,
     },
   })
 
