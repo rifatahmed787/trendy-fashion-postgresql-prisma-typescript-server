@@ -43,6 +43,18 @@ const userProfile = catchAsync(async (req: Request, res: Response) => {
     message: "User's information retrieved successfully",
   })
 })
+//  Get   admin and super admin profile information
+const adminProfile = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.logged_in_user?.id
+  const result = await UserServices.admin_profile(userId)
+
+  sendResponse(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: result,
+    message: "Admin's information retrieved successfully",
+  })
+})
 
 const createAddress = catchAsync(async (req: Request, res: Response) => {
   const { ...address_data } = req.body
@@ -114,6 +126,7 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
 
 export const UserController = {
   userProfile,
+  adminProfile,
   allUsers,
   adminUsers,
   createAddress,

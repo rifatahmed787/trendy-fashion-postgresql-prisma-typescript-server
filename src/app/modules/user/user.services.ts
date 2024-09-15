@@ -18,6 +18,7 @@ const my_profile = async (userId: string): Promise<Partial<User> | null> => {
       email: true,
       avatar: true,
       role: true,
+      isActive: true,
       address: {
         select: {
           id: true,
@@ -117,6 +118,42 @@ const allUsers = async (
     },
     data: users,
   }
+}
+
+const admin_profile = async (userId: string): Promise<Partial<User> | null> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: parseInt(userId),
+    },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      avatar: true,
+      password: true,
+      gender: true,
+      isActive: true,
+      role: true,
+      address: {
+        select: {
+          id: true,
+          street_address: true,
+          city: true,
+          postal_code: true,
+          country: true,
+          phone_number: true,
+          district_name: true,
+        },
+      },
+    },
+  })
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found')
+  }
+
+  // we can return only the necessary fields if we want a partial user profile.
+  return user
 }
 
 // get all admin user
@@ -415,6 +452,7 @@ const delete_user = async (
 
 export const UserServices = {
   my_profile,
+  admin_profile,
   allUsers,
   createAddress,
   updateUser,
