@@ -1,6 +1,8 @@
+import authHandler from '../../middlewares/authHandler'
 import requestValidationHandler from '../../middlewares/requestValidationHandler'
 import { AuthController } from './auth.controller'
 import {
+  admin_create_zod_schema,
   user_login_zod_schema,
   user_refresh_token_zod_schema,
   user_signup_zod_schema,
@@ -13,6 +15,12 @@ router.post(
   '/signup',
   requestValidationHandler(user_signup_zod_schema),
   AuthController.signupUser
+)
+router.post(
+  '/create_admin',
+  requestValidationHandler(admin_create_zod_schema),
+  authHandler(),
+  AuthController.adminCreate
 )
 router.post(
   '/login',

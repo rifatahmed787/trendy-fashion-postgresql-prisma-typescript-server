@@ -1,7 +1,7 @@
 import { jwtHelper } from '../../../helpers/jwtHelper'
 import config from '../../../config'
-import { Secret } from 'jsonwebtoken'
-import { Address, PrismaClient, User } from '@prisma/client'
+import { JwtPayload, Secret } from 'jsonwebtoken'
+import { Address, PrismaClient, Role, User } from '@prisma/client'
 import ApiError from '../../errors/ApiError'
 import httpStatus from 'http-status'
 import bcrypt from 'bcrypt'
@@ -21,6 +21,62 @@ const user_signup = async (user_data: User): Promise<UserWithResponse> => {
       email: user_data.email,
       password: hashedPassword,
       role: user_data.role,
+      avatar: avatar,
+      isActive: true,
+    },
+  })
+
+  const userWithoutPassword: Partial<User> = {
+    id: created_user.id,
+    username: created_user.username,
+    email: created_user.email,
+    role: created_user.role,
+    avatar: created_user.avatar,
+  }
+
+  delete userWithoutPassword.password
+
+  const accessToken = jwtHelper.create_token(
+    { id: userWithoutPassword.id, email: userWithoutPassword.email },
+    config.jwt.access_token_secret as Secret,
+    config.jwt.access_token_expiresIn as string
+  )
+
+  const refreshToken = jwtHelper.create_token(
+    { id: userWithoutPassword.id, email: userWithoutPassword.email },
+    config.jwt.refresh_token_secret as Secret,
+    config.jwt.refresh_token_expiresIn as string
+  )
+
+  return {
+    user_details: created_user,
+    accessToken,
+    refreshToken,
+  }
+}
+// admin create
+const admin_create = async (
+  user_data: User,
+  user: JwtPayload
+): Promise<UserWithResponse> => {
+  // Check if the user is an admin
+  if (user?.role !== Role.ADMIN) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'Only admin users can create admin or superadmin'
+    )
+  }
+  const hashedPassword = await bcrypt.hash(user_data.password, 10)
+  const avatar =
+    user_data.avatar ||
+    'https://res.cloudinary.com/dztlowlu0/image/upload/v1700031261/avatar_ylo9mt.png'
+  const created_user = await prisma.user.create({
+    data: {
+      username: user_data.username,
+      email: user_data.email,
+      password: hashedPassword,
+      role: user_data.role,
+      gender: user_data.gender,
       avatar: avatar,
       isActive: true,
     },
@@ -203,6 +259,7 @@ const refresh_token = async (
 
 export const AuthServices = {
   user_signup,
+  admin_create,
   user_login,
   createOrUpdateUserDetails,
   refresh_token,

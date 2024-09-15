@@ -31,6 +31,31 @@ const signupUser = catchAsync(async (req: Request, res: Response) => {
     message: 'User signed up successfully',
   })
 })
+// admin create
+const adminCreate = catchAsync(async (req: Request, res: Response) => {
+  const { ...user_data } = req.body
+  const user = req.logged_in_user
+  const result = await AuthServices.admin_create(user_data, user)
+
+  const accessToken = result?.accessToken as string
+  const refreshToken = result?.refreshToken as string
+  const user_details = result?.user_details as Partial<User>
+
+  // cookies options
+  const options = {
+    httpOnly: true,
+    secure: false,
+  }
+
+  res.cookie('refreshToken', refreshToken, options)
+
+  sendResponse<IUserLoginResponse, null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: { accessToken, user_details },
+    message: 'Admin Created successfully',
+  })
+})
 
 // login User
 const loginUser = catchAsync(async (req: Request, res: Response) => {
@@ -99,6 +124,7 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 export const AuthController = {
   signupUser,
   loginUser,
+  adminCreate,
   createOrUpdateUserDetails,
   refreshToken,
 }
