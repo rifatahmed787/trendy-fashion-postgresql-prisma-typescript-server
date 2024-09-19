@@ -55,8 +55,12 @@ const updateProduct = catchAsync(async (req: Request, res: Response) => {
 const allProducts = catchAsync(async (req: Request, res: Response) => {
   const filers = pick(req.query, product_filter_keys)
   const pagination = pick(req.query, pagination_keys)
-
-  const result = await ProductServices.get_all_products(filers, pagination)
+  const search = req.query.search?.toString() || ''
+  const result = await ProductServices.get_all_products(
+    filers,
+    pagination,
+    search
+  )
 
   sendResponse(res, {
     status_code: httpStatus.OK,

@@ -8,7 +8,7 @@ import {
   IProductFilteringItems as IProductUniqueFilteringItems,
 } from './product.interface'
 import httpStatus from 'http-status'
-import { Products, PrismaClient, Role } from '@prisma/client'
+import { Products, PrismaClient, Role, Prisma } from '@prisma/client'
 import { JwtPayload } from 'jsonwebtoken'
 const prisma = new PrismaClient()
 
@@ -32,19 +32,100 @@ const create_new_product = async (
   return created_product
 }
 
-//  gel_all_products
+// get all the products
 const get_all_products = async (
   filters: IProductFilter,
-  pagination_data: Partial<IPagination>
+  pagination_data: Partial<IPagination>,
+  search: string
 ): Promise<GenericResponse<Products[]> | null> => {
   const { page, limit, skip, sortObject } = pagination_map(pagination_data)
 
-  // Define conditions (for search and filter)
+  // Define conditions for filters
   const filterConditions = filter_product_conditions(filters) ?? {}
 
-  // Use the dynamic 'sortObject' in the 'orderBy' clause
-  const allproducts = await prisma.products.findMany({
-    where: filterConditions,
+  // Scalar fields search conditions
+  const scalarSearchConditions: Prisma.ProductsWhereInput = search
+    ? {
+        OR: [
+          {
+            productName: {
+              contains: search,
+              mode: Prisma.QueryMode.insensitive,
+            },
+          },
+          {
+            productGender: {
+              contains: search,
+              mode: Prisma.QueryMode.insensitive,
+            },
+          },
+          {
+            brandName: {
+              contains: search,
+              mode: Prisma.QueryMode.insensitive,
+            },
+          },
+        ],
+      }
+    : {}
+
+  // Related fields search conditions
+  const relatedSearchConditions: Prisma.ProductsWhereInput = search
+    ? {
+        OR: [
+          {
+            productCategory: {
+              categoryName: {
+                contains: search,
+                mode: Prisma.QueryMode.insensitive,
+              },
+            },
+          },
+          {
+            productType: {
+              typeName: {
+                contains: search,
+                mode: Prisma.QueryMode.insensitive,
+              },
+            },
+          },
+          {
+            productSizes: {
+              hasSome: [search],
+            },
+          },
+          {
+            productColors: {
+              hasSome: [search.toLowerCase()],
+            },
+          },
+          {
+            tags: {
+              hasSome: [search.toLowerCase()],
+            },
+          },
+          {
+            ages: {
+              hasSome: [search.toLowerCase()],
+            },
+          },
+        ],
+      }
+    : {}
+
+  // Combine scalar and related search conditions with filters
+  const whereConditions: Prisma.ProductsWhereInput = {
+    AND: [
+      filterConditions,
+      {
+        OR: [scalarSearchConditions, relatedSearchConditions],
+      },
+    ],
+  }
+
+  // Fetch the products
+  const allProducts = await prisma.products.findMany({
+    where: whereConditions,
     orderBy: sortObject,
     skip: skip,
     take: limit,
@@ -55,9 +136,9 @@ const get_all_products = async (
     },
   })
 
-  // Get the total count of product products that match the conditions
+  // Count the total number of matching products
   const total = await prisma.products.count({
-    where: filterConditions,
+    where: whereConditions,
   })
 
   return {
@@ -66,7 +147,7 @@ const get_all_products = async (
       limit: limit,
       total: total,
     },
-    data: allproducts,
+    data: allProducts,
   }
 }
 

@@ -44,7 +44,7 @@ const my_profile = async (userId: string): Promise<Partial<User> | null> => {
 // get all the user
 const allUsers = async (
   pagination_data: Partial<IPagination>,
-  search = ''
+  search: string
 ): Promise<{
   meta: { page: number; limit: number; total: number }
   data: User[]
