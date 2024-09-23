@@ -1,7 +1,9 @@
-import { PrismaClient, ProductCategory, Role } from '@prisma/client'
+import { Prisma, PrismaClient, ProductCategory, Role } from '@prisma/client'
 import { JwtPayload } from 'jsonwebtoken'
 import ApiError from '../../errors/ApiError'
 import httpStatus from 'http-status'
+import { IPagination } from '../../../interfaces/pagination'
+import { pagination_map } from '../../../helpers/pagination'
 
 const prisma = new PrismaClient()
 
@@ -23,7 +25,15 @@ const createProductCategory = async (
   return createCategory
 }
 
-const getCategory = async (user: JwtPayload): Promise<ProductCategory[]> => {
+const getCategory = async (
+  pagination_data: Partial<IPagination>,
+  search: string,
+  user: JwtPayload
+): Promise<{
+  meta: { page: number; limit: number; total: number }
+  data: ProductCategory[]
+}> => {
+  const { page, limit, skip, sortObject } = pagination_map(pagination_data)
   // Check if the user is an admin
   if (user?.role !== Role.ADMIN) {
     throw new ApiError(
@@ -31,8 +41,57 @@ const getCategory = async (user: JwtPayload): Promise<ProductCategory[]> => {
       'Only admin users can get category'
     )
   }
-  const getData = await prisma.productCategory.findMany()
-  return getData
+  // Count the total number of brands based on filters
+  const total = await prisma.productCategory.count({
+    where: {
+      AND: [
+        search
+          ? {
+              OR: [
+                {
+                  categoryName: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+              ],
+            }
+          : {},
+      ],
+    },
+  })
+
+  // Fetch category with filters, pagination, and sorting
+  const brands = await prisma.productCategory.findMany({
+    where: {
+      AND: [
+        search
+          ? {
+              OR: [
+                {
+                  categoryName: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+              ],
+            }
+          : {},
+      ],
+    },
+    orderBy: sortObject || { id: 'asc' },
+    skip: skip,
+    take: limit,
+  })
+
+  return {
+    meta: {
+      page: page,
+      limit: limit,
+      total: total,
+    },
+    data: brands,
+  }
 }
 
 const updateCategory = async (

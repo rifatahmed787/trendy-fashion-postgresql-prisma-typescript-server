@@ -3,6 +3,8 @@ import { Request, Response } from 'express'
 import catchAsync from '../../../shared/catchAsync'
 import sendResponse from '../../../shared/sendResponse'
 import { ProductCategoryService } from './productCategory.service'
+import { pagination_keys } from '../../../constant/common'
+import pick from '../../../shared/pick'
 
 // Create category
 const createCategory = catchAsync(async (req: Request, res: Response) => {
@@ -23,7 +25,13 @@ const createCategory = catchAsync(async (req: Request, res: Response) => {
 
 const getCategory = catchAsync(async (req: Request, res: Response) => {
   const user = req.logged_in_user
-  const result = await ProductCategoryService.getCategory(user)
+  const pagination = pick(req.query, pagination_keys)
+  const search = req.query.search?.toString() || ''
+  const result = await ProductCategoryService.getCategory(
+    pagination,
+    search,
+    user
+  )
   sendResponse(res, {
     status_code: httpStatus.OK,
     success: true,
