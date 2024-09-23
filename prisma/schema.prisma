@@ -100,6 +100,12 @@ model ProductType {
   products Products[]
 }
 
+model ProductBrand {
+  id        Int        @id @default(autoincrement())
+  brandName String
+  products  Products[]
+}
+
 model ProductSize {
   id   Int    @id @default(autoincrement())
   size String
@@ -119,7 +125,8 @@ model Products {
   id                    Int             @id @default(autoincrement())
   productId             String          @unique
   productName           String
-  brandName             String
+  brand_id              Int             @default(1)
+  productBrand          ProductBrand    @relation(fields: [brand_id], references: [id])
   productDetails        String?
   video                 String?         @default("https://www.youtube.com/watch?v=p0YQWOB_kPE")
   productColors         String[]
@@ -221,8 +228,8 @@ model dealSection {
 
 // faq/accordian model
 model accordianCategory {
-  id           Int    @id @default(autoincrement())
-  categoryName String
+  id               Int                @id @default(autoincrement())
+  categoryName     String
   ProductAccordian ProductAccordian[]
 }
 
