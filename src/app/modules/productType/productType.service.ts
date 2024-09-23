@@ -1,7 +1,9 @@
-import { PrismaClient, ProductType, Role } from '@prisma/client'
+import { Prisma, PrismaClient, ProductType, Role } from '@prisma/client'
 import { JwtPayload } from 'jsonwebtoken'
 import ApiError from '../../errors/ApiError'
 import httpStatus from 'http-status'
+import { IPagination } from '../../../interfaces/pagination'
+import { pagination_map } from '../../../helpers/pagination'
 
 const prisma = new PrismaClient()
 
@@ -20,7 +22,15 @@ const createProductType = async (
   return createType
 }
 
-const getType = async (user: JwtPayload): Promise<ProductType[]> => {
+const getType = async (
+  pagination_data: Partial<IPagination>,
+  search: string,
+  user: JwtPayload
+): Promise<{
+  meta: { page: number; limit: number; total: number }
+  data: ProductType[]
+}> => {
+  const { page, limit, skip, sortObject } = pagination_map(pagination_data)
   // Check if the user is an admin
   if (user?.role !== Role.ADMIN) {
     throw new ApiError(
@@ -29,8 +39,57 @@ const getType = async (user: JwtPayload): Promise<ProductType[]> => {
     )
   }
 
-  const getData = await prisma.productType.findMany()
-  return getData
+  // Count the total number of types based on filters
+  const total = await prisma.productType.count({
+    where: {
+      AND: [
+        search
+          ? {
+              OR: [
+                {
+                  typeName: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+              ],
+            }
+          : {},
+      ],
+    },
+  })
+
+  // Fetch category with filters, pagination, and sorting
+  const types = await prisma.productType.findMany({
+    where: {
+      AND: [
+        search
+          ? {
+              OR: [
+                {
+                  typeName: {
+                    contains: search,
+                    mode: Prisma.QueryMode.insensitive,
+                  },
+                },
+              ],
+            }
+          : {},
+      ],
+    },
+    orderBy: sortObject || { id: 'asc' },
+    skip: skip,
+    take: limit,
+  })
+
+  return {
+    meta: {
+      page: page,
+      limit: limit,
+      total: total,
+    },
+    data: types,
+  }
 }
 
 const updateType = async (

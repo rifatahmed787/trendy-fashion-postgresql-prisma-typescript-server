@@ -25,7 +25,7 @@ import { ProductSizeRoute } from '../app/modules/productSize/productSize.route'
 import { ProductTagRoute } from '../app/modules/productTag/productTag.route'
 import { ProductTypeRoute } from '../app/modules/productType/productType.route'
 import { AccordianCategoryRoute } from '../app/modules/accordianCategory/accordianCategory.route'
-import { BrandNameRoute } from '../app/modules/brandName/brandName.route'
+// import { BrandNameRoute } from '../app/modules/brandName/brandName.route'
 
 const router = express.Router()
 
@@ -42,7 +42,7 @@ const all_routes = [
   { path: '/product_size', router: ProductSizeRoute },
   { path: '/product_tag', router: ProductTagRoute },
   { path: '/product_type', router: ProductTypeRoute },
-  { path: '/brand_name', router: BrandNameRoute },
+  // { path: '/brand_name', router: BrandNameRoute },
   { path: '/product', router: ProductRoute },
   { path: '/reviews', router: ReviewRoute },
   { path: '/wish', router: WishRoute },

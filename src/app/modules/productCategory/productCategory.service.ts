@@ -41,7 +41,7 @@ const getCategory = async (
       'Only admin users can get category'
     )
   }
-  // Count the total number of brands based on filters
+  // Count the total number of categories based on filters
   const total = await prisma.productCategory.count({
     where: {
       AND: [
@@ -62,7 +62,7 @@ const getCategory = async (
   })
 
   // Fetch category with filters, pagination, and sorting
-  const brands = await prisma.productCategory.findMany({
+  const categories = await prisma.productCategory.findMany({
     where: {
       AND: [
         search
@@ -90,7 +90,7 @@ const getCategory = async (
       limit: limit,
       total: total,
     },
-    data: brands,
+    data: categories,
   }
 }
 

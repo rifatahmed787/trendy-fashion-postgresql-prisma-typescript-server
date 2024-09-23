@@ -3,6 +3,8 @@ import { Request, Response } from 'express'
 import catchAsync from '../../../shared/catchAsync'
 import sendResponse from '../../../shared/sendResponse'
 import { ProductTypeService } from './productType.service'
+import { pagination_keys } from '../../../constant/common'
+import pick from '../../../shared/pick'
 
 // Create Type
 const createType = catchAsync(async (req: Request, res: Response) => {
@@ -23,7 +25,9 @@ const createType = catchAsync(async (req: Request, res: Response) => {
 
 const getType = catchAsync(async (req: Request, res: Response) => {
   const user = req.logged_in_user
-  const result = await ProductTypeService.getType(user)
+  const pagination = pick(req.query, pagination_keys)
+  const search = req.query.search?.toString() || ''
+  const result = await ProductTypeService.getType(pagination, search, user)
   sendResponse(res, {
     status_code: httpStatus.OK,
     success: true,
