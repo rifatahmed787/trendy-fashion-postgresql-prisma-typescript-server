@@ -4,7 +4,7 @@ export const createProductSchema = z.object({
   body: z.object({
     productId: z.string().optional(),
     productName: z.string().min(1, { message: 'Product Name is required' }),
-    brandName: z.string().min(1, { message: 'Brand Name is required' }),
+    brand_id: z.number().int({ message: 'Brand id is required' }),
     productDetails: z.string().optional(),
     productColors: z.array(
       z.string().min(1, { message: 'Product colors is required' })
@@ -49,7 +49,7 @@ export const updateProductSchema = z.object({
   body: z.object({
     productId: z.string().min(1).optional(),
     productName: z.string().min(1).optional(),
-    brandName: z.string().min(1).optional(),
+    brand_id: z.number().int().optional(),
     productDetails: z.string().optional(),
     productColors: z.array(z.string().min(1)).optional(),
     productQualities: z.array(z.string().min(1)).optional(),

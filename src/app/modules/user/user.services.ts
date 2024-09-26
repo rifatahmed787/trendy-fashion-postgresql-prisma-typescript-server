@@ -51,58 +51,26 @@ const allUsers = async (
 }> => {
   const { page, limit, skip, sortObject } = pagination_map(pagination_data)
 
+  // Build whereCondition dynamically
+  const whereCondition: Prisma.UserWhereInput = {}
+
+  if (search) {
+    whereCondition.OR = [
+      { username: { contains: search, mode: Prisma.QueryMode.insensitive } },
+      { email: { contains: search, mode: Prisma.QueryMode.insensitive } },
+    ]
+  }
+
   // Count the total number of users based on filters
   const total = await prisma.user.count({
-    where: {
-      AND: [
-        search
-          ? {
-              OR: [
-                {
-                  username: {
-                    contains: search,
-                    mode: Prisma.QueryMode.insensitive,
-                  },
-                },
-                {
-                  email: {
-                    contains: search,
-                    mode: Prisma.QueryMode.insensitive,
-                  },
-                },
-              ],
-            }
-          : {},
-      ],
-    },
+    where: whereCondition,
   })
 
   // Fetch users with filters, pagination, and sorting
   const users = await prisma.user.findMany({
-    where: {
-      AND: [
-        search
-          ? {
-              OR: [
-                {
-                  username: {
-                    contains: search,
-                    mode: Prisma.QueryMode.insensitive,
-                  },
-                },
-                {
-                  email: {
-                    contains: search,
-                    mode: Prisma.QueryMode.insensitive,
-                  },
-                },
-              ],
-            }
-          : {},
-      ],
-    },
+    where: whereCondition,
     orderBy: sortObject || { id: 'asc' },
-    skip: skip,
+    skip,
     take: limit,
     include: {
       address: true,
@@ -112,9 +80,9 @@ const allUsers = async (
 
   return {
     meta: {
-      page: page,
-      limit: limit,
-      total: total,
+      page,
+      limit,
+      total,
     },
     data: users,
   }

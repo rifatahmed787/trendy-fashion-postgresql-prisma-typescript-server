@@ -59,12 +59,6 @@ const get_all_products = async (
               mode: Prisma.QueryMode.insensitive,
             },
           },
-          {
-            brandName: {
-              contains: search,
-              mode: Prisma.QueryMode.insensitive,
-            },
-          },
         ],
       }
     : {}
@@ -84,6 +78,14 @@ const get_all_products = async (
           {
             productType: {
               typeName: {
+                contains: search,
+                mode: Prisma.QueryMode.insensitive,
+              },
+            },
+          },
+          {
+            productBrand: {
+              brandName: {
                 contains: search,
                 mode: Prisma.QueryMode.insensitive,
               },
