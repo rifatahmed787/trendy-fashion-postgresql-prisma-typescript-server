@@ -1,8 +1,6 @@
 export const product_search_condition_keys = [
   'productName',
-  'categoryName',
   'productGender',
-  'typeName',
   'tags',
 ]
 

@@ -1,46 +1,13 @@
-import { product_search_condition_keys } from './product.constant'
 import { IProductFilter } from './product.interface'
 
 export const filter_product_conditions = (
   filters: IProductFilter
 ): { [key: string]: unknown } | undefined => {
-  const { searchTerm, tags, ...filter_keys } = filters
+  const { ...filter_keys } = filters
+
+  console.log(filter_keys?.maxPrice, filter_keys.minPrice)
 
   const conditions: Array<{ [key: string]: unknown }> = []
-
-  if (searchTerm) {
-    conditions.push({
-      OR: [
-        ...product_search_condition_keys.map(item => ({
-          [item]: {
-            contains: searchTerm,
-            mode: 'insensitive',
-          },
-        })),
-        {
-          productCategory: {
-            categoryName: {
-              contains: searchTerm,
-              mode: 'insensitive',
-            },
-          },
-        },
-        {
-          productType: {
-            typeName: {
-              contains: searchTerm,
-              mode: 'insensitive',
-            },
-          },
-        },
-        {
-          tags: {
-            has: searchTerm,
-          },
-        },
-      ],
-    })
-  }
 
   if (Object.keys(filter_keys).length) {
     conditions.push({
@@ -57,22 +24,21 @@ export const filter_product_conditions = (
           return { productType: { typeName: { contains: value } } }
         } else if (key === 'productGender' && typeof value === 'string') {
           return { productGender: { contains: value } }
-        } else if (key === 'productPrice') {
-          return { productPrice: Number(value) }
+        } else if (key === 'minPrice' || key === 'maxPrice') {
+          const priceConditions: { [key: string]: unknown } = {}
+          if (filter_keys.minPrice) {
+            priceConditions.gte = Number(filter_keys.minPrice)
+          }
+          if (filter_keys.maxPrice) {
+            priceConditions.lte = Number(filter_keys.maxPrice)
+          }
+          return { productPrice: priceConditions }
         } else if (key === 'tags' && Array.isArray(value)) {
           return { tags: { hasSome: value } }
         } else {
           return { [key]: value }
         }
       }),
-    })
-  }
-
-  if (tags && Array.isArray(tags) && tags.length) {
-    conditions.push({
-      tags: {
-        hasSome: tags,
-      },
     })
   }
 

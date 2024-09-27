@@ -201,15 +201,30 @@ const get__unique_filtering_items =
     const distinctCategories = await prisma.productCategory.groupBy({
       by: ['categoryName'],
     })
+    const distinctTypes = await prisma.productType.groupBy({
+      by: ['typeName'],
+    })
+
+    // Get the minimum and maximum product prices
+    const priceRange = await prisma.products.aggregate({
+      _min: {
+        productPrice: true,
+      },
+      _max: {
+        productPrice: true,
+      },
+    })
 
     const allGender = distinctGender.map(item => item.productGender)
     const allCategories = distinctCategories.map(item => item.categoryName)
+    const allTypes = distinctTypes.map(item => item.typeName)
 
     return {
       data: {
         all_gender: allGender,
         all_category: allCategories,
-        all_type: [],
+        all_type: allTypes,
+        all_price: [priceRange._min.productPrice, priceRange._max.productPrice],
       },
     }
   }
