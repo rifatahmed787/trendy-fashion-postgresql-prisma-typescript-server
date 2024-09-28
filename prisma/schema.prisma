@@ -28,7 +28,8 @@ model User {
   mobileNumber      String?          @unique  
   password          String?
   googleId          String?        
-  facebookId        String?         
+  facebookId        String? 
+  verified          Boolean         @default(false)        
   avatar            String          @default("https://res.cloudinary.com/dztlowlu0/image/upload/v1700031261/avatar_ylo9mt.png")
   role              Role            @default(USER)
   gender            Gender          @default(Male)
@@ -42,7 +43,7 @@ model User {
   PostLike          PostLike[]
   isActive          Boolean         @default(false)
   createdAt         DateTime        @default(now())
-
+  
   @@map("Users")
 }
 
