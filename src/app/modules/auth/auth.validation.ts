@@ -2,9 +2,15 @@ import { z } from 'zod'
 
 export const user_signup_zod_schema = z.object({
   body: z.object({
-    email: z.string({ required_error: 'Email address is required' }),
-
-    password: z.string({ required_error: 'Password  is required' }),
+    email: z.string({ required_error: 'Email address is required' }).optional(),
+    mobileNumber: z
+      .string({ required_error: 'Please enter a mobile number' })
+      .optional(),
+    password: z.string({ required_error: 'Password  is required' }).optional(),
+    googleId: z.string({ required_error: 'googleId  is required' }).optional(),
+    facebookId: z
+      .string({ required_error: 'facebookId  is required' })
+      .optional(),
     username: z.string({
       required_error: 'Username is required',
     }),
@@ -37,6 +43,13 @@ export const user_login_zod_schema = z.object({
   body: z.object({
     email: z.string({ required_error: 'Email address  is required' }),
     password: z.string({ required_error: 'Password  is required' }),
+    mobileNumber: z
+      .string({ required_error: 'Please enter a mobile number' })
+      .optional(),
+    googleId: z.string({ required_error: 'googleId  is required' }).optional(),
+    facebookId: z
+      .string({ required_error: 'facebookId  is required' })
+      .optional(),
   }),
 })
 

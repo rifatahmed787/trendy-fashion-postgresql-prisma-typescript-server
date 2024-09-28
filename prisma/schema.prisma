@@ -7,13 +7,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+model OTP {
+  id             Int      @id @default(autoincrement())
+  otp            String
+  expiration     DateTime
+  userIdentifier String   
+  createdAt      DateTime @default(now())
+
+  @@map("otps")
+}
+
+
 // user model
 
 model User {
   id                Int             @id @default(autoincrement())
   username          String
-  email             String          @unique
-  password          String
+  email             String?          @unique
+  mobileNumber      String?          @unique  
+  password          String?
+  googleId          String?        
+  facebookId        String?         
   avatar            String          @default("https://res.cloudinary.com/dztlowlu0/image/upload/v1700031261/avatar_ylo9mt.png")
   role              Role            @default(USER)
   gender            Gender          @default(Male)

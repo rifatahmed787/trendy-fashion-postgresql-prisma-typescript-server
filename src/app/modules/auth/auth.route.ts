@@ -8,9 +8,11 @@ import {
   user_signup_zod_schema,
 } from './auth.validation'
 import express from 'express'
+import { OtpController } from './otpController'
 
 const router = express.Router()
 
+router.post('/send-otp', OtpController.sendOtp)
 router.post(
   '/signup',
   requestValidationHandler(user_signup_zod_schema),

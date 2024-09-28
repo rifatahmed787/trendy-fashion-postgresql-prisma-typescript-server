@@ -10,8 +10,15 @@ import { IUserLoginResponse, UserWithResponse } from '../user/user.interface'
 const prisma = new PrismaClient()
 
 // user signup
-const user_signup = async (user_data: User): Promise<UserWithResponse> => {
-  const hashedPassword = await bcrypt.hash(user_data.password, 10)
+const user_signup = async (
+  user_data: User,
+  deviceToken: string | undefined
+): Promise<UserWithResponse> => {
+  let hashedPassword: string | null = null
+  // Check if password is provided, then hash it
+  if (user_data.password) {
+    hashedPassword = await bcrypt.hash(user_data.password, 10)
+  }
   const avatar =
     user_data.avatar ||
     'https://res.cloudinary.com/dztlowlu0/image/upload/v1700031261/avatar_ylo9mt.png'
@@ -19,6 +26,7 @@ const user_signup = async (user_data: User): Promise<UserWithResponse> => {
     data: {
       username: user_data.username,
       email: user_data.email,
+      mobileNumber: user_data.mobileNumber,
       password: hashedPassword,
       role: user_data.role,
       avatar: avatar,
@@ -30,6 +38,7 @@ const user_signup = async (user_data: User): Promise<UserWithResponse> => {
     id: created_user.id,
     username: created_user.username,
     email: created_user.email,
+    mobileNumber: created_user.mobileNumber,
     role: created_user.role,
     avatar: created_user.avatar,
   }
@@ -37,16 +46,33 @@ const user_signup = async (user_data: User): Promise<UserWithResponse> => {
   delete userWithoutPassword.password
 
   const accessToken = jwtHelper.create_token(
-    { id: userWithoutPassword.id, email: userWithoutPassword.email },
+    {
+      id: userWithoutPassword.id,
+      email: userWithoutPassword.email,
+      mobileNumber: userWithoutPassword.mobileNumber,
+    },
     config.jwt.access_token_secret as Secret,
     config.jwt.access_token_expiresIn as string
   )
 
   const refreshToken = jwtHelper.create_token(
-    { id: userWithoutPassword.id, email: userWithoutPassword.email },
+    {
+      id: userWithoutPassword.id,
+      email: userWithoutPassword.email,
+      mobileNumber: userWithoutPassword.mobileNumber,
+    },
     config.jwt.refresh_token_secret as Secret,
     config.jwt.refresh_token_expiresIn as string
   )
+
+  // Store the device token if provided
+  if (deviceToken) {
+    await prisma.deviceToken.create({
+      data: {
+        deviceToken,
+      },
+    })
+  }
 
   return {
     user_details: created_user,
@@ -66,7 +92,11 @@ const admin_create = async (
       'Only admin users can create admin or superadmin'
     )
   }
-  const hashedPassword = await bcrypt.hash(user_data.password, 10)
+  let hashedPassword: string | null = null
+  // Check if password is provided, then hash it
+  if (user_data.password) {
+    hashedPassword = await bcrypt.hash(user_data.password, 10)
+  }
   const avatar =
     user_data.avatar ||
     'https://res.cloudinary.com/dztlowlu0/image/upload/v1700031261/avatar_ylo9mt.png'
@@ -113,21 +143,28 @@ const admin_create = async (
 
 // user_login
 const user_login = async (
-  email: string,
+  identifier: string, // email or mobileNumber
   password: string,
   deviceToken: string | undefined
 ): Promise<IUserLoginResponse | null> => {
-  // Function to check if a user with a given email exists
-  const isUserExist = async (email: string): Promise<User | null> => {
-    return prisma.user.findUnique({
-      where: { email },
+  // Function to check if a user with a given email or mobileNumber exists
+  const isUserExist = async (identifier: string): Promise<User | null> => {
+    return prisma.user.findFirst({
+      where: {
+        OR: [{ email: identifier }, { mobileNumber: identifier }],
+      },
     })
   }
 
-  const user = await isUserExist(email)
+  const user = await isUserExist(identifier)
 
   if (!user) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'User not found')
+  }
+
+  // Validate password: ensure it's not null
+  if (!user.password) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User has no password set')
   }
 
   // Function to compare a given password with the stored hashed password
@@ -135,8 +172,7 @@ const user_login = async (
     encrypted_pass: string,
     given_pass: string
   ): Promise<boolean> => {
-    const isMatch = await bcrypt.compare(given_pass, encrypted_pass)
-    return isMatch
+    return bcrypt.compare(given_pass, encrypted_pass)
   }
 
   // Match password
@@ -144,20 +180,30 @@ const user_login = async (
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid password')
   }
 
+  // Ensure email is not null when generating the token
+  const emailForToken = user.email ? user.email : ''
+  const mobileNumberForToken = user.mobileNumber ? user.mobileNumber : ''
+
   // Create an access token
   const accessToken = jwtHelper.create_token(
-    { id: user.id, email: user.email, role: user.role },
+    {
+      id: user.id,
+      email: emailForToken,
+      role: user.role,
+      mobileNumber: mobileNumberForToken,
+    },
     config.jwt.access_token_secret as Secret,
     config.jwt.access_token_expiresIn as string
   )
 
   // Create a refresh token
   const refreshToken = jwtHelper.create_token(
-    { id: user.id, email: user.email },
+    { id: user.id, email: emailForToken, mobileNumber: mobileNumberForToken },
     config.jwt.refresh_token_secret as Secret,
     config.jwt.refresh_token_expiresIn as string
   )
 
+  // Store the device token if provided
   if (deviceToken) {
     await prisma.deviceToken.create({
       data: {
@@ -174,6 +220,7 @@ const user_login = async (
       id: user.id,
       username: user.username,
       email: user.email,
+      mobileNumber: user.mobileNumber,
       role: user.role,
       avatar: user.avatar,
       isActive: true,

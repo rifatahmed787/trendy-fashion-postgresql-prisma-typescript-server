@@ -6,11 +6,24 @@ import { AuthServices } from './auth.services'
 
 import { User } from '@prisma/client'
 import { IUserLoginResponse } from '../user/user.interface'
+import { verifyOTP } from './otpService'
 
 // signup user
 const signupUser = catchAsync(async (req: Request, res: Response) => {
-  const { ...user_data } = req.body
-  const result = await AuthServices.user_signup(user_data)
+  const { otp, userIdentifier, deviceToken, ...user_data } = req.body
+  // Verify the OTP first
+  const otpVerificationResult = await verifyOTP(userIdentifier, otp)
+
+  if (!otpVerificationResult.success) {
+    // If OTP verification fails, send an error response
+    return sendResponse<null, null>(res, {
+      status_code: httpStatus.BAD_REQUEST,
+      success: false,
+      data: null,
+      message: 'OTP verification failed',
+    })
+  }
+  const result = await AuthServices.user_signup(user_data, deviceToken)
 
   const accessToken = result?.accessToken as string
   const refreshToken = result?.refreshToken as string
