@@ -94,6 +94,36 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     message: 'User logged in successfully',
   })
 })
+// login User
+const loginGoogleUser = catchAsync(async (req: Request, res: Response) => {
+  const { email, username, avatar, googleId, deviceToken } = req.body
+  const result = await AuthServices.user_google_login(
+    email,
+    username,
+    avatar,
+    googleId,
+    deviceToken
+  )
+
+  const accessToken = result?.accessToken as string
+  const refreshToken = result?.refreshToken as string
+  const user_details = result?.user_details as Partial<User>
+
+  // cookies options
+  const options = {
+    httpOnly: true,
+    secure: false,
+  }
+
+  res.cookie('refreshToken', refreshToken, options)
+
+  sendResponse<IUserLoginResponse, null>(res, {
+    status_code: httpStatus.OK,
+    success: true,
+    data: { accessToken, user_details },
+    message: 'User logged in successfully',
+  })
+})
 
 //user profile create or update
 const createOrUpdateUserDetails = catchAsync(
@@ -140,4 +170,5 @@ export const AuthController = {
   adminCreate,
   createOrUpdateUserDetails,
   refreshToken,
+  loginGoogleUser,
 }

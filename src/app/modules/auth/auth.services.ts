@@ -143,7 +143,7 @@ const admin_create = async (
 
 // user_login
 const user_login = async (
-  identifier: string, // email or mobileNumber
+  identifier: string,
   password: string,
   deviceToken: string | undefined
 ): Promise<IUserLoginResponse | null> => {
@@ -224,6 +224,88 @@ const user_login = async (
       role: user.role,
       avatar: user.avatar,
       isActive: true,
+    },
+  }
+}
+const user_google_login = async (
+  email: string,
+  username: string,
+  avatar: string,
+  googleId: string,
+  deviceToken: string | undefined
+): Promise<IUserLoginResponse | null> => {
+  // Check if the user already exists by email or googleId
+  const isUserExist = async (): Promise<User | null> => {
+    return prisma.user.findFirst({
+      where: {
+        OR: [{ email: email }, { googleId: googleId }],
+      },
+    })
+  }
+
+  let user = await isUserExist()
+
+  if (!user) {
+    user = await prisma.user.create({
+      data: {
+        email: email,
+        username: username,
+        avatar: avatar,
+        googleId: googleId,
+        isActive: true,
+      },
+    })
+  }
+
+  // Ensure email is not null when generating the token
+  const emailForToken = email ? email : ''
+
+  // Create an access token
+  const accessToken = jwtHelper.create_token(
+    {
+      id: user.id,
+      email: emailForToken,
+      role: user.role,
+    },
+    config.jwt.access_token_secret as Secret,
+    config.jwt.access_token_expiresIn as string
+  )
+
+  // Create a refresh token
+  const refreshToken = jwtHelper.create_token(
+    { id: user.id, email: emailForToken },
+    config.jwt.refresh_token_secret as Secret,
+    config.jwt.refresh_token_expiresIn as string
+  )
+
+  // Store the device token if provided and not already stored
+  if (deviceToken) {
+    const existingDeviceToken = await prisma.deviceToken.findFirst({
+      where: {
+        deviceToken: deviceToken,
+      },
+    })
+
+    if (!existingDeviceToken) {
+      await prisma.deviceToken.create({
+        data: {
+          deviceToken,
+        },
+      })
+    }
+  }
+
+  // Return the response with tokens and user details
+  return {
+    accessToken,
+    refreshToken,
+    user_details: {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      avatar: user.avatar,
+      isActive: user.isActive,
     },
   }
 }
@@ -310,4 +392,5 @@ export const AuthServices = {
   user_login,
   createOrUpdateUserDetails,
   refresh_token,
+  user_google_login,
 }

@@ -29,6 +29,7 @@ router.post(
   requestValidationHandler(user_login_zod_schema),
   AuthController.loginUser
 )
+router.post('/google-login', AuthController.loginGoogleUser)
 
 router.post('/profile', AuthController.createOrUpdateUserDetails)
 
