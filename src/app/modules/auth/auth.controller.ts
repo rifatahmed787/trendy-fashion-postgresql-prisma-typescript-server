@@ -10,7 +10,8 @@ import { verifyOTP } from './otpService'
 
 // signup user
 const signupUser = catchAsync(async (req: Request, res: Response) => {
-  const { otp, userIdentifier, deviceToken, ...user_data } = req.body
+  const { otp, deviceToken, ...user_data } = req.body
+  const userIdentifier = user_data?.email
   // Verify the OTP first
   const otpVerificationResult = await verifyOTP(userIdentifier, otp)
 
@@ -20,7 +21,7 @@ const signupUser = catchAsync(async (req: Request, res: Response) => {
       status_code: httpStatus.BAD_REQUEST,
       success: false,
       data: null,
-      message: 'OTP verification failed',
+      message: otpVerificationResult.message,
     })
   }
   const result = await AuthServices.user_signup(user_data, deviceToken)

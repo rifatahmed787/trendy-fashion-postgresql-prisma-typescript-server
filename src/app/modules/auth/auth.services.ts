@@ -31,6 +31,7 @@ const user_signup = async (
       role: user_data.role,
       avatar: avatar,
       isActive: true,
+      verified: true,
     },
   })
 
