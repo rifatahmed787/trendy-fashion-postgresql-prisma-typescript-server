@@ -135,6 +135,7 @@ const get_all_products = async (
       productReviews: true,
       productCategory: true,
       productType: true,
+      productBrand: true,
     },
   })
 
@@ -251,6 +252,7 @@ const get_product_details = async (id: string): Promise<Products | null> => {
       },
       productCategory: true,
       productType: true,
+      productBrand: true,
     },
   })
 
